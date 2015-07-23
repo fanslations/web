@@ -1,4 +1,0 @@
-D:\Projects\ParaNovels\Paranovels.Common\bin\Debug\Paranovels.Common.dll
-D:\Projects\ParaNovels\Paranovels.Common\bin\Debug\Paranovels.Common.pdb
-D:\Projects\ParaNovels\Paranovels.Common\obj\Debug\Paranovels.Common.dll
-D:\Projects\ParaNovels\Paranovels.Common\obj\Debug\Paranovels.Common.pdb
