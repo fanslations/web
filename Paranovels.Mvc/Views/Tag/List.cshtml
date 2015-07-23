@@ -7,7 +7,15 @@
     ViewBag.Title = Model.Data.Any() ? Model.Data[0].TagType.Translate(R.TagType.Translate) : "";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@section CurrentMenu
+{
+    <section class="menu-section">
+        <h2 class="menu-section-title">Current</h2>
+        <ul class="menu-section-list">
+            <li><a href="#add-container" class="action toggle" data-toggle='{ "target": "#add-container"}' role="button"><i class=" fa fa-plus"></i>Add new Model.Data[0].TagType.Translate(R.TagType.Translate)</a></li>
+        </ul>
+    </section>
+}
 
 <section class="section">
     <div class="header">
