@@ -1,0 +1,27 @@
+﻿/* begin divider */
+.divider {
+    display: inline-block !important;
+    padding: 0 !important;
+}
+
+    .divider.divider-pipe {
+        width: 1px;
+        height: 8px;
+        margin: 0 2px;
+    }
+
+    .divider.divider-circle {
+        width: 4px;
+        height: 4px;
+        margin: 2px 2px;
+        border-radius: 4px;
+    }
+
+    .divider.divider-white {
+        background-color: #EFEFEF !important;
+    }
+
+    .divider.divider-black {
+        background-color: #101010 !important;
+    }
+/* end divider */

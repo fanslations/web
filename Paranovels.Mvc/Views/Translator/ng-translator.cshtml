@@ -1,0 +1,34 @@
+﻿@model dynamic
+
+@{
+    Layout = null;
+}
+
+<div class="translator">
+    <ul class="list-unstyled list-inline pull-right">
+        <li>
+            <a href="" class="btn btn-sm btn-primary" ng-click="save()"><i class="fa fa-save"></i>Save</a>
+        </li>
+        <li>
+            <a href="" class="btn btn-sm btn-default" ng-click="discard()"><i class="fa fa-trash"></i>Discard</a>
+        </li>
+    </ul>
+    <ul class="list-unstyled list-inline">
+        <li ng-repeat="translator in translators">
+            <a href="" class="btn btn-sm btn-default switch" ng-class="translator.isSelected ? 'selected': ''" ng-click="toggleTranslator(translator)"><i class="fa fa-power-off"></i>{{translator.Name}}</a>
+        </li>
+        <li>
+            <select ng-model="language.glossary" ng-change="applyGlossary()" class="form-control input-sm">
+                <option value="0">No Glossary</option>
+                <option value="100">Local Glossary</option>
+                <option value="1000">Global Glossary</option>
+            </select>
+            <button id="applyglossary" class="hidden" ng-click="applyGlossary()">Apply</button>
+        </li>
+    </ul>
+    <div>
+        <pre id="raw" class="raw"><i class="label label-info">Raw</i>{{paragraph.Raw}}</pre>
+        <pre ng-repeat="translator in translators" ng-show="translator.isSelected"><i class="label label-info">{{translator.Name}}</i>{{translator.text}}</pre>
+    </div>
+    <a href="" ng-click='close()' class="position-absolute top-0px right-0px cursor-pointer padding-5px" role="button"><i class="fa fa-times-circle"></i><span class="sr-only">Close</span></a>
+</div>

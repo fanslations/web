@@ -1,0 +1,177 @@
+﻿@using Elmah.ContentSyndication
+@using Microsoft.Ajax.Utilities
+@using Paranovels.Common
+@using Paranovels.DataModels
+@using Paranovels.ViewModels
+@using Thi.Core
+@model SeriesDetail
+@{
+    ViewBag.Title = Model.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<section class="section">
+    <div class="header">
+        <a href="@Url.Action("Index")" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
+        <h1 class="title">
+            @Model.Title
+        </h1>
+    </div>
+    <div class="content">
+        <ul class="list-unstyled list-inline mylist">
+            <li><strong><i class="fa fa-list-fal"></i>Your reading list</strong></li>
+            @foreach (var item in Model.UserLists)
+            {
+                <li class="action connect" data-connect='{ "ConnectorID": @( (Model.UserListConnector ?? new Connector()).ID ), "ConnectorType": @R.ConnectorType.SERIES_USERLIST, "SourceID": @Model.ID, "TargetID": @item.ID}' role="button">
+                    @if (Model.UserListConnector != null && Model.UserListConnector.IsDeleted == false && Model.UserListConnector.TargetID == item.UserListID)
+                    {
+                        <span title="Remove from @item.Name"><i class="fa fa-check color-gold"></i>@item.Name</span>
+                    }
+                    else
+                    {
+                        <span title="Move to @item.Name"><i class="fa fa-check"></i>@item.Name</span>
+                    }
+                </li>
+            }
+
+            @if (Model.UserLists == null || !Model.UserLists.Any())
+            {
+                <li><a href="/userlist">You donot have any list <i class="fa fa-plus-circle"></i>Add new list</a></li>
+            }
+            else
+            {
+                <li><a href="/userlist"><i class="fa fa-plus-circle"></i>Add new list</a></li>
+            }
+
+        </ul>
+    </div>
+    <div class="content">
+        <div class="detail-group improve-img">
+            <img src="@Model.ImageUrl.ToGoogleDriveImageUrl()" class="center-block img-responsive" title="@Model.Title's cover image" />
+            @Html.ImproveThis(m => m.ImageUrl)
+        </div>
+        <div class="detail-group">
+            <strong class="sr-only">Synopsis</strong>
+            <div>
+                @Html.Raw(Model.Synopsis.FormatString(0,20, "No synopsis available. Click on 'Edit' to help us update it."))
+                @Html.ImproveThis(m => m.Synopsis)
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Updated Date</strong>
+            <div>@Html.Raw(Model.UpdatedDate.FormatDate())</div>
+        </div>
+        <div class="detail-group">
+            <strong>Status</strong>
+            <div>
+                @Model.Status.Translate(R.TranslationStatus.Translate)
+                @Html.ImproveThis(m => m.Status)
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Last Release</strong>
+            <div>
+                @{ var release = Model.Releases.OrderByDescending(o => o.Date).FirstOrDefault() ?? new Release(); }
+                <a href="@Url.Action("Detail", "Release", new { ID = release.ReleaseID, Seo = release.Title.ToSeo()})">@release.Title</a> - @release.Date.FormatDate()
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Release Frequency</strong>
+            <div>
+                @{
+                    const int DAYS = 30;
+                    var total = Model.Releases.Count(w => w.Date > DateTime.Now.AddDays(DAYS * -1));
+                    var releaseFrequency = (double)DAYS / total;
+                }
+                @(releaseFrequency > 1 ? string.Format("About every {0:0.0} day(s) based on last {1} days", releaseFrequency, DAYS) : string.Format("About every {0:0.0} hours(s) based on last {1} days", releaseFrequency*24, DAYS))
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Day(s) of Release</strong>
+            <div>
+                @{
+                    var daysOfRelease = Model.Releases.Where(w => w.Date > DateTime.Now.AddDays(DAYS * -1)).GroupBy(o=> o.Date.DayOfWeek).OrderByDescending(o=> o.Count()).Select(s=>s.Key).ToList();
+             
+                }
+                @string.Join(", ", daysOfRelease)
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Orginal Language</strong>
+            <div>
+                @Model.RawLanguage.Translate(R.Language.Translate)
+                @Html.ImproveThis(m => m.RawLanguage)
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Raw Source</strong>
+            <div>
+                <a href="@Model.RawUrl" target="_blank">@Model.RawUrl</a>
+                @if (string.IsNullOrWhiteSpace(Model.RawUrl))
+                {
+                    <text>No raw source url available. Click on 'Edit' to help us update it.</text>
+                }
+                @Html.ImproveThis(m => m.RawUrl)
+            </div>
+        </div>
+
+        <div class="detail-group">
+            <strong>Categories</strong>
+            <div>
+                @Html.Raw(string.Join(", ", Model.Categories.Select(s => string.Format(@"<a href=""{1}"">{0}</a>", s.Name, Url.Action("Detail", "Tag", new { ID = s.TagID, Seo = s.Name.ToSeo() })))).FormatString())
+                @Html.ImproveThis(m => m.Categories)
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Genres</strong>
+            <div>
+                @Html.Raw(string.Join(", ", Model.Genres.Select(s => string.Format(@"<a href=""{1}"">{0}</a>", s.Name, Url.Action("Detail", "Tag", new { ID = s.TagID, Seo = s.Name.ToSeo() })))).FormatString())
+                @Html.ImproveThis(m => m.Genres)
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Translations Group</strong>
+            <div>
+                @if (Model.GroupID > 0)
+                {
+                    <a href="@Url.Action("Detail", "Group", new {ID = Model.GroupID, Seo=Model.Group.Name.ToSeo()})">@Html.Raw(Model.Group.Name.FormatString())</a>
+                }
+                else
+                {
+                    @Html.Raw("".FormatString());
+                }
+                @Html.ImproveThis(m => m.GroupID)
+            </div>
+        </div>
+    </div>
+</section>
+<div class="subheader">
+    <h2 class="title">Releases</h2>
+</div>
+<div class="content section">
+    @{
+        Html.RenderPartial("~/Views/Release/_Release.cshtml", new PagedList<ReleaseGrid>
+        {
+            Data = Model.Releases.Select(s => new ReleaseGrid
+            {
+                ReleaseID = s.ReleaseID,
+                Title = s.Title,
+                Date = s.Date,
+                Url = s.Url,
+
+            }).ToList()
+        });
+    }
+
+</div>
+
+<section class="section">
+    <div class="header">
+        <h2>Comments</h2>
+    </div>
+    <div class="content">
+        @{
+            Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.SeriesID, SourceTable = R.SourceTable.SERIES });
+        }
+    </div>
+</section>

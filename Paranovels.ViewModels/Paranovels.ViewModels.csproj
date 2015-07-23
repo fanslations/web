@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FDD9257C-AC59-4869-9760-0B3ADBB332C3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Paranovels.ViewModels</RootNamespace>
+    <AssemblyName>Paranovels.ViewModels</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Criteria Models\BaseCriteria.cs" />
+    <Compile Include="Criteria Models\ListCriteria.cs" />
+    <Compile Include="Criteria Models\VoteCriteria.cs" />
+    <Compile Include="Criteria Models\GenericCriteria.cs" />
+    <Compile Include="Criteria Models\GlossaryCriteria.cs" />
+    <Compile Include="Criteria Models\ReleaseCriteria.cs" />
+    <Compile Include="Criteria Models\NovelCriteria.cs" />
+    <Compile Include="Criteria Models\GroupCriteria.cs" />
+    <Compile Include="Criteria Models\CommentCriteria.cs" />
+    <Compile Include="Criteria Models\UserCriteria.cs" />
+    <Compile Include="Criteria Models\TagCriteria.cs" />
+    <Compile Include="Criteria Models\SeriesCriteria.cs" />
+    <Compile Include="Criteria Models\ChapterCriteria.cs" />
+    <Compile Include="Criteria Models\NovelTrackerCriteria.cs" />
+    <Compile Include="Detail Models\GlossaryDetail.cs" />
+    <Compile Include="Detail Models\GroupDetail.cs" />
+    <Compile Include="Detail Models\ReleaseDetail.cs" />
+    <Compile Include="Detail Models\CommentDetail.cs" />
+    <Compile Include="Detail Models\ListDetail.cs" />
+    <Compile Include="Detail Models\UserDetail.cs" />
+    <Compile Include="Detail Models\TagDetail.cs" />
+    <Compile Include="Detail Models\SeriesDetail.cs" />
+    <Compile Include="Detail Models\ChapterDetail.cs" />
+    <Compile Include="Detail Models\NovelDetail.cs" />
+    <Compile Include="Form Models\GlossaryForm.cs" />
+    <Compile Include="Form Models\ReleasetForm.cs" />
+    <Compile Include="Form Models\ContentForm.cs" />
+    <Compile Include="Form Models\CommentForm.cs" />
+    <Compile Include="Form Models\RateForm.cs" />
+    <Compile Include="Form Models\ReadForm.cs" />
+    <Compile Include="Form Models\ListForm.cs" />
+    <Compile Include="Form Models\VoteForm.cs" />
+    <Compile Include="Form Models\TagForm.cs" />
+    <Compile Include="Form Models\ConnectorForm.cs" />
+    <Compile Include="Form Models\GenericForm.cs" />
+    <Compile Include="Form Models\GroupForm.cs" />
+    <Compile Include="Form Models\SeriesForm.cs" />
+    <Compile Include="Form Models\InlineEditForm.cs" />
+    <Compile Include="Form Models\ChapterForm.cs" />
+    <Compile Include="Form Models\NovelForm.cs" />
+    <Compile Include="Form Models\UserForm.cs" />
+    <Compile Include="Grid Models\CommentGrid.cs" />
+    <Compile Include="Grid Models\ReleaseGrid.cs" />
+    <Compile Include="Grid Models\SeriesGrid.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Criteria Models\TranslatorCriteria.cs" />
+    <Compile Include="Sort Extensions\SortGridExtension.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Paranovels.DataModels\Paranovels.DataModels.csproj">
+      <Project>{06a45be9-db3f-485b-bb9c-30f9d65e2f53}</Project>
+      <Name>Paranovels.DataModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Thi.Core\Thi.Core.csproj">
+      <Project>{849B2474-5273-4BF5-9A4A-35610F81216F}</Project>
+      <Name>Thi.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

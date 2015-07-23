@@ -1,0 +1,23 @@
+﻿.no-margin {
+    margin: 0 !important;
+}
+.no-padding {
+    padding: 0 !important;
+}
+
+.color-blue {
+    color: blue !important;
+}
+.color-green {
+    color: green !important;
+}
+.color-gold {
+    color: gold !important;
+}
+.color-red {
+    color: red !important;
+}
+
+.loaded {
+    display: none;
+}

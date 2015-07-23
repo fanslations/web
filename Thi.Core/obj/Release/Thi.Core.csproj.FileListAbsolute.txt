@@ -1,0 +1,12 @@
+D:\Projects\ParaNovels\Thi.Core\bin\Release\Thi.Core.dll.config
+D:\Projects\ParaNovels\Thi.Core\bin\Release\Thi.Core.dll
+D:\Projects\ParaNovels\Thi.Core\bin\Release\Thi.Core.pdb
+D:\Projects\ParaNovels\Thi.Core\bin\Release\EntityFramework.dll
+D:\Projects\ParaNovels\Thi.Core\bin\Release\EntityFramework.SqlServer.dll
+D:\Projects\ParaNovels\Thi.Core\bin\Release\Newtonsoft.Json.dll
+D:\Projects\ParaNovels\Thi.Core\bin\Release\EntityFramework.xml
+D:\Projects\ParaNovels\Thi.Core\bin\Release\EntityFramework.SqlServer.xml
+D:\Projects\ParaNovels\Thi.Core\bin\Release\Newtonsoft.Json.xml
+D:\Projects\ParaNovels\Thi.Core\obj\Release\Thi.Core.csprojResolveAssemblyReference.cache
+D:\Projects\ParaNovels\Thi.Core\obj\Release\Thi.Core.dll
+D:\Projects\ParaNovels\Thi.Core\obj\Release\Thi.Core.pdb

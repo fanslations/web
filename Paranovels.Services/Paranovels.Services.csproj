@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E8727304-24CD-4938-A9EC-5584CADF5DFB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Paranovels.Services</RootNamespace>
+    <AssemblyName>Paranovels.Services</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ConnectorService.cs" />
+    <Compile Include="GlossaryService.cs" />
+    <Compile Include="FeedService.cs" />
+    <Compile Include="ReleaseService.cs" />
+    <Compile Include="Novel Services\ChapterService.cs" />
+    <Compile Include="Novel Services\NovelService.cs" />
+    <Compile Include="QueryService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CommentService.cs" />
+    <Compile Include="ListService.cs" />
+    <Compile Include="TagService.cs" />
+    <Compile Include="GroupService.cs" />
+    <Compile Include="UserActionService.cs" />
+    <Compile Include="UserService.cs" />
+    <Compile Include="SeriesService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Paranovels.Common\Paranovels.Common.csproj">
+      <Project>{373b031c-5e05-427b-b90e-2fed1747aa5d}</Project>
+      <Name>Paranovels.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Paranovels.DataModels\Paranovels.DataModels.csproj">
+      <Project>{06a45be9-db3f-485b-bb9c-30f9d65e2f53}</Project>
+      <Name>Paranovels.DataModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Paranovels.ViewModels\Paranovels.ViewModels.csproj">
+      <Project>{fdd9257c-ac59-4869-9760-0b3adbb332c3}</Project>
+      <Name>Paranovels.ViewModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Thi.Core\Thi.Core.csproj">
+      <Project>{849b2474-5273-4bf5-9a4a-35610f81216f}</Project>
+      <Name>Thi.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

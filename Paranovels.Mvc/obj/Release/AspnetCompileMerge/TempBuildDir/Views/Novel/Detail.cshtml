@@ -1,0 +1,114 @@
+﻿@using Paranovels.ViewModels
+@using Thi.Core
+@model NovelDetail
+@{
+    ViewBag.Title = Model.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section js {
+    <script>
+        window.pnHooks.push(function () {
+            require(['jquery', 'angular', 'marked'], function ($, angular, marked) {
+                'use strict';
+
+                $('[data-marked').each(function () {
+                    $(this).html(marked('\n\n' + $(this).html())).addClass('animated fadeIn').show();
+                    console.log($(this).text());
+                    console.log(marked($(this).text()));
+                });
+            });
+        });
+    </script>
+}
+<section class="section">
+    <div class="header">
+        <a href="@Url.Action("Index")" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
+        <h1 class="title">
+            @Model.Title
+        </h1>
+    </div>
+    <div class="content">
+        <div class="detail-group improve-img">
+            <img src="@Model.ImageUrl.ToGoogleDriveImageUrl()" class="center-block img-responsive" title="@Model.Title's cover image" />
+            @Html.ImproveThis(m => m.ImageUrl)
+        </div>
+        <div class="detail-group">
+            <strong class="sr-only">Synopsis</strong>
+            <div>
+                @Model.Synopsis
+                @Html.ImproveThis(m => m.Synopsis)
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Total Chapter</strong>
+            <div>
+                @Html.Raw(Model.TotalChapter.FormatInt())
+                @Html.ImproveThis(m => m.TotalChapter)
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Released Date</strong>
+            <div>
+                @Html.Raw(Model.ReleasedDate.FormatDate())
+                @Html.ImproveThis(m => m.ReleasedDate)
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Completed Date</strong>
+            <div>
+                @Html.Raw(Model.CompletedDate.FormatDate())
+                @Html.ImproveThis(m => m.CompletedDate)
+            </div>
+        </div>
+    </div>
+</section>
+<br/>
+<section class="section">
+    <div class="header">
+        <ul class="" role="tablist">
+            <li role="presentation" class="active"><a href="#toc" aria-controls="toc" role="tab" data-toggle="tab">Table of contents</a></li>
+            <li role="presentation"><a href="#glossary" aria-controls="glossary" role="tab" data-toggle="tab">Glossary</a></li>
+        </ul>
+    </div>
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="toc">
+            <div id="addnewchapter" class="">
+                <form id="addchapter" method="post" action="@Url.Action("Form", "Chapter")">
+                    <div id="entry">
+                        <div class="form-group">
+                            <label id="labelnumber" for="number" class="arrow_box">Enter chapter number</label>
+                            <input id="number" name="number" type="text" class="form-control" placeholder="Enter chapter number" aria-labelledby="labelnumber">
+                        </div>
+                        <div class="form-group">
+                            <label id="labeltitle" for="title" class="arrow_box">Enter chapter title</label>
+                            <input id="title" name="title" type="text" class="form-control" placeholder="Enter chapter title" aria-labelledby="labeltitle">
+                        </div>
+                        <div class="form-group">
+                            <label id="labelcontent" for="content" class="arrow_box">Enter chapter content</label>
+                            <textarea id="content" name="content" class="form-control" rows="3" placeholder="Enter chapter content" aria-labelledby="labelcontent"></textarea>
+                        </div>
+                        <div class="hidden">
+                            <input type="hidden" name="NovelID" value="@Model.NovelID" />
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-plus-circle"></i>Add Novel</button>
+                            <button type="button" class="btn btn-default"><i class="fa fa-times-circle"></i>Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <ul class="list-unstyled">
+                @foreach (var chapter in Model.Chapters.OrderBy(o => o.Number))
+                {
+                    <li><a href="">Chapter @(chapter.Number). @chapter.Title</a></li>
+                }
+            </ul>
+
+        </div>
+        <div role="tabpanel" class="tab-pane" id="glossary">
+            .
+        </div>
+    </div>
+
+</section>

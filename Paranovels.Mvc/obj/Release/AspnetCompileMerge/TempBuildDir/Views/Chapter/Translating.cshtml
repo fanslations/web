@@ -1,0 +1,496 @@
+﻿@using System.Web.Razor.Parser
+@using Microsoft.Ajax.Utilities
+@using Thi.Core
+@using Thi.Web
+@model Paranovels.ViewModels.ChapterDetail
+@{
+    ViewBag.Title = "Translating";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var fromLanguage = new DetectLanguageDetector().Detect(Model.Contents.Select(s => s.Raw).FirstOrDefault(w => w.Length > 20));
+    var toLanguage = "en";
+}
+@section js {
+    <script>
+        window.pnHooks.push(function() {
+            require(['jquery', 'angular', 'ui/auto-resize', 'toastr'], function($, angular, autoResize, toastr) {
+                'use strict';
+
+                angular
+                    .module('transApp', [])
+                    .controller('TransController', TransController)
+                    .factory('translationService', translationService)
+                    .factory('segmentationService', segmentationService)
+                    .directive('paraTranslation', paraTranslation)
+                    .directive('fanLookup', fanLookup);
+
+                TransController.$inject = ['$scope', '$http', '$timeout', 'translationService', 'segmentationService'];
+
+                function TransController($scope, $http, $timeout, translationService, segmentationService) {
+                    var vm = this;
+
+                    vm.contents = @Html.Raw(JsonHelper.Serialize(Model.Contents));
+
+                    console.log('contents', vm.contents);
+                    vm.paragraph = vm.contents[0];
+                    vm.language = $('#translate').data('language');
+                    vm.glossary = { raw: "", final: "", definition: "", isLookup: false };
+                    console.log('language', vm.language, $('#translate').data('language'));
+                    // functions
+                    vm.segment = segment;
+                    vm.translate = translate;
+                    vm.sync = sync;
+                    vm.editing = editing;
+                    vm.save = save;
+                    vm.reset = reset;
+                    vm.close = close;
+
+                    function segment() {
+                        vm.originalSegments = segmentationService.segment(vm.chapter.content);
+                        vm.translatedSegments = segmentationService.segment(vm.chapter.content);
+                        //console.log(vm.segments);
+                        angular.forEach(vm.originalSegments, function(segment) {
+                            segment.isTranslating = true;
+                        });
+                    };
+
+                    function translate(p, event) {
+                        vm.paragraph.top = event.currentTarget.offsetTop;
+                        vm.paragraph.text = p.text;
+                        vm.paragraph.isTranslating = true;
+                        p.isTranslating = vm.paragraph.isTranslating;
+                        console.log('translate', p, event);
+                    }
+
+                    function editing(p, event) {
+                        angular.forEach(vm.contents, function(paragraph) {
+                            paragraph.isTranslating = false;
+                        });
+
+                        p.isTranslating = true;
+                        vm.paragraph = p;
+
+                        $('#translator').appendTo('#p' + p.Paragraph);
+                        console.log('editing', p, event);
+                    }
+
+                    function sync(p, event) {
+                        if (p.Final != event.currentTarget.innerText) {
+                            p._Final = p.Final;
+                            p.Final = event.currentTarget.innerText;
+                            p.isModified = true;
+                        }
+                        //vm.paragraph = null;
+                        console.log('sync', p, event);
+                    }
+
+                    function save(p, event) {
+                        if (p.isModified) {
+                            p.isModified = false;
+                            // save to server
+
+
+                            var http = $http.post('@Url.Action("Form", "Content")', { ID: p.ID, InlineEditProperty: "Final", Final: p.Final }, {
+
+                            }).success(function(responseData) {
+                                console.log(responseData);
+                            }).error(function(responseData) {
+                                console.log(responseData);
+                            });
+
+                        }
+                        close(p);
+                    };
+
+                    function reset(p, event) {
+                        if (p.isModified) {
+                            p.Final = p._Final;
+                            p.isModified = false;
+                        }
+                        close(p);
+                    };
+
+                    function close(p) {
+                        p.isTranslating = false;
+
+                    }
+
+                    $scope.$on('translator-save', function(event, data) {
+                        vm.save(data);
+                    });
+
+                    $scope.$on('translator-discard', function(event, data) {
+                        vm.reset(data);
+                    });
+                    $scope.$on('translator-lookup', function(event, data) {
+                        console.log('glossary before', vm.glossary, data);
+                        vm.glossary.raw = data;
+                        vm.glossary.isLookup = data != '';
+                        if (!$scope.$$phase) {
+                            $scope.$apply();
+                            $scope.$broadcast('add-glossary', vm.glossary);
+                        }
+                        console.log('glossary after', vm.glossary, data);
+                    });
+                    $scope.$on('translator-close', function(event, data) {
+                        vm.close(data);
+                    });
+
+                    $scope.$on('glossary-close', function(event, data) {
+                        vm.glossary.isLookup = false;
+                    });
+                };
+
+                segmentationService.$inject = ['$http'];
+
+                function segmentationService($http) {
+                    var service = {
+                        segment: segment
+                    };
+                    return service;
+
+                    function segment(text) {
+                        var segments = [];
+                        var paragraphs = text.split('\n');
+                        for (var i = 0; i < paragraphs.length; i++) {
+                            segments.push({
+                                line: i,
+                                text: paragraphs[i]
+                            });
+                        }
+                        return segments;
+                    };
+
+                };
+
+                translationService.$inject = ['$http', '$q'];
+
+                function translationService($http, $q) {
+                    var service = {
+                        translate: translate,
+                        addGlossary: addGlossary
+                    };
+                    return service;
+
+                    function translate(translator, id, text, language) {
+                        var deferred = $q.defer();
+
+                        if (translator.IsManual) {
+                            text = unescape(encodeURIComponent(text));
+                        }
+                        var http = $http.post('/translator/translate', { id: id, text: text, from: language.from, to: language.to, by: translator.ID, glossary: language.glossary }, {
+                            //headers: { 'Content-Type': 'application/form-data; charset=UTF-8' }
+
+                        }).success(function(responseData) {
+                            deferred.resolve(responseData);
+                        }).error(function() {
+                            deferred.reject('Failed to translate');
+                        });
+                        return deferred.promise;
+                    };
+
+                    function addGlossary(glossary) {
+                        var deferred = $q.defer();
+                        var http = $http.post('@Url.Action("Form", "Novel")', glossary, {
+                            //headers: { 'Content-Type': 'application/form-data; charset=UTF-8' }
+
+                        }).success(function(responseData) {
+                            deferred.resolve(responseData);
+                        }).error(function() {
+                            deferred.reject('Failed to save glossary');
+                        });
+                        return deferred.promise;
+                    };
+                };
+
+                paraTranslation.$inject = ['$interval', '$http', '$q', 'translationService'];
+
+                function paraTranslation($interval, $http, $q, translationService) {
+                    var directive = {
+                        restrict: 'A',
+                        //transclude: true,
+                        templateUrl: "/translator/angularviews/translator",
+                        scope: {
+                            paragraph: '=',
+                            language: '='
+                        },
+                        controller: function($scope) {
+                            console.log('controller', $scope);
+                            // define translators
+                            $scope.translators = @Html.Raw(JsonHelper.Serialize(TranslatorFactory.TranslatorList()));
+
+                            $scope.isGlobalDictionary = false;
+                            $scope.translations = [];
+                            // functions
+                            $scope.lookup = lookup;
+                            $scope.close = close;
+                            $scope.applyGlossary = applyGlossary;
+                            $scope.translate = translate;
+                            $scope.toggleTranslator = toggleTranslator;
+                            $scope.toggleGlobalDictionary = toggleGlobalDictionary;
+                            $scope.save = save;
+                            $scope.discard = discard;
+                            $scope.initialize = initialize;
+
+                            function initialize() {
+                                angular.forEach($scope.translators, function(translator) {
+                                    translator.isTranslated = false;
+                                    translator.text = '';
+                                });
+                                $scope.language.glossary = "100";
+                                $scope.lookup('');
+                                $scope.applyGlossary();
+                                $scope.translate();
+                            };
+
+                            function save() {
+                                console.log('save', $scope.paragraph);
+                                $scope.$emit('translator-save', $scope.paragraph);
+                            };
+
+                            function discard() {
+                                console.log('discard', $scope.paragraph);
+                                $scope.$emit('translator-discard', $scope.paragraph);
+                            };
+
+                            function close() {
+                                console.log('translator-close', $scope.paragraph);
+                                $scope.$emit('translator-close', $scope.paragraph);
+                            };
+
+                            function lookup(text) {
+                                console.log('translator-lookup', text);
+                                $scope.$emit('translator-lookup', text);
+                            }
+
+                            function toggleTranslator(translator) {
+                                //angular.forEach($scope.translators, function(translator) {
+                                //    if (translatorName == translator.Name) {
+                                //        translator.isSelected = !translator.isSelected;
+                                //        translator.text = 'Translating...';
+                                //    }
+                                //});
+                                //$scope.translate();
+                                translator.isSelected = !translator.isSelected;
+                                if (translator.isTranslated == false) {
+                                    translationService.translate(translator, @Model.NovelID, $scope.paragraph.Glossary, $scope.language)
+                                        .then(function(data) {
+                                                translator.text = data;
+                                            },
+                                            function(data) {
+                                                translator.text = data;
+                                            });
+                                    translator.isTranslated = true;
+                                } else {
+                                    translator.isTranslated = false;
+                                }
+                            };
+
+                            function applyGlossary() {
+
+                                var translator = $scope.translators[0];
+                                translator.isSelected = true;
+
+                                var oldGlossary = $scope.paragraph.Glossary;
+                                $scope.paragraph.Glossary = 'Translating...';
+
+                                translationService.translate(translator, @Model.NovelID, $scope.paragraph.Raw, $scope.language)
+                                    .then(function(data) {
+                                            $scope.paragraph.Glossary = data;
+                                            // re-translate when changes in glossary
+                                            if (oldGlossary != data) {
+                                                $scope.translate();
+                                            }
+                                        },
+                                        function(data) {
+                                            toastr["error"]('Failed to apply glossary.');
+                                            deferred.reject('Failed to apply glossary.');
+                                        });
+                            };
+
+                            function toggleGlobalDictionary() {
+                                $scope.isGlobalDictionary = !$scope.isGlobalDictionary;
+                                applyGlossary().then(function() {
+                                    console.log('glossary applied');
+                                    $scope.translate();
+                                });
+                            };
+
+                            function translate(f) {
+                                angular.forEach($scope.translators, function(translator) {
+                                    if (translator.isSelected) {
+                                        translationService.translate(translator, @Model.NovelID, $scope.paragraph.Glossary, $scope.language)
+                                            .then(function(data) {
+                                                    translator.text = data;
+                                                },
+                                                function(data) {
+                                                    translator.text = data;
+                                                });
+                                    }
+                                });
+
+                            };
+
+
+                        },
+                        link: function(scope, element, attr, ctrl) {
+                            console.log('link', scope, element, attr, ctrl);
+                            $('.desktop .raw').mouseup(function(e) {
+                                scope.lookup(getSelectedText());
+                                $(this).after($('#glossary'));
+                                $('#glossary').addClass('open');
+
+                            });
+
+                            $('.mobile .raw').on('touchend touchcancel', function(event) {
+                                var checkSelectedTextIntervalId = $interval(function() {
+                                    var selectedText = getSelectedText();
+                                    if (selectedText == '') {
+                                        $interval.stop(checkSelectedTextIntervalId);
+                                    } else {
+                                        scope.lookup(selectedText);
+                                        $(this).after($('#glossary'));
+                                        $('#glossary').addClass('open');
+                                    }
+                                }, 100);
+                            });
+
+                            function getSelectedText() {
+                                if (window.getSelection) {
+                                    return window.getSelection().toString();
+                                } else if (document.selection) {
+                                    return document.selection.createRange().text;
+                                }
+                                return '';
+                            }
+
+                            scope.$on('close', function(e) {
+                                scope.paragraph.isTranslating = false;
+                                console.log('on close');
+                            });
+
+                            scope.$watch('paragraph.Raw', function(val) {
+                                console.log('raw', val);
+                                scope.initialize();
+                            }, true);
+                            scope.$watch('paragraph', function(val) {
+                                var changes = {
+                                    top: (angular.element('#p' + (val.line)).position() || { top: 400 }).top - 20 + 'px',
+                                }
+                                //console.log('watch paragraph', val, changes, element, angular.element('#p' + (val.line)).position());
+                                //element.css();
+                                element.css(changes);
+                                //console.log('css before', element.css());
+                                //element.position({
+                                //    "my": "center",
+                                //    "at": "center",
+                                //    "of": "#p"+val.line
+                                //});
+                                //console.log('css', element.css());
+
+                            }, true);
+
+                        }
+                    };
+                    return directive;
+
+
+                }
+
+                fanLookup.$inject = ['$timeout', 'translationService'];
+
+                function fanLookup($timeout, translationService) {
+                    var directive = {
+                        restrict: 'A',
+                        //transclude: true,
+                        templateUrl: "/translator/angularviews/lookup",
+                        scope: {
+                            glossary: '=',
+                            language: '='
+                        },
+                        controller: function($scope) {
+
+                            $scope.add = add;
+                            $scope.close = close;
+                            $scope.loadDictionary = loadDictionary;
+
+                            function initialize() {
+                                $scope.loadDictionary();
+                            }
+
+                            function loadDictionary() {
+                                $('#dictionary').load('/translator/dictionary?from=' + $scope.language.from + '&text=' + $scope.glossary.raw, function(data) {
+                                    $('#dictionary > table').addClass('table table-condensed table-bordered table-striped');
+                                });
+                            }
+
+                            function add() {
+                                var novel = { ID: @Model.NovelID, InlineEditProperty: 'Glossaries', Glossaries: [$scope.glossary] };
+                                translationService.addGlossary(novel)
+                                    .then(function(data) {
+                                            toastr["success"]('Successful!');
+                                            $scope.close();
+                                            $timeout(function() {
+                                                $('#applyglossary').click();
+                                            });
+
+                                        },
+                                        function(data) {
+                                            toastr["error"](data);
+                                        });
+                            };
+
+                            function close() {
+                                //$scope.glossary.raw = '';
+                                console.log('close', $scope.glossary);
+                                $scope.glossary.raw = '';
+                                $scope.glossary.isLookup = false;
+                            };
+                        },
+                        link: function(scope, element, attr, ctrl) {
+                            scope.$watch('glossary', function(val) {
+                                console.log('glossary', val);
+
+                            }, true);
+                            scope.$watch('glossary.raw', function(val) {
+                                if (val != '') {
+                                    $timeout(function() {
+                                        scope.loadDictionary();
+                                    });
+                                }
+                            }, true);
+                        }
+                    };
+                    return directive;
+                }
+
+                // bootstrap angularjs
+                angular.bootstrap($('#transApp'), ['transApp']);
+                $('#transApp').show();
+                $('#loading').hide();
+                //autoResize.init();
+            }); // end require4
+
+        }); // end pnHook
+    </script>
+}
+
+<section class="section">
+    <div class="header">
+        <h1 class="title">
+            Translating - @Model.Title
+        </h1>
+    </div>
+    <div class="content">
+        <div id="loading">Loading...</div>
+        <div id="transApp" ng-controller="TransController as vm" style="display: none;">
+            <div id="translate" data-language='{"from": "@fromLanguage", "to":"@toLanguage"}'>
+                <div id="translator" class="" para-translation paragraph="vm.paragraph" language="vm.language" ng-show="vm.paragraph.isTranslating"></div>
+                <div id="glossary" draggable="true" fan-lookup glossary="vm.glossary" language="vm.language" ng-show="vm.glossary.isLookup"></div>
+                <div id="{{'p'+p.Paragraph}}" ng-class="{'translating' : p.isTranslating, 'modified': p.isModified}" ng-repeat="p in vm.contents" class="clearfix">
+                    <p title="paragraph #{{p.Paragraph}}" style="border: none; width: 100%; background-color: transparent;" ng-focus="vm.editing(p, $event)" ng-blur="vm.sync(p, $event)" ng-class="p.isTranslating ? '' : 'cursor-pointer'" contenteditable="true">{{p.Final}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

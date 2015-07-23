@@ -1,0 +1,129 @@
+﻿@using Paranovels.Common
+@using Paranovels.ViewModels
+@using Thi.Core
+@model Thi.Core.PagedList<Paranovels.ViewModels.ReleaseGrid>
+@{
+    var sortedModel = new SortedModel
+    {
+        Sorted = Request.QueryString["sorted"] ?? "new",
+        SortOptions = new Dictionary<string, string>
+        {
+            {"best", "best"},
+            {"reads", "most read"},
+            {"votes", "most voted"},
+            {"views", "most viewed"},
+            {"new", "new"},
+            {"old", "old"},
+            {"quality", "quality"},
+            {"top", "top voted"},
+        }
+    };
+}
+
+@helper DisplayRating(ReleaseGrid item)
+{
+    Func<ReleaseGrid, int, string> checkRating = (r, rating) =>
+    {
+        if (r.QualityCount.GetValueOrDefault() == 0) return "";
+        return (r.QualityScore / r.QualityCount) == rating ? "checked" : "data-a=" + ((double)r.QualityScore.GetValueOrDefault() / r.QualityCount.GetValueOrDefault());
+    };
+    <fieldset class="rating">
+        <legend class="sr-only">Translation Quality Rating</legend>
+        <input type="radio" id="star5-@(item.ID)" name="rating@(item.ID)" value="10" @checkRating(item, 10) />
+        <label class="full action rate" for="star5-@(item.ID)" title="Awesome - 5 stars" data-rate='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 10}'></label>
+        <input type="radio" id="star4half-@(item.ID)" name="rating@(item.ID)" value="9" @checkRating(item, 9) />
+        <label class="half action rate" for="star4half-@(item.ID)" title="Pretty good - 4.5 stars" data-rate='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 9}'></label>
+        <input type="radio" id="star4-@(item.ID)" name="rating@(item.ID)" value="8" @checkRating(item, 8) />
+        <label class="full action rate" for="star4-@(item.ID)" title="Pretty good - 4 stars" data-rate='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 8}'></label>
+        <input type="radio" id="star3half-@(item.ID)" name="rating@(item.ID)" value="7" @checkRating(item, 7) />
+        <label class="half action rate" for="star3half-@(item.ID)" title="Meh - 3.5 stars" data-rate='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 7}'></label>
+        <input type="radio" id="star3-@(item.ID)" name="rating@(item.ID)" value="6" @checkRating(item, 6) />
+        <label class="full action rate" for="star3-@(item.ID)" title="Meh - 3 stars" data-rate='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 6}'></label>
+        <input type="radio" id="star2half-@(item.ID)" name="rating@(item.ID)" value="5" @checkRating(item, 5) />
+        <label class="half action rate" for="star2half-@(item.ID)" title="Kinda bad - 2.5 stars" data-rate='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 5}'></label>
+        <input type="radio" id="star2-@(item.ID)" name="rating@(item.ID)" value="4" @checkRating(item, 4) />
+        <label class="full action rate" for="star2-@(item.ID)" title="Kinda bad - 2 stars" data-rate='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 4}'></label>
+        <input type="radio" id="star1half-@(item.ID)" name="rating@(item.ID)" value="3" @checkRating(item, 3) />
+        <label class="half action rate" for="star1half-@(item.ID)" title="Meh - 1.5 stars" data-rate='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 3}'></label>
+        <input type="radio" id="star1-@(item.ID)" name="rating@(item.ID)" value="2" @checkRating(item, 2) />
+        <label class="full action rate" for="star1-@(item.ID)" title="Sucks big time - 1 star" data-rate='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 2}'></label>
+        <input type="radio" id="starhalf-@(item.ID)" name="rating@(item.ID)" value="1" @checkRating(item, 1) />
+        <label class="half action rate" for="starhalf-@(item.ID)" title="Sucks big time - 0.5 stars" data-rate='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 1}'></label>
+    </fieldset>
+}
+
+@helper DisplayGrid(ReleaseGrid item)
+{
+    <li class="row-list">
+        <div class="col-first">
+            <div class="vote @(item.Voted.GetValueOrDefault() == 1 ? "likes" : item.Voted.GetValueOrDefault() == -1 ? "dislikes" : "")">
+                <div class="action vote-up" data-vote='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Vote": 1}'><i class="fa fa-chevron-up"></i></div>
+                <div class="score @((item.VoteUp + item.VoteDown) < 0 ? "dislikes" : "likes")">@(item.VoteUp.GetValueOrDefault() + item.VoteDown.GetValueOrDefault())</div>
+                <div class="action vote-down" data-vote='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Vote": -1}'><i class="fa fa-chevron-down"></i></div>
+            </div>
+            <div class="read @(item.IsRead ? "yes" : "no")" title="@(item.IsRead ? "Your already read this release" : "Mark this as read")">
+                <div class="action read" data-read='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE}'><i class="fa @("fa-check")"></i></div>
+            </div>
+        </div>
+        <div class="col-content">
+            <div class="fs-12em">
+                <a href="@Url.Action("Out", "Release", new { ID = item.ReleaseID, Url = item.Url, Seo = item.Title.ToSeo() })">@item.Title</a>
+                @if (item.Series == null)
+                {
+                    @item.ImproveThis(m => m.Title, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Release") } })
+                }
+            </div>
+            <ul class="list-unstyled list-inline fs-09em">
+                <li title="Release Date"><i class="fa fa-clock-o"></i><time class="timeago" datetime="@item.Date">@item.Date</time></li>
+                <li title="Comments"><i class="fa fa-comments-o"></i><a href="@Url.Action("Detail", "Release", new { ID = item.ReleaseID, Seo = item.Title.ToSeo() })#comments">@item.CommentCount.GetValueOrDefault() comments</a></li>
+                <li title="Translation Quality Rating"><i class="fa fa-diamond" title="@(item.QualityRated == 0 ? "You haven't  rated this" : string.Format("You rated {0:0.0} star(s)", item.QualityRated / 2))"></i>@DisplayRating(item)</li>
+                @if (item.Series != null)
+                {
+                    <li title="Series Title">
+                        <i class="fa fa-book"></i><a href="@Url.Action("Detail","Series", new{ ID= item.Series.ID, Seo = item.Series.Title.ToSeo()})">@item.Series.Title</a>
+                    </li>
+                }
+                @if (item.Group != null)
+                {
+                    <li title="Translations Group">
+                        <i class="fa fa-group"></i><a href="@Url.Action("Detail","Group", new{ ID= item.Group.ID, Seo = item.Group.Name.ToSeo()})">@item.Group.Name</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </li>
+}
+
+<div class="content">
+    @{
+        Html.RenderPartial("_Sorted", sortedModel);
+    }
+</div>
+@{
+    var shouldGroupByDate = sortedModel.Sorted == "new" || sortedModel.Sorted == "old";
+
+    if (shouldGroupByDate)
+    {
+        foreach (var date in Model.Data.GroupBy(g => g.Date.Date).Select(s => s.Key))
+        {
+            <div class="subheader @(date == DateTime.Now.Date ? "hidden" : "")">
+                <h2 class="title">@date.ToLongDateString()</h2>
+            </div>
+            <ul class="grid">
+                @foreach (var item in Model.Data.Where(w => w.Date.Date == date))
+                {
+                    @DisplayGrid(item);
+                }
+            </ul>
+        }
+    }
+    else
+    {
+        <ul class="grid">
+            @foreach (var item in Model.Data)
+            {
+                @DisplayGrid(item);
+            }
+        </ul>
+    }
+}

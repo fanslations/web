@@ -1,0 +1,12 @@
+﻿.device {
+    margin: 0 auto;
+}
+
+    .device.desktop {
+        max-width: 960px;
+    }
+
+    .device.mobile {
+        max-width: 100%;
+        
+    }

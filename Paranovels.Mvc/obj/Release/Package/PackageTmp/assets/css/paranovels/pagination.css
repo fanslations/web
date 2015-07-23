@@ -1,0 +1,81 @@
+﻿.pagination-container {
+    text-align: center;
+}
+
+.pagination {
+    width: 100%;
+    margin: 0px;
+}
+
+    .pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+        background-color: #2e6ca2 !important;
+        border-color: #2e6ca2 !important;
+    }
+
+    .pagination > li > a {
+        color: #003478;
+    }
+
+        .pagination > li > a.active {
+            color: #ffffff;
+        }
+
+
+    .pagination li.disabled a {
+        pointer-events: none;
+        cursor: not-allowed;
+        color: #ccc;
+    }
+
+    .pagination li.previous {
+        float: left;
+    }
+
+        .pagination li.previous a {
+            border-radius: 0 5px 5px 0;
+            cursor: pointer !important;
+        }
+
+    .pagination li.next {
+        float: right;
+    }
+
+        .pagination li.next a {
+            border-radius: 5px 0 0 5px;
+            cursor: pointer !important;
+        }
+
+    .pagination > li {
+        display: inline-block !important;
+    }
+
+        .pagination > li.dropdown-open {
+            position: relative !important;
+        }
+
+        .pagination > li > .dropdown-switcher {
+            cursor: pointer !important;
+        }
+
+        .pagination > li.dropdown-open > .dropdown-switcher > i {
+            color: #bb3300;
+        }
+
+        .pagination > li.dropdown-open > .dropdown-container {
+            display: block !important;
+            opacity: 1;
+            z-index: 10;
+            transition: 1s;
+        }
+
+        .pagination > li > .dropdown-container {
+            background-color: #2e6ca2;
+            border-radius: 0px 0px 3px 3px;
+            display: none;
+            opacity: 0;
+            transition: 1s;
+            position: absolute;
+            bottom: -75px;
+            padding: 5px 10px;
+            z-index: -1;
+        }

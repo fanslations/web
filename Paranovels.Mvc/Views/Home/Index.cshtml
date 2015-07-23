@@ -1,0 +1,43 @@
+﻿@using Paranovels.Common
+@using Paranovels.DataModels
+@using Paranovels.ViewModels
+@using Thi.Core
+@{
+    ViewBag.Title = "Latest Releases and News";
+
+    var releases = ViewBag.Releases as PagedList<ReleaseGrid> ?? new PagedList<ReleaseGrid>();
+}
+
+@section CurrentMenu
+{
+    <section class="menu-section">
+        <h2 class="menu-section-title">Current</h2>
+        <ul class="menu-section-list">
+            <li><a href="@Url.Action("Index", "Release", new { Do = "add" })"><i class="fa fa-plus"></i>Add a release</a></li>
+            <li><a href="@Url.Action("Index", "Series", new { Do = "add" })"><i class="fa fa-plus"></i>Add a series</a></li>
+            <li><a href="@Url.Action("Index", "Group", new { Do = "add" })"><i class="fa fa-plus"></i>Add a group</a></li>
+        </ul>
+    </section>
+}
+@*<section class="section">
+        <div class="header">
+            <h2 class="title">
+                <i class="fa fa-newspaper-o"></i>News
+            </h2>
+        </div>
+        <div class="content">
+            <div>
+                <span>@DateTime.Now.FormatDate()</span> - Switch to working on the translator (<a href="@Url.Action("Translating", "Chapter", new{ID = 3, Seo = "Testing"})">demo</a>) part now.
+                I'm still collecting ideals on how to make the tracker better. If you have suggestions feel free to let me know by clicking on "<a class="cursor-pointer" onclick="$('#doorbell-button').click()">Feedback</a>" to send me your ideas.
+            </div>
+        </div>
+    </section>*@
+<section class="section">
+    <div class="header">
+        <h1 class="title">
+            <i class="fa fa-rss-square"></i>Latest Releases
+        </h1>
+    </div>
+    @{ Html.RenderPartial("~/Views/Release/_Release.cshtml", releases); }
+    <p><a href="@Url.Action("Index", "Release", new { pi = 2, ps = 50, ob = "Date desc" })" class="btn btn-primary btn-block"><i class="fa fa-history"></i>View Older Releases</a></p>
+</section>

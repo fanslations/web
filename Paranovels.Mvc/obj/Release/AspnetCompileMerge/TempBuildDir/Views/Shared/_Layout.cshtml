@@ -1,0 +1,124 @@
+﻿@using Microsoft.AspNet.Identity
+@using Thi.Core
+
+@{
+    var device = WebHelper.GetClientDevice();
+}
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <title>@(ViewBag.Title ?? "Home") - Fanslations</title>
+    <meta name="description" content="@(ViewBag.Description ?? "Translating light novels, web novels from other languages to English. Fanslations also aggregated new releases from other translations group for easier access.")">
+    @Html.Partial("_LayoutHeader", new { Portal = "public" })
+    @RenderSection("css", required: false)
+</head>
+<body class="device @device">
+    <header class="fs-12em" role="banner">
+        <div class="global">
+            <ul class="global-left">
+                <li class="">
+                    <a class="fs-16em slideout"><i class="fa fa-bars"></i></a>
+                </li>
+                <li><a class="logo" href="/">Fanslations</a></li>
+            </ul>
+            <ul class="global-right">
+                @if (Request.IsAuthenticated)
+                {
+                    <li>
+                        <a href="@Url.Action("Manage", "Account")"><i class="fa fa-user"></i>@User.Identity.GetUserName()</a>
+                    </li>
+                }
+                else
+                {
+                    <li><a href="/account/login/" id="loginLink"><i class="fa fa-user"></i>LOG IN | SIGN UP</a></li>
+                }
+            </ul>
+        </div>
+
+    </header>
+    @*<nav id="menu2" class="menu slideout-menu">
+
+            <section class="menu-section">
+                <h2 class="menu-section-title">Main</h2>
+                <ul class="menu-section-list">
+                    <li><a href="/"><i class="fa fa-home"></i>Home</a></li>
+                    <li><a href="@Url.Action("Index", "Project")">Projects</a></li>
+                    <li><a href="@Url.Action("Index", "Release", new { ps = 50 })">Releases</a></li>
+                    <li><a href="@Url.Action("Index", "Series")">Series</a></li>
+                    <li><a href="@Url.Action("Index", "Group")">Groups</a></li>
+                    <li><a href="@Url.Action("List", "Tag", new { id = 3, Seo = "categories" })">Categories</a></li>
+                    <li><a href="@Url.Action("List", "Tag", new { id = 2, Seo = "geners" })">Genres</a></li>
+                </ul>
+            </section>
+            <section class="menu-section">
+                <h2 class="menu-section-title">Members</h2>
+                <ul class="menu-section-list">
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li>
+                            <a href="@Url.Action("Manage", "Account")"><i class="fa fa-user"></i>Settings</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li><a href="/account/login/" id="loginLink"><i class="fa fa-user"></i>LOG IN</a></li>
+                    }
+                </ul>
+            </section>
+        </nav>*@
+
+    <main role="main">
+        <div id="panel">
+            @RenderBody()
+        </div>
+        <nav id="menu" class="side-menu">
+            @RenderSection("CurrentMenu", false)
+            <section class="menu-section">
+                <h2 class="menu-section-title">Main</h2>
+                <ul class="menu-section-list">
+                    <li><a href="/"><i class="fa fa-home"></i>Home</a></li>
+                    <li><a href="@Url.Action("Index", "Project")"><i class="fa fa-lightbulb-o"></i>Projects</a></li>
+                    <li><a href="@Url.Action("Index", "Release", new { ps = 50 })"><i class="fa fa-rss-square"></i>Releases</a></li>
+                    <li><a href="@Url.Action("Index", "Series")"><i class="fa fa-book"></i>Series</a></li>
+                    <li><a href="@Url.Action("Index", "Group")"><i class="fa fa-group"></i>Groups</a></li>
+                    <li><a href="@Url.Action("List", "Tag", new { id = 3, Seo = "categories" })">Categories</a></li>
+                    <li><a href="@Url.Action("List", "Tag", new { id = 2, Seo = "geners" })">Genres</a></li>
+                </ul>
+            </section>
+            <section class="menu-section">
+                <h2 class="menu-section-title">Members</h2>
+                <ul class="menu-section-list">
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li>
+                            <a href="@Url.Action("Manage", "Account")"><i class="fa fa-user"></i>Settings</a>
+                            <a href="@Url.Action("Index", "UserList")"><i class="fa fa-list"></i>My Lists</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li><a href="/account/login/" id="loginLink"><i class="fa fa-sign-in"></i>LOG IN</a></li>
+                    }
+                </ul>
+            </section>
+        </nav>
+    </main>
+
+    <footer class="" role="contentinfo">
+        <ul class="list-unstyled list-inline no-margin">
+            <li>&copy; @DateTime.Now.Year Fanslations</li>
+            <li class="divider divider-black divider-pipe"></li>
+            <li>About</li>
+            <li class="divider divider-black divider-pipe"></li>
+            <li>Contact</li>
+            <li class="divider divider-black divider-pipe"></li>
+            <li>Help</li>
+            <li class="pull-right small">This page take <span id="client-load-time">0</span> second(s) to load.</li>
+        </ul>
+        <small>Please support the authors and publishers by purchasing the books from official avenues when they are available in your locale.</small>
+    </footer>
+    <div id="ajaxstatus" style="display: none; position: fixed; bottom: 0px; padding: 0px 5px; background-color: #cb490c; color: #FFFFFF; font-size: smaller; width: 100% !important;">Please wait...</div>
+    @Html.Partial("_LayoutFooter", new { Portal = "public" })
+    @RenderSection("js", required: false)
+</body>
+</html>

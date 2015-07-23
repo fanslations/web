@@ -1,0 +1,173 @@
+﻿<#@ template debug="true" hostSpecific="true" language="C#" #>
+<#@ output extension=".generated.cs" #>
+<#@ Assembly Name="EnvDTE" #>
+<#@ Assembly Name="System.Data" #>
+<#@ Assembly name="System.Core" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="System.Data" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#
+    // config server and fields
+    string templateName = Path.GetFileNameWithoutExtension(Host.TemplateFile);
+    string tableName = "StaticResource"; 
+    string orderBy= "ClassName, PropertyName";
+    string path = Path.GetDirectoryName(Host.TemplateFile);
+    string connectionString = "Data Source=database.fanslations.com;Initial Catalog=Thi;Persist Security Info=True;User ID=thi;Password=a31081804;MultipleActiveResultSets=True"; 
+	
+	var translateDatas = new List<TranslateData>();
+    
+	// Get containing project
+    IServiceProvider serviceProvider = (IServiceProvider)Host;
+    DTE dte = (DTE)serviceProvider.GetService(typeof(DTE));
+    Project project = dte.Solution.FindProjectItem(Host.TemplateFile).ContainingProject;
+
+#>
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+
+namespace <#=  project.Properties.Item("DefaultNamespace").Value #> //<#= Path.GetDirectoryName(Host.TemplateFile).Remove(0, Path.GetDirectoryName(project.FileName).Length).Replace("\\", ".") #>
+{
+    /// <summary>
+    /// This class contains resources and system settings.
+    /// </summary>
+    public partial class R
+    {
+<#
+
+    using(SqlConnection conn = new SqlConnection(connectionString))
+	{
+		conn.Open();
+		string command = string.Format("SELECT * FROM {0} ORDER BY {1}", tableName, orderBy);
+		SqlCommand comm = new SqlCommand(command, conn);
+		SqlDataReader reader = comm.ExecuteReader();
+
+		while(reader.Read())
+		{
+			translateDatas.Add(new TranslateData {
+													ClassName = reader["ClassName"].ToString(),
+													PropertyType = reader["PropertyType"].ToString(),
+													PropertyName = reader["PropertyName"].ToString(),
+													PropertyValue = reader["PropertyValue"].ToString(),
+													TranslationValue = reader["TranslationValue"].ToString(),
+												 });
+		}
+		reader.Dispose();	    
+	}
+
+    foreach (var className in translateDatas.GroupBy(g=>g.ClassName).Select(s=>s.Key)) // start foreach2
+    {
+		// handle enum
+		if(className.EndsWith("Enum"))
+		{
+#>
+		/// <summary>
+        /// <#= className.Replace("Enum","") #> auto generated enum.
+        /// </summary>
+		public enum <#= className.Replace("Enum","") #>
+		{
+<#
+			foreach (var data in translateDatas.Where(w=>w.ClassName == className))
+			{
+#>
+			/// <summary><#= data.TranslationValue #></summary>
+			[Description("<#= data.TranslationValue #>")]
+			<#= Format(data.PropertyName) #> = <#= data.PropertyValue #>,
+
+<#
+			} 
+#>
+		}
+<#
+		}
+		else
+		{
+
+#>
+        /// <summary>
+        /// <#= className #> auto generated class.
+        /// </summary>
+        public partial class <#= className #> 
+        {		
+<#
+			foreach (var data in translateDatas.Where(w=>w.ClassName == className))
+			{
+				
+#>
+			/// <summary>
+			/// <#= data.TranslationValue #>
+			/// </summary>
+			[Description("<#= data.TranslationValue #>")]
+<#
+				if(data.PropertyType.ToLower().Contains("string"))
+				{
+#>
+			public const <#= data.PropertyType #> <#= Format(data.PropertyName) #> = "<#= data.PropertyValue #>";
+<#
+				}
+				else
+				{
+#>
+			public const <#= data.PropertyType #> <#= Format(data.PropertyName) #> = <#= data.PropertyValue #>;
+				
+<#           
+				}
+			}
+#>
+			
+			public const string ClassName = "<#= className #>";
+			public static readonly Dictionary<<#= translateDatas.Where(w=>w.ClassName == className).First().PropertyType #>,string> Translate = new Dictionary<<#= translateDatas.Where(w=>w.ClassName == className).First().PropertyType #>,string> {
+			<#
+				foreach (var data in translateDatas.Where(w=>w.ClassName == className))
+				{
+			#>
+				<#
+				if(data.PropertyType.ToLower().Contains("string"))
+				{
+				#>
+					{"<#= data.PropertyValue #>","<#= data.TranslationValue #>"},
+				<#
+				}
+				else
+				{
+				#>
+					{<#= data.PropertyValue #>,"<#= data.TranslationValue #>"},
+				<#
+				}
+				#>			
+			<#
+				}
+			#>
+			}; // end translate dictionary
+        }	
+<#
+		}
+    } // end foreach2
+
+#>             
+    }
+}
+ 
+
+<#+
+
+    private string Format(object value)
+    {
+        return value.ToString().Replace(" ","_").Replace("-","_").Replace(",","").Replace("'","_").Replace("&","_").Replace(".","").Replace("(","").Replace(")","").ToUpper();
+    }
+
+	public class TranslateData
+	{
+		public string ClassName { get; set;}
+		public string PropertyType { get; set; }
+		public string PropertyName { get; set; }
+		public string PropertyValue { get; set; }
+		public string TranslationValue { get; set; }
+	}
+
+#>
+

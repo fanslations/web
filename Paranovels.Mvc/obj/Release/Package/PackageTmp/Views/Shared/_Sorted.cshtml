@@ -1,0 +1,29 @@
+﻿@using Paranovels.Common
+@using Thi.Core
+@model SortedModel
+
+@{
+    var queryStrings = Request.QueryString.AllKeys.Where(w => w != "sorted");
+}
+<div>
+    <form class="form-inline" role="search" method="GET" action="@Request.RawUrl">
+        <div class="hidden">
+            @foreach (var item in queryStrings)
+            {
+                <input type="hidden" name="@item" value="@Request.QueryString[item]"/>
+            }
+        </div>
+        <label for="sorted">
+            Sorted by
+        </label>
+            <select id="sorted" name="sorted" class="action submit">
+                @foreach (var item in Model.SortOptions)
+                {
+                    <option value="@item.Key" @(Model.Sorted == item.Key ? "selected" : "")>@item.Value</option>
+                }
+            </select>
+        <noscript>
+            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+        </noscript>
+    </form>
+</div>

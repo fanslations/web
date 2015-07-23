@@ -1,0 +1,15 @@
+D:\Projects\ParaNovels\Paranovels.ViewModels\bin\Release\Paranovels.ViewModels.dll
+D:\Projects\ParaNovels\Paranovels.ViewModels\bin\Release\Paranovels.ViewModels.pdb
+D:\Projects\ParaNovels\Paranovels.ViewModels\bin\Release\Paranovels.DataModels.dll
+D:\Projects\ParaNovels\Paranovels.ViewModels\bin\Release\Thi.Core.dll
+D:\Projects\ParaNovels\Paranovels.ViewModels\bin\Release\EntityFramework.dll
+D:\Projects\ParaNovels\Paranovels.ViewModels\bin\Release\Newtonsoft.Json.dll
+D:\Projects\ParaNovels\Paranovels.ViewModels\bin\Release\EntityFramework.SqlServer.dll
+D:\Projects\ParaNovels\Paranovels.ViewModels\bin\Release\Paranovels.DataModels.pdb
+D:\Projects\ParaNovels\Paranovels.ViewModels\bin\Release\Thi.Core.pdb
+D:\Projects\ParaNovels\Paranovels.ViewModels\bin\Release\EntityFramework.xml
+D:\Projects\ParaNovels\Paranovels.ViewModels\bin\Release\Newtonsoft.Json.xml
+D:\Projects\ParaNovels\Paranovels.ViewModels\bin\Release\EntityFramework.SqlServer.xml
+D:\Projects\ParaNovels\Paranovels.ViewModels\obj\Release\Paranovels.ViewModels.csprojResolveAssemblyReference.cache
+D:\Projects\ParaNovels\Paranovels.ViewModels\obj\Release\Paranovels.ViewModels.dll
+D:\Projects\ParaNovels\Paranovels.ViewModels\obj\Release\Paranovels.ViewModels.pdb

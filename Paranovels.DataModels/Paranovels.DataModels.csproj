@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{06A45BE9-DB3F-485B-BB9C-30F9D65E2F53}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Paranovels.DataModels</RootNamespace>
+    <AssemblyName>Paranovels.DataModels</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Generated\Author.generated.cs" />
+    <Compile Include="Generated\Chapter.generated.cs" />
+    <Compile Include="Generated\Connector.generated.cs" />
+    <Compile Include="Generated\Content.generated.cs" />
+    <Compile Include="Generated\Feed.generated.cs" />
+    <Compile Include="Generated\Glossary.generated.cs" />
+    <Compile Include="Generated\Group.generated.cs" />
+    <Compile Include="Generated\Novel.generated.cs" />
+    <Compile Include="Generated\NovelTrackerGrid.generated.cs" />
+    <Compile Include="Generated\Release.generated.cs" />
+    <Compile Include="Generated\Series.generated.cs" />
+    <Compile Include="Generated\StaticResource.generated.cs" />
+    <Compile Include="Generated\Summarize.generated.cs" />
+    <Compile Include="Generated\Tag.generated.cs" />
+    <Compile Include="Generated\User.generated.cs" />
+    <Compile Include="Generated\UserComment.generated.cs" />
+    <Compile Include="Generated\UserList.generated.cs" />
+    <Compile Include="Generated\UserRate.generated.cs" />
+    <Compile Include="Generated\UserRead.generated.cs" />
+    <Compile Include="Generated\UserView.generated.cs" />
+    <Compile Include="Generated\UserVote.generated.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ST4bby.View.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ST4bby.View.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ST4bby1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ST4bby.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ST4bby.Config.ttinclude" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ST4bby.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ST4bby1.cs</LastGenOutput>
+    </Content>
+    <Content Include="ST4bby.View.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ST4bby.View.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Thi.Core\Thi.Core.csproj">
+      <Project>{849B2474-5273-4BF5-9A4A-35610F81216F}</Project>
+      <Name>Thi.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

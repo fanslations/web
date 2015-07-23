@@ -1,0 +1,5 @@
+D:\Projects\ParaNovels\Paranovels.Common\bin\Release\Paranovels.Common.dll
+D:\Projects\ParaNovels\Paranovels.Common\bin\Release\Paranovels.Common.pdb
+D:\Projects\ParaNovels\Paranovels.Common\obj\Release\Paranovels.Common.csprojResolveAssemblyReference.cache
+D:\Projects\ParaNovels\Paranovels.Common\obj\Release\Paranovels.Common.dll
+D:\Projects\ParaNovels\Paranovels.Common\obj\Release\Paranovels.Common.pdb

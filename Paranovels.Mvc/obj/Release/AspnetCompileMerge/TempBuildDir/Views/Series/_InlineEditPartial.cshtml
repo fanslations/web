@@ -1,0 +1,163 @@
+﻿@using Paranovels.Common
+@using Paranovels.ViewModels
+@using Thi.Core
+@model InlineEditForm<SeriesDetail>
+@{
+    Layout = null;
+}
+<div id="@(Model.InlineEditProperty)Container" class="inline-editor">
+    <form id="@(Model.InlineEditProperty)Form" method="post" action="@Url.Action("Form")" enctype="multipart/form-data">
+        <div class="form-group">
+            @if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Status))
+            {
+                <fieldset class="form-control">
+                    <legend class="sr-only">Status</legend>
+                    @foreach (var status in R.TranslationStatus.Translate)
+                    {
+                        <div class="radio">
+                            <label>
+                                <input id="status-@status.Key" type="radio" name="@Model.InlineEditProperty" value="@status.Key" checked="@(Model.Model.Status == status.Key)" required />
+                                @status.Value
+                            </label>
+                        </div>
+                    }
+                </fieldset>
+            }
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.RawLanguage))
+            {
+                <fieldset class="form-control">
+                    <legend class="sr-only">Language</legend>
+                    @foreach (var item in R.Language.Translate)
+                    {
+                        <div class="radio">
+                            <label>
+                                <input id="status-@item.Key" type="radio" name="@Model.InlineEditProperty" value="@item.Key" checked="@(Model.Model.RawLanguage == item.Key)" required />
+                                @item.Value
+                            </label>
+                        </div>
+                    }
+                </fieldset>
+            }
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Genres))
+            {
+                var json = new WebClient().DownloadString(Request.Url.GetLeftPart(UriPartial.Authority) + "/query/genres");
+                var tags = JsonHelper.Deserialize<List<TagDetail>>(json);
+
+                <fieldset class="form-control">
+                    <legend class="sr-only">Genres</legend>
+                    @foreach (var tag in tags.OrderBy(o=>o.Name))
+                    {
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="@Model.InlineEditProperty" value="@tag.ID" aria-describedby="description-@tag.ID" checked="@Model.Model.Genres.Any(w=>w.ID == tag.ID)" />
+                                <strong>@tag.Name</strong> – <span id="description-@tag.ID">@tag.Description</span>
+                            </label>
+
+                        </div>
+                    }
+                    <div class="checkbox">
+                        <a href="@Url.Action("List", "Tag", new { ID = R.TagType.NOVEL_GENRE, Seo = Model.InlineEditProperty.ToSeo(), ReturnUrl = Request.UrlReferrer })"><i class="fa fa-plus"></i> Add new genre</a>
+                    </div>
+                </fieldset>
+            }
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Categories))
+            {
+                var json = new WebClient().DownloadString(Request.Url.GetLeftPart(UriPartial.Authority) + "/query/categories");
+                var tags = JsonHelper.Deserialize<List<TagDetail>>(json);
+
+                <fieldset class="form-control">
+                    <legend class="sr-only">Categories</legend>
+                    @foreach (var tag in tags.OrderBy(o => o.Name))
+                    {
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="@Model.InlineEditProperty" value="@tag.ID" aria-describedby="description-@tag.ID" checked="@Model.Model.Categories.Any(w => w.ID == tag.ID)" />
+                                <strong>@tag.Name</strong> – <span id="description-@tag.ID">@tag.Description</span>
+                            </label>
+                        </div>
+                    }
+                    <div class="checkbox">
+                        <a href="@Url.Action("List", "Tag", new { ID = R.TagType.NOVEL_CATEGORY, Seo = Model.InlineEditProperty.ToSeo(), ReturnUrl = Request.UrlReferrer })"><i class="fa fa-plus"></i> Add new category</a>
+                    </div>
+                </fieldset>
+             
+            }
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.GroupID))
+            {
+                <script>
+
+                    //window.pnHooks.push(function () {
+                    require(['jquery', 'selectize'], function ($, selectize) {
+                        'use strict';
+
+                        console.log($, selectize);
+                        $('#groupid').selectize({
+                            valueField: 'GroupID',
+                            labelField: 'Name',
+                            searchField: 'Name',
+                            create: false,
+                            render: {
+                                option: function (item, escape) {
+                                    return '<div>' +
+                                        '<strong class="title">' + item.Name + '</strong>' +
+                                        '<p class="description">' + escape(item.Url) + '</p>' +
+                                        '</div>';
+                                }
+                            },
+                            load: function (query, callback) {
+                                if (!query.length) return callback();
+                                $.ajax({
+                                    url: '/query/groups?query=' + encodeURIComponent(query),
+                                    type: 'GET',
+                                    error: function () {
+                                        callback();
+                                    },
+                                    success: function (res) {
+                                        callback(res);
+                                    }
+                                });
+                            }
+                        });
+                    });
+                    //});
+                </script>
+                <label for="groupid" class="sr-only">Select Translations Group</label>
+                <select id="groupid" name="@Model.InlineEditProperty" placeholder="Select Group" required></select>
+
+            }
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.ImageUrl))
+            {
+                <label>
+                    <input type="file" name="image" required />
+                </label>
+                <input type="hidden" name="ImagePath" value="/Fanslations/Novels/@Model.Model.Title.ToSeo()" />
+            }
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Synopsis))
+            {
+                <label for="@Model.InlineEditProperty" class="sr-only">@Model.InlineEditProperty</label>
+                <textarea id="@Model.InlineEditProperty" class="form-control" rows="2" name="@Model.InlineEditProperty" required>@Model.Model.Synopsis</textarea>
+
+            }
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.RawUrl))
+            {
+                <label for="@Model.InlineEditProperty" class="sr-only">Raw Source Url</label>
+                <input id="@Model.InlineEditProperty" type="url" class="form-control" name="@Model.InlineEditProperty" required value="@Model.Model.RawUrl" />
+            }
+            else
+            {
+                <label>
+                    <input type="text" class="form-control" name="@Model.InlineEditProperty" required />
+                </label>
+            }
+        </div>
+        <div class="hidden">
+            <input type="hidden" name="ID" value="@Model.ID" />
+            <input type="hidden" name="InlineEditProperty" value="@Model.InlineEditProperty" />
+        </div>
+        <div class="form-group clearfix">
+            <button id="@(Model.InlineEditProperty)Submit" type="submit" class="btn btn-primary"><i class="fa fa-check-circle"></i>Submit</button>
+
+            <button id="@(Model.InlineEditProperty)Cancel" type="button" class="btn btn-default"><i class="fa fa-times-circle"></i>Cancel</button>
+        </div>
+    </form>
+</div>

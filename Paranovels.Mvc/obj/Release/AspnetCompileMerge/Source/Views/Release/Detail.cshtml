@@ -1,0 +1,126 @@
+﻿@using Paranovels.Common
+@using Paranovels.DataModels
+@using Paranovels.ViewModels
+@using Thi.Core
+@model Paranovels.ViewModels.ReleaseDetail
+@{
+    ViewBag.Title = Model.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // needed in case release doesnot have summarize yet!
+    Model.Summarize.SourceID = Model.ReleaseID;
+}
+
+@helper DisplayRating(Summarize item)
+{
+    Func<Summarize, int, string> checkRating = (r, rating) =>
+    {
+        if (r.QualityCount == 0) return "";
+        return (r.QualityScore / r.QualityCount) == rating ? "checked" : "data-a=" + ((double)r.QualityScore / r.QualityCount);
+    };
+    <fieldset class="rating">
+        <legend class="sr-only">Translation Quality Rating</legend>
+        <input type="radio" id="star5-@(item.ID)" name="rating@(item.ID)" value="10" @checkRating(item, 10) />
+        <label class="full action rate" for="star5-@(item.ID)" title="Awesome - 5 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 10}'></label>
+        <input type="radio" id="star4half-@(item.ID)" name="rating@(item.ID)" value="9" @checkRating(item, 9) />
+        <label class="half action rate" for="star4half-@(item.ID)" title="Pretty good - 4.5 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 9}'></label>
+        <input type="radio" id="star4-@(item.ID)" name="rating@(item.ID)" value="8" @checkRating(item, 8) />
+        <label class="full action rate" for="star4-@(item.ID)" title="Pretty good - 4 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 8}'></label>
+        <input type="radio" id="star3half-@(item.ID)" name="rating@(item.ID)" value="7" @checkRating(item, 7) />
+        <label class="half action rate" for="star3half-@(item.ID)" title="Meh - 3.5 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 7}'></label>
+        <input type="radio" id="star3-@(item.ID)" name="rating@(item.ID)" value="6" @checkRating(item, 6) />
+        <label class="full action rate" for="star3-@(item.ID)" title="Meh - 3 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 6}'></label>
+        <input type="radio" id="star2half-@(item.ID)" name="rating@(item.ID)" value="5" @checkRating(item, 5) />
+        <label class="half action rate" for="star2half-@(item.ID)" title="Kinda bad - 2.5 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 5}'></label>
+        <input type="radio" id="star2-@(item.ID)" name="rating@(item.ID)" value="4" @checkRating(item, 4) />
+        <label class="full action rate" for="star2-@(item.ID)" title="Kinda bad - 2 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 4}'></label>
+        <input type="radio" id="star1half-@(item.ID)" name="rating@(item.ID)" value="3" @checkRating(item, 3) />
+        <label class="half action rate" for="star1half-@(item.ID)" title="Meh - 1.5 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 3}'></label>
+        <input type="radio" id="star1-@(item.ID)" name="rating@(item.ID)" value="2" @checkRating(item, 2) />
+        <label class="full action rate" for="star1-@(item.ID)" title="Sucks big time - 1 star" data-rate='{"SourceID": @item.SourceID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 2}'></label>
+        <input type="radio" id="starhalf-@(item.ID)" name="rating@(item.ID)" value="1" @checkRating(item, 1) />
+        <label class="half action rate" for="starhalf-@(item.ID)" title="Sucks big time - 0.5 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 1}'></label>
+    </fieldset>
+}
+
+<section class="section">
+    <div class="header">
+        <a href="javascript:history.go(-1);" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
+        <h1 class="title">
+            @Model.Title
+        </h1>
+    </div>
+    <div class="content">
+        <div class="detail-group">
+            <strong class="sr-only">Summary</strong>
+            <div>
+                @Html.Raw(Model.Summary.FormatString(0, 20, "No summary available. Click on 'Edit' to help us update it."))
+                @Html.ImproveThis(m => m.Summary)
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Release Title</strong>
+            <div>
+                @Model.Title
+                @Html.ImproveThis(m => m.Title)
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Release Url</strong>
+            <div>
+                <a href="@Url.Action("Out", "Release", new { ID = Model.ReleaseID, Url = Model.Url, Seo = Model.Title.ToSeo() })">@Model.Url</a>
+                @Html.ImproveThis(m => m.Url)
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Release Date</strong>
+            <div>
+                @Html.Raw(Model.Date.FormatDate())
+                @Html.ImproveThis(m => m.Date)
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Translation Quality</strong>
+            <div>@DisplayRating(Model.Summarize)</div>
+        </div>
+        <div class="detail-group">
+            <strong>Series Title</strong>
+            <div>
+                @if (Model.SeriesID > 0)
+                {
+                    <a href="@Url.Action("Detail", "Series", new { ID = Model.SeriesID, Seo = Model.Series.Title.ToSeo() })">@Model.Series.Title</a>
+                }
+                else
+                {
+                    <text>No series linked to this release yet! Do you know the title of this series? Click on 'Edit' to help us update it.</text>
+                }
+                @Html.ImproveThis(m => m.SeriesID)
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Translations Group</strong>
+            <div>
+                @if (Model.GroupID > 0)
+                {
+                    <a href="@Url.Action("Detail", "Group", new {ID = Model.GroupID, Seo=Model.Group.Name.ToSeo()})">@Model.Group.Name</a>
+                }
+                else
+                {
+                    <text>No group linked to this release yet! Do you know whose translated this series? Click on 'Edit' to help us update it.</text>
+                }
+                @Html.ImproveThis(m => m.GroupID)
+            </div>
+        </div>
+    </div>
+
+</section>
+<section id="comments" class="section">
+    <div class="header">
+        <h2>@Model.Summarize.CommentCount Comments</h2>
+    </div>
+    <div class="content">
+        @{
+            Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.ReleaseID, SourceTable = R.SourceTable.RELEASE });
+        }
+    </div>
+</section>

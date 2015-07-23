@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{849B2474-5273-4BF5-9A4A-35610F81216F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Thi.Core</RootNamespace>
+    <AssemblyName>Thi.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Base Interface\IDetailModel.cs" />
+    <Compile Include="Base Interface\IFacade.cs" />
+    <Compile Include="Base Interface\IFormModel.cs" />
+    <Compile Include="Base Interface\IDataModel.cs" />
+    <Compile Include="Base Interface\ICriteriaModel.cs" />
+    <Compile Include="Base Interface\IModel.cs" />
+    <Compile Include="Base Object\BaseService.cs" />
+    <Compile Include="Class1.cs" />
+    <Compile Include="Extensions\FormatExtension.cs" />
+    <Compile Include="Extensions\StringExtension.cs" />
+    <Compile Include="Search Related\SearchExtension.cs" />
+    <Compile Include="Extensions\ReflectionExtension.cs" />
+    <Compile Include="Extensions\UrlExtensions.cs" />
+    <Compile Include="Lib Helpers\JsonHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Search Related\Paging\DynamicLibrary.cs" />
+    <Compile Include="Search Related\Paging\PagedList.cs" />
+    <Compile Include="Search Related\Paging\PagedListConfig.cs" />
+    <Compile Include="Search Related\Paging\PagedListData.cs" />
+    <Compile Include="Search Related\Paging\PagedListExtensions.cs" />
+    <Compile Include="Search Related\Paging\QueryableSearch.cs" />
+    <Compile Include="Search Related\SearchModel.cs" />
+    <Compile Include="Search Related\SortedModel.cs" />
+    <Compile Include="Security\EncryptionService.cs" />
+    <Compile Include="Security\IEncryptionService.cs" />
+    <Compile Include="Unit of Work\IReadOnlyRepository.cs" />
+    <Compile Include="Unit of Work\IRepository.cs" />
+    <Compile Include="Unit of Work\IUnitOfWork.cs" />
+    <Compile Include="Unit of Work\Repository.cs" />
+    <Compile Include="Unit of Work\UnitOfWork.cs" />
+    <Compile Include="Unit of Work\UnitOfWorkFactory.cs" />
+    <Compile Include="Utilities\AssertUtil.cs" />
+    <Compile Include="Utilities\DefaultValue.cs" />
+    <Compile Include="Utilities\PropertyMapper.cs" />
+    <Compile Include="Utilities\SimpleTemplate.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

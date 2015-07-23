@@ -1,0 +1,31 @@
+﻿@model Paranovels.ViewModels.InlineEditForm<Paranovels.ViewModels.NovelDetail>
+@{
+    Layout = null;
+
+    var inputType = Model.Model.GetType().GetProperty(Model.InlineEditProperty).PropertyType.Name;
+    inputType = inputType.Contains("Int")
+        ? "number" : inputType.Contains("Date")
+            ? "date" : "text";
+}
+<div id="@(Model.InlineEditProperty)Container">
+    <form id="@(Model.InlineEditProperty)Form" method="post" action="@Url.Action("Form")">
+        <div class="form-group">
+            @if (Model.InlineEditProperty == "Synopsis")
+            {
+                <textarea name="@Model.InlineEditProperty" class="form-control" rows="3">@Model.Model.Synopsis</textarea>
+            }
+            else
+            {
+                <input type="@inputType" class="form-control" name="@Model.InlineEditProperty" />
+            }
+        </div>
+        <div class="hidden">
+            <input type="hidden" name="ID" value="@Model.ID" />
+            <input type="hidden" name="InlineEditProperty" value="@Model.InlineEditProperty" />
+        </div>
+        <div class="form-group">
+            <button id="@(Model.InlineEditProperty)Submit" type="submit" class="btn btn-primary"><i class="fa fa-edit"></i>Submit</button>
+            <button id="@(Model.InlineEditProperty)Cancel" type="button" class="btn btn-default"><i class="fa fa-times-circle"></i>Cancel</button>
+        </div>
+    </form>
+</div>

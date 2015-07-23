@@ -1,0 +1,36 @@
+﻿.improve-this {
+    cursor: pointer;
+    position: relative;
+}
+.improve-this.on i.fa-edit {
+    display: none;
+}
+a.improve-this.on:after {
+    display: inline-block;
+  content: "";
+  display: block;
+  border: 8px solid transparent;
+  border-bottom-color: #EFEFEF;
+  position: absolute;
+  bottom: -2px;
+  left: 100%;
+  z-index: 999999;
+}
+.improve-img {
+    position: relative;
+}
+.improve-img .improve-this {
+    position: absolute;
+    left: 5px;
+    bottom: 0;
+}
+.improve-img .improve-this.on {
+    position: relative;
+}
+
+
+.inline-editor {
+    background: #EFEFEF;
+    padding: 10px;
+    border-radius: 5px;
+}

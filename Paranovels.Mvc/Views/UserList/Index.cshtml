@@ -1,0 +1,65 @@
+﻿@using Paranovels.Common
+@using Paranovels.ViewModels
+@using Thi.Core
+@model Thi.Core.PagedList<Paranovels.DataModels.UserList>
+@{
+    ViewBag.Title = "My Lists";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var formModel = new ListForm();
+}
+
+@section CurrentMenu
+{
+    <section class="menu-section">
+        <h2 class="menu-section-title">Current</h2>
+        <ul class="menu-section-list">
+            <li><a href="#add-container" class="action toggle" data-toggle='{ "target": "#add-container"}' role="button"><i class=" fa fa-plus"></i>Add new list</a></li>
+        </ul>
+    </section>
+}
+
+<section class="section">
+    <div class="header">
+        <a href="/" class="action left" role="button" title="back"><i class="fa fa-chevron-circle-left"></i></a>
+        <h1 class="title">
+            @ViewBag.Title
+        </h1>
+        <a class="action right toggle" data-toggle='{ "target": "#add-container"}'><i class="fa fa-plus"></i></a>
+    </div>
+    <div id="add-container" class="form">
+        <form class="" method="POST" action="@Url.Action("Form")" data-form-ajax='{}'>
+            <div class="hidden">
+                
+            </div>
+            <div class="form-group">
+                <label id="label-name" for="name">List Name</label>
+                <input id="name" name="@formModel.PropertyName(m => m.Name)" type="text" class="form-control" placeholder="Enter list name" aria-labelledby="label-name" required />
+            </div>
+            <div class="form-group">
+                <label id="label-description" for="description">List description</label>
+                <textarea id="description" name="@formModel.PropertyName(m => m.Description)" class="form-control" placeholder="Enter list description" aria-labelledby="label-description" required></textarea>
+            </div>
+            <div class="form-group clearfix">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-plus-circle"></i>Add List</button>
+                <button type="button" class="btn btn-default action toggle" data-toggle='{ "target": "#add-container"}'><i class="fa fa-times-circle"></i>Cancel</button>
+            </div>
+        </form>
+    </div>
+    <ul class="grid">
+        @foreach (var item in Model.Data)
+        {
+            <li class="row-list">
+                <div class="col-content">
+                    <div>
+                        <a href="@Url.Action("Detail", new{ ID = item.UserListID, Seo = item.Name.ToSeo() })">@item.Name</a>
+                    </div>
+                    <div>@Html.Raw(item.Description.FormatString())</div>
+                </div>
+            </li>
+
+        }
+    </ul>
+    @Html.Raw(Model.ToPagination(Request.RawUrl, 0))
+</section>
+

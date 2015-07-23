@@ -1,0 +1,121 @@
+﻿@using Paranovels.Common
+@using Paranovels.DataModels
+@using Paranovels.ViewModels
+@using Thi.Core
+@model Paranovels.ViewModels.ListDetail
+@{
+    ViewBag.Title = "My List - " + Model.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="section">
+    <div class="header">
+        <a href="javascript:history.go(-1);" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
+        <h1 class="title">
+            @ViewBag.Title
+        </h1>
+        <a class="action toggle right" role="button" data-toggle='{ "target":"#addtolist"}'><i class="fa fa-plus-circle"></i></a>
+    </div>
+    <div id="addtolist" class="form animated">
+        @{ var formModel = new ConnectorForm(); }
+        <script>
+            window.pnHooks = window.pnHooks || [];
+            window.pnHooks.push(function () {
+                require(['jquery', 'selectize'], function ($, selectize) {
+                    'use strict';
+
+                    $('#seriesid').selectize({
+                        valueField: 'SeriesID',
+                        labelField: 'Title',
+                        searchField: 'Title',
+                        create: false,
+                        render: {
+                            option: function (item, escape) {
+                                return '<div>' +
+                                    '<strong class="title">' + item.Title + '</strong>' +
+                                    '<p class="description">' + escape(item.Synopsis) + '</p>' +
+                                    '</div>';
+                            }
+                        },
+                        load: function (query, callback) {
+                            if (!query.length) return callback();
+                            $.ajax({
+                                url: '/query/series?query=' + encodeURIComponent(query),
+                                type: 'GET',
+                                error: function () {
+                                    callback();
+                                },
+                                success: function (res) {
+                                    callback(res);
+                                }
+                            });
+                        }
+                    });
+                });
+            });
+        </script>
+
+        <form method="post" action="@Url.Action("Form", "Connector")" enctype="multipart/form-data" data-form-ajax='{"returnUrl":"@Request.RawUrl"}'>
+            <div class="form-group">
+                <label for="seriesid" class="sr-only">Select Series</label>
+                <select id="seriesid" name="@formModel.PropertyName(m=> m.SourceID)" placeholder="Select Series" required></select>
+            </div>
+            <div class="hidden">
+                <input type="hidden" name="@formModel.PropertyName(m=> m.ConnectorType)" value="@R.ConnectorType.SERIES_USERLIST" />
+                <input type="hidden" name="@formModel.PropertyName(m=> m.TargetID)" value="@Model.UserListID" />
+            </div>
+            <div class="form-group clearfix">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-plus-circle"></i>Add to list</button>
+                <button type="button" class="btn btn-default action toggle" data-toggle='{ "target":"#addtolist"}'><i class="fa fa-times-circle"></i>Cancel</button>
+            </div>
+        </form>
+    </div>
+    <div class="reading-list">
+        <div class="row-list">
+            <ul class="list-inline list-unstyled">
+                <li>Sort by</li>
+                <li><a href="@Request.RawUrl.UrlAddQuery("sorted","a-z")">a - z</a></li>
+                <li><a href="@Request.RawUrl.UrlAddQuery("sorted","z-a")">z - a</a></li>
+                <li><a href="@Request.RawUrl.UrlAddQuery("sorted","rating")">rating</a></li>
+            </ul>
+        </div>
+        @foreach (var item in Model.Series)
+        {
+            <div class="row-list">
+
+                <div class="col-title">
+
+                    <a href="@Url.Action("Detail", "NovelTracker", new{ ID = item.SeriesID, Seo = item.Title.ToSeo() })">@item.Title</a>
+
+                </div>
+                <div class="col-status">
+                    @if (item.Release != null)
+                    {
+                        <a href="@Url.Action("Detail", "Release", new { ID = item.Release.ReleaseID, Seo = item.Release.Title.ToSeo() })">@item.Release.Title</a>
+                    }
+                    else
+                    {
+                        <text>No release yet!</text>
+                    }
+                </div>
+                <div class="col-status">
+                    @if (item.UserRead != null)
+                    {
+                        <a href="@Url.Action("Detail", "Release", new { ID = item.UserRead.ReleaseID, Seo = item.UserRead.Title.ToSeo() })">@item.UserRead.Title</a>
+                    }
+                    else
+                    {
+                        <text>You haven't mark any release as read yet!</text>
+                    }
+                </div>
+                <div class="col-rating">
+                    4.5
+                </div>
+                <div class="col-rating">
+                    3.6
+                </div>
+            </div>
+
+        }
+    </div>
+</section>

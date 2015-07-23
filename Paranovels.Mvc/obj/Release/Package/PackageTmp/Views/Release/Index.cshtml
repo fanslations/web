@@ -1,0 +1,55 @@
+﻿@using System.Text.RegularExpressions
+@using Paranovels.Common
+@using Paranovels.ViewModels
+@using Thi.Core
+@model Thi.Core.PagedList<Paranovels.ViewModels.ReleaseGrid>
+@{
+    ViewBag.Title = "Releases";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section CurrentMenu
+{
+    <section class="menu-section">
+        <h2 class="menu-section-title">Current</h2>
+        <ul class="menu-section-list">
+            <li><a href="#add-container" class="action toggle" data-toggle='{ "target": "#add-container"}' role="button"><i class=" fa fa-plus"></i>Add new release</a></li>
+            <li><a href="#search-container" class="action toggle" data-toggle='{ "target": "#search-container"}' role="button"><i class="fa fa-search"></i>Search releases</a></li>
+        </ul>
+    </section>
+}
+
+<section class="section">
+    <div class="header">
+        <a href="/" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
+        <h1 class="title">
+            @ViewBag.Title
+        </h1>
+        <a class="action right toggle" data-toggle='{ "target": "#add-container"}'><i class="fa fa-plus"></i></a>
+        <a class="action right toggle" data-toggle='{ "target": "#search-container"}'><i class="fa fa-search"></i></a>
+    </div>
+    @{ Html.RenderPartial("_Search", Request.QueryString.ToCriteria<ReleaseCriteria>()); }
+    <div id="add-container" class="form" style="@(Request.QueryString["do"] == "add" ? "display:block;" : "display:none;")">
+        @{ var formModel = new ReleaseForm(); }
+        <form class="" method="POST" action="@Url.Action("Form")" data-form-ajax='{}'>
+            <div class="form-group">
+                <label id="label-date" for="date" class="arrow_box">Release Date</label>
+                <input id="date" name="@formModel.PropertyName(m=>m.Date)" type="date" class="form-control" placeholder="mm/dd/yyyy" aria-labelledby="label-date" required />
+            </div>
+            <div class="form-group">
+                <label id="label-title" for="title" class="arrow_box">Title</label>
+                <input id="title" name="@formModel.PropertyName(m=>m.Title)" type="text" class="form-control" placeholder="Enter title" aria-labelledby="label-title" required />
+            </div>
+            <div class="form-group">
+                <label id="label-url" for="url" class="arrow_box">Url</label>
+                <input id="url" name="title" type="@formModel.PropertyName(m=>m.Url)" class="form-control" placeholder="Enter url" aria-labelledby="label-url" required />
+            </div>
+            <div class="form-group clearfix">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-plus-circle"></i>Add new release</button>
+                <button type="button" class="btn btn-default action toggle" data-toggle='{ "target": "#add-container"}'><i class="fa fa-times-circle"></i>Cancel</button>
+            </div>
+        </form>
+    </div>
+    @{ Html.RenderPartial("_Release", Model); }
+    @Html.Raw(Model.ToPagination(Request.RawUrl, 0))
+</section>
+

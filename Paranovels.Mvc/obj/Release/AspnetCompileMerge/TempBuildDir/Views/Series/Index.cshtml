@@ -1,0 +1,112 @@
+﻿@using System.Activities.Expressions
+@using Paranovels.Common
+@using Paranovels.DataModels
+@using Paranovels.ViewModels
+@using Thi.Core
+@model Thi.Core.PagedList<Paranovels.ViewModels.SeriesGrid>
+@{
+    ViewBag.Title = "Series";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var sortedModel = new SortedModel
+    {
+        Sorted = Request.QueryString["sorted"] ?? "new",
+        SortOptions = new Dictionary<string, string>
+        {
+            {"best", "best"},
+            {"reads", "reads"},
+            {"votes", "votes"},
+            {"views", "views"},
+            {"new", "new"},
+            {"old", "old"},
+            {"rating", "rating"},
+            {"top", "scores"},
+        }
+    };
+}
+
+@section CurrentMenu
+{
+    <section class="menu-section">
+        <h2 class="menu-section-title">Current</h2>
+        <ul class="menu-section-list">
+            <li><a href="#add-container" class="action toggle" data-toggle='{ "target": "#add-container"}' role="button"><i class="fa fa-plus"></i>Add new series</a></li>
+            <li><a href="#search-container" class="action toggle" data-toggle='{ "target": "#search-container"}' role="button"><i class="fa fa-search"></i>Search series</a></li>
+        </ul>
+    </section>
+}
+<section class="section">
+    <div class="header">
+        <a href="/" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
+        <h1 class="title">
+            @ViewBag.Title
+        </h1>
+        <a class="action right toggle" data-toggle='{ "target": "#add-container"}' role="button"><i class="fa fa-plus-circle"></i></a>
+        <a class="action right toggle" data-toggle='{ "target": "#search-container"}' role="button"><i class="fa fa-search"></i></a>
+    </div>
+    @{ Html.RenderPartial("_Search", Request.QueryString.ToCriteria<NovelTrackerCriteria>()); }
+    <div id="add-container" class="form" style="@(Request.QueryString["do"] == "add" ? "display:block;" : "display:none;")">
+        @{ var formModel = new SeriesForm(); }
+        <form class="" method="POST" action="@Url.Action("Form")" data-form-ajax='{}'>
+            <div class="form-group">
+                <label id="label-title" for="title">Title</label>
+                <input id="title" name="@formModel.PropertyName(m => m.Title)" type="text" class="form-control" placeholder="Enter title" aria-labelledby="label-title" required />
+            </div>
+            <div class="form-group">
+                <label id="label-synopsis" for="synopsis">Synopsis</label>
+                <textarea id="synopsis" name="@formModel.PropertyName(m => m.Synopsis)" class="form-control" placeholder="Enter synopsis" aria-labelledby="label-synopsis" required></textarea>
+            </div>
+            <div class="hidden">
+                <input type="hidden" name="Seo" value="" />
+            </div>
+            <div class="form-group clearfix">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-plus-circle"></i>Add Novel</button>
+                <button type="button" class="btn btn-default action toggle" data-toggle='{ "target": "#add-container"}'><i class="fa fa-times-circle"></i>Cancel</button>
+            </div>
+        </form>
+    </div>
+    <div class="content">
+        @{
+            Html.RenderPartial("_Sorted", sortedModel);
+        }
+    </div>
+    <ul class="grid">
+        @foreach (var item in Model.Data)
+        {
+            <li class="row-list">
+                <div class="col-image">
+                    <a href="#" class="">
+                        <img src="@item.ImageUrl.ToGoogleDriveImageUrl()" class="img-rounded" alt="@item.Title's cover" />
+                    </a>
+                </div>
+                <div class="col-content">
+                    <div>
+                        <a href="@Url.Action("Detail", new{ ID = item.SeriesID, Seo = item.Title.ToSeo() })">@item.Title</a>
+                    </div>
+                    <div>@Html.Raw(item.Synopsis.FormatString(100))</div>
+                    <ul class="list-unstyled list-inline">
+                        <li title="Status">
+                            <i class="fa fa-certificate"></i><a href="@Url.Action("Index", new{ Query = "status:" + item.Status})">@Html.Raw(item.Status.Translate(R.TranslationStatus.Translate).FormatString())</a>
+                        </li>
+                        <li class="divider divider-pipe divider-black"></li>
+                        <li title="Updated Date"><i class="fa fa-calendar"></i>@Html.Raw(item.UpdatedDate.FormatDate())</li>
+                        @if (item.Release != null)
+                        {
+                            <li class="divider divider-pipe divider-black"></li>
+                            <li title="Latest Release"><i class="fa fa-rss"></i>@Html.Raw(item.Release.Title.FormatString())</li>
+                        }
+                        @if (item.Group != null)
+                        {
+                            <li class="divider divider-pipe divider-black"></li>
+                            <li title="Translations Group">
+                                <i class="fa fa-group"></i><a href="@Url.Action("Detail", "Group", new { ID = item.Group.GroupID, Seo = item.Group.Name.ToSeo() })">@item.Group.Name</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </li>
+
+        }
+    </ul>
+    @Html.Raw(Model.ToPagination(Request.RawUrl, 0))
+</section>

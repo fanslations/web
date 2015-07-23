@@ -1,0 +1,21 @@
+﻿
+@using Paranovels.Common
+@using Thi.Core
+@model Paranovels.ViewModels.BaseCriteria
+
+<div id="search-container" class="form" style="@((!string.IsNullOrWhiteSpace(Model.Query) || Request.QueryString["do"] == "search") ? "display:block;" : "display:none;")">
+    <form class="form-horizontal no-margin" role="search" method="GET">
+        @foreach (var hiddenField in Model.HiddenFields ?? new Dictionary<string, string>())
+        {
+            <input type="hidden" name="@hiddenField.Key" value="@hiddenField.Value" />
+        }
+
+        <div class="input-group">
+            <label for="search" class="sr-only">Enter your search</label>
+            <input id="search" type="search" name="@Model.PropertyName(m=> m.Query)" class="form-control" value="@Model.Query" placeholder="Enter text to search...">
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+            </span>
+        </div>
+    </form>
+</div>
