@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paranovels.Mvc", "Paranovels.Mvc\Paranovels.Mvc.csproj", "{3E9C8560-1DED-4E17-8154-CC3F7014EB17}"
 EndProject
@@ -24,6 +24,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paranovels.Facade", "Paranovels.Facade\Paranovels.Facade.csproj", "{5184269E-3AA0-4ADD-8CDB-8E1A7C3D29E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paranovels.Services", "Paranovels.Services\Paranovels.Services.csproj", "{E8727304-24CD-4938-A9EC-5584CADF5DFB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2FFF9AF9-355B-4CCC-A1E8-CFDD5086C318}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
