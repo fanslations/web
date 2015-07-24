@@ -33,6 +33,11 @@ namespace Paranovels.Services
         public UserDetail Get(UserCriteria criteria)
         {
             var qUser = View<User>().All();
+
+            if (criteria.IDToInt > 0)
+            {
+                qUser = qUser.Where(w => w.UserID == criteria.IDToInt);
+            }
             if (!string.IsNullOrWhiteSpace(criteria.Username))
             {
                 qUser = qUser.Where(w => w.Username == criteria.Username);

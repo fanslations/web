@@ -49,7 +49,6 @@
     <Compile Include="Generated\Glossary.generated.cs" />
     <Compile Include="Generated\Group.generated.cs" />
     <Compile Include="Generated\Novel.generated.cs" />
-    <Compile Include="Generated\NovelTrackerGrid.generated.cs" />
     <Compile Include="Generated\Release.generated.cs" />
     <Compile Include="Generated\Series.generated.cs" />
     <Compile Include="Generated\StaticResource.generated.cs" />
@@ -58,6 +57,7 @@
     <Compile Include="Generated\User.generated.cs" />
     <Compile Include="Generated\UserComment.generated.cs" />
     <Compile Include="Generated\UserList.generated.cs" />
+    <Compile Include="Generated\UserPreference.generated.cs" />
     <Compile Include="Generated\UserRate.generated.cs" />
     <Compile Include="Generated\UserRead.generated.cs" />
     <Compile Include="Generated\UserView.generated.cs" />

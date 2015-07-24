@@ -51,6 +51,7 @@
     <Compile Include="ConnectorService.cs" />
     <Compile Include="GlossaryService.cs" />
     <Compile Include="FeedService.cs" />
+    <Compile Include="PreferenceService.cs" />
     <Compile Include="ReleaseService.cs" />
     <Compile Include="Novel Services\ChapterService.cs" />
     <Compile Include="Novel Services\NovelService.cs" />

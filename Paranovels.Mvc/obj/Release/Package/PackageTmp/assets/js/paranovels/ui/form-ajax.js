@@ -12,6 +12,11 @@
 
                 var $form = $(this);
                 var json = $form.data('form-ajax');
+                json.reload = json.reload == undefined;
+
+                $('input.submit', $form).on('change', function () {
+                    $form.submit();
+                });
 
                 //$form.find('input, textarea, select').first().focus();
                 $form.on('submit', function (event) {
@@ -32,10 +37,12 @@
                                 window.location = json.returnUrl;
                             } else {
                                 if (data.IsSuccessful) {
-                                    if (data.RedirectUrl) {
-                                        window.location = data.RedirectUrl;
-                                    } else {
-                                        window.location.reload();
+                                    if (json.reload) {
+                                        if (data.RedirectUrl) {
+                                            window.location = data.RedirectUrl;
+                                        } else {
+                                            window.location.reload();
+                                        }
                                     }
                                 } else {
                                     alert(data.ErrorMessage);

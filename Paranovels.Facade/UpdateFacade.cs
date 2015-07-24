@@ -46,6 +46,9 @@ namespace Paranovels.Facade
             if (formModel.GetType() == typeof(ListForm))
                 return new ListFacade().AddList(formModel as ListForm);
 
+            if (formModel.GetType() == typeof(PreferenceForm))
+                return new UserFacade().AddPreference(formModel as PreferenceForm);
+
             return -1;
         }
     }

@@ -346,6 +346,82 @@ namespace Paranovels.Common //.Generated Resources
 						}; // end translate dictionary
         }	
         /// <summary>
+        /// PreferenceScore auto generated class.
+        /// </summary>
+        public partial class PreferenceScore 
+        {		
+			/// <summary>
+			/// Dislike
+			/// </summary>
+			[Description("Dislike")]
+			public const int DISLIKE = -50;
+				
+			/// <summary>
+			/// Hate
+			/// </summary>
+			[Description("Hate")]
+			public const int HATE = -100;
+				
+			/// <summary>
+			/// Like
+			/// </summary>
+			[Description("Like")]
+			public const int LIKE = 50;
+				
+			/// <summary>
+			/// Love
+			/// </summary>
+			[Description("Love")]
+			public const int LOVE = 100;
+				
+			/// <summary>
+			/// Neutral
+			/// </summary>
+			[Description("Neutral")]
+			public const int NEUTRAL = 0;
+				
+			
+			public const string ClassName = "PreferenceScore";
+			public static readonly Dictionary<int,string> Translate = new Dictionary<int,string> {
+												{-50,"Dislike"},
+							
+												{-100,"Hate"},
+							
+												{50,"Like"},
+							
+												{100,"Love"},
+							
+												{0,"Neutral"},
+							
+						}; // end translate dictionary
+        }	
+        /// <summary>
+        /// PreferenceType auto generated class.
+        /// </summary>
+        public partial class PreferenceType 
+        {		
+			/// <summary>
+			/// Category Preferences
+			/// </summary>
+			[Description("Category Preferences")]
+			public const int CATEGORY = 2;
+				
+			/// <summary>
+			/// Genre Preferences
+			/// </summary>
+			[Description("Genre Preferences")]
+			public const int GENRE = 1;
+				
+			
+			public const string ClassName = "PreferenceType";
+			public static readonly Dictionary<int,string> Translate = new Dictionary<int,string> {
+												{2,"Category Preferences"},
+							
+												{1,"Genre Preferences"},
+							
+						}; // end translate dictionary
+        }	
+        /// <summary>
         /// SourceTable auto generated class.
         /// </summary>
         public partial class SourceTable 
@@ -392,6 +468,12 @@ namespace Paranovels.Common //.Generated Resources
 			[Description("Series")]
 			public const int SERIES = 2;
 				
+			/// <summary>
+			/// Tag
+			/// </summary>
+			[Description("Tag")]
+			public const int TAG = 8;
+				
 			
 			public const string ClassName = "SourceTable";
 			public static readonly Dictionary<int,string> Translate = new Dictionary<int,string> {
@@ -408,6 +490,8 @@ namespace Paranovels.Common //.Generated Resources
 												{1,"Release"},
 							
 												{2,"Series"},
+							
+												{8,"Tag"},
 							
 						}; // end translate dictionary
         }	

@@ -65,7 +65,7 @@
                 </div>
                 <div class="col-content">
                     <div>
-                        <a href="@Url.Action("Detail", "NovelTracker", new{ ID = item.SeriesID, Seo = item.Title.ToSeo() })">@item.Title</a>
+                        <a href="@Url.Action("Detail", "Series", new{ ID = item.SeriesID, Seo = item.Title.ToSeo() })">@item.Title</a>
                     </div>
                     <div>@Html.Raw(item.Synopsis.FormatString(100))</div>
                     <ul class="list-unstyled list-inline">

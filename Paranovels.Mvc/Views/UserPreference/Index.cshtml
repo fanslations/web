@@ -1,0 +1,97 @@
+﻿@using Paranovels.Common
+@using Paranovels.DataModels
+@using Paranovels.ViewModels
+@using Thi.Core
+@using Thi.Web
+@model Paranovels.ViewModels.UserDetail
+@{
+    ViewBag.Title = "Preferences";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var webClient = WebClientFactory.ChromeClient();
+    var json = webClient.DownloadString(Request.Url.GetLeftPart(UriPartial.Authority) + "/query/categories");
+    var categories = JsonHelper.Deserialize<List<TagDetail>>(json);
+
+    json = webClient.DownloadString(Request.Url.GetLeftPart(UriPartial.Authority) + "/query/genres");
+    var genres = JsonHelper.Deserialize<List<TagDetail>>(json);
+}
+
+<section class="section">
+    <div class="header">
+        <a href="/" class="action left"><i class="fa fa-chevron-left"></i></a>
+        <h1 class="title">
+            @ViewBag.Title
+        </h1>
+    </div>
+    <div class="content">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#categories" aria-controls="home" role="tab" data-toggle="tab">Categories</a></li>
+            <li role="presentation"><a href="#genres" aria-controls="profile" role="tab" data-toggle="tab">Genres</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="categories">
+                @foreach (var tag in categories.OrderBy(o => o.Name))
+                {
+                    var preference = Model.Preferences.SingleOrDefault(w => w.Type == R.PreferenceType.CATEGORY && w.SourceID == tag.TagID && w.SourceTable == R.SourceTable.TAG) ?? new UserPreference();
+                    <div class="detail-group">
+                        <strong id="label@(tag.ID)">@tag.Name</strong>
+                        <div>
+                            <form class="" method="POST" action="@Url.Action("Form")" data-form-ajax='{"reload": false}'>
+                                <div class="hidden">
+                                    <input type="hidden" name="@preference.PropertyName(m=> m.UserPreferenceID)" value="@preference.UserPreferenceID" />
+                                    <input type="hidden" name="@preference.PropertyName(m=> m.Type)" value="@R.PreferenceType.CATEGORY" />
+                                    <input type="hidden" name="@preference.PropertyName(m=> m.SourceID)" value="@tag.TagID" />
+                                    <input type="hidden" name="@preference.PropertyName(m=> m.SourceTable)" value="@R.SourceTable.TAG" />
+                                </div>
+                                <div class="form-group">
+                                    @foreach (var item in R.PreferenceScore.Translate.OrderBy(o => o.Key))
+                                    {
+                                        <label class="radio-inline">
+                                            <input type="radio" name="@preference.PropertyName(m=>m.Score)" value="@item.Key" checked="@(preference.Score == item.Key)" class="submit" aria-labelledby="label@(tag.ID)"> @item.Value
+                                        </label>
+                                    }
+                                    <noscript>
+                                        <button type="submit" class=""><i class="fa fa-save"></i>Save</button>
+                                    </noscript>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div role="tabpanel" class="tab-pane" id="genres">
+                @foreach (var tag in genres.OrderBy(o => o.Name))
+                {
+                    var preference = Model.Preferences.SingleOrDefault(w => w.Type == R.PreferenceType.GENRE && w.SourceID == tag.TagID && w.SourceTable == R.SourceTable.TAG) ?? new UserPreference();
+                    <div class="detail-group">
+                        <strong id="label@(tag.ID)">@tag.Name</strong>
+                        <div>
+                            <form class="" method="POST" action="@Url.Action("Form")" data-form-ajax='{"reload": false}'>
+                                <div class="hidden">
+                                    <input type="hidden" name="@preference.PropertyName(m=> m.UserPreferenceID)" value="@preference.UserPreferenceID" />
+                                    <input type="hidden" name="@preference.PropertyName(m=> m.Type)" value="@R.PreferenceType.GENRE" />
+                                    <input type="hidden" name="@preference.PropertyName(m=> m.SourceID)" value="@tag.TagID" />
+                                    <input type="hidden" name="@preference.PropertyName(m=> m.SourceTable)" value="@R.SourceTable.TAG" />
+                                </div>
+                                <div class="form-group">
+                                    @foreach (var item in R.PreferenceScore.Translate.OrderBy(o => o.Key))
+                                    {
+                                        <label class="radio-inline">
+                                            <input type="radio" name="@preference.PropertyName(m=>m.Score)" value="@item.Key" checked="@(preference.Score == item.Key)" class="submit" aria-labelledby="label@(tag.ID)"> @item.Value
+                                        </label>
+                                    }
+                                    <noscript>
+                                        <button type="submit" class=""><i class="fa fa-save"></i>Save</button>
+                                    </noscript>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

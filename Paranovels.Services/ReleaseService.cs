@@ -73,6 +73,24 @@ namespace Paranovels.Services
                 };
                 qRelease = qRelease.Search(columns, c.Query.ToSearchKeywords()) as IQueryable<Release>;
             }
+            if (c.ByUserID > 0)
+            {
+                var connectorTypes = new[] {R.ConnectorType.SERIES_TAGCATEGORY, R.ConnectorType.SERIES_TAGGENRE};
+                var preferenceTypes = new[] {R.PreferenceType.CATEGORY, R.PreferenceType.GENRE};
+                var qConnector = View<Connector>().Where(w => connectorTypes.Contains(w.ConnectorType) );
+                var qUserPreference = View<UserPreference>().Where(w => w.UserID == c.ByUserID && preferenceTypes.Contains(w.Type) && w.SourceTable == R.SourceTable.TAG);
+
+                var q = qConnector.Join(qUserPreference, cn => cn.TargetID, up => up.SourceID,
+                    (cn, up) => new {cn.SourceID, up.Score})
+                    .GroupBy(g => new {g.SourceID, g.Score})
+                    .Where(w => w.Sum(s => s.Score) < 0)
+                    .Select(s => s.Key.SourceID);
+
+                var excludedSeriesIDs = q.ToList();
+
+                qRelease = qRelease.Where(w => excludedSeriesIDs.All(a => a != w.SeriesID));
+            }
+
 
             var results = qRelease.GroupJoin(qSummarize, r => r.ReleaseID, s => s.SourceID,
                 (r, s) => new { Release = r, Summarize = s.DefaultIfEmpty() })
@@ -85,7 +103,7 @@ namespace Paranovels.Services
                     Summary = sm.Release.Summary,
                     GroupID = sm.Release.GroupID,
                     SeriesID = sm.Release.SeriesID,
-                    
+
                     CommentCount = s.CommentCount,
                     ViewCount = s.ViewCount,
                     VoteUp = s.VoteUp,

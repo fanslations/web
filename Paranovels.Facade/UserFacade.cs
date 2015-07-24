@@ -52,5 +52,27 @@ namespace Paranovels.Facade
                 return session;
             }
         }
+
+        public UserDetail Get(UserCriteria criteria)
+        {
+            using (var uow = UnitOfWorkFactory.Create<NovelContext>())
+            {
+                var service = new UserService(uow);
+                var detail = service.Get(criteria);
+
+                detail.Preferences = service.View<UserPreference>().Where(w => w.UserID == detail.UserID).ToList();
+
+                return detail;
+            }
+        }
+
+        public int AddPreference(PreferenceForm form)
+        {
+            using (var uow = UnitOfWorkFactory.Create<NovelContext>())
+            {
+                var service = new PreferenceService(uow);
+                return service.SaveChanges(form);
+            }
+        }
     }
 }

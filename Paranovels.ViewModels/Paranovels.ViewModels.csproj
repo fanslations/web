@@ -71,6 +71,7 @@
     <Compile Include="Form Models\RateForm.cs" />
     <Compile Include="Form Models\ReadForm.cs" />
     <Compile Include="Form Models\ListForm.cs" />
+    <Compile Include="Form Models\PreferenceForm.cs" />
     <Compile Include="Form Models\VoteForm.cs" />
     <Compile Include="Form Models\TagForm.cs" />
     <Compile Include="Form Models\ConnectorForm.cs" />

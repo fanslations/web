@@ -63,7 +63,7 @@
             init: init
         }
     }(jquery);
-    module.init();
+    //module.init();
     // nothing to return
     return module;
 });

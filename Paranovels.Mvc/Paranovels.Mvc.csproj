@@ -275,6 +275,7 @@
     <Compile Include="Controllers\TranslatorController.cs" />
     <Compile Include="Controllers\RateController.cs" />
     <Compile Include="Controllers\UserListController.cs" />
+    <Compile Include="Controllers\UserPreferenceController.cs" />
     <Compile Include="Controllers\VoteController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -396,6 +397,7 @@
     <Content Include="Views\Shared\_Search.cshtml" />
     <Content Include="Views\Release\Detail.cshtml" />
     <Content Include="Views\Project\Index.cshtml" />
+    <Content Include="Views\UserPreference\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
