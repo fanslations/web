@@ -113,9 +113,10 @@
             <li>Contact</li>
             <li class="divider divider-black divider-pipe"></li>
             <li>Help</li>
-            <li class="pull-right small">This page take <span id="client-load-time">0</span> second(s) to load.</li>
+            
         </ul>
-        <small>Please support the authors and publishers by purchasing the books from official avenues when they are available in your locale.</small>
+        <div class="small">Please support the authors and publishers by purchasing the books from official avenues when they are available in your locale.</div>
+        <div class="small">This page take <span id="server-execute-time">...</span> seconds to execute and <span id="client-load-time">...</span> seconds to load.</div>
     </footer>
     <div id="ajaxstatus" style="display: none; position: fixed; bottom: 0px; padding: 0px 5px; background-color: #cb490c; color: #FFFFFF; font-size: smaller; width: 100% !important;">Please wait...</div>
     @Html.Partial("_LayoutFooter", new { Portal = "public" })

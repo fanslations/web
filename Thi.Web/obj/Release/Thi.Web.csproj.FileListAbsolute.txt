@@ -47,3 +47,16 @@ D:\Projects\ParaNovels\Thi.Web\obj\Release\Thi.Web.csproj.App.config
 D:\Projects\ParaNovels\Thi.Web\obj\Release\Thi.Web.csprojResolveAssemblyReference.cache
 D:\Projects\ParaNovels\Thi.Web\obj\Release\Thi.Web.dll
 D:\Projects\ParaNovels\Thi.Web\obj\Release\Thi.Web.pdb
+D:\Projects\ParaNovels\Thi.Web\bin\Release\Microsoft.Web.Infrastructure.dll
+D:\Projects\ParaNovels\Thi.Web\bin\Release\System.Web.Helpers.dll
+D:\Projects\ParaNovels\Thi.Web\bin\Release\System.Web.Mvc.dll
+D:\Projects\ParaNovels\Thi.Web\bin\Release\System.Web.Razor.dll
+D:\Projects\ParaNovels\Thi.Web\bin\Release\System.Web.WebPages.Deployment.dll
+D:\Projects\ParaNovels\Thi.Web\bin\Release\System.Web.WebPages.dll
+D:\Projects\ParaNovels\Thi.Web\bin\Release\System.Web.WebPages.Razor.dll
+D:\Projects\ParaNovels\Thi.Web\bin\Release\System.Web.Helpers.xml
+D:\Projects\ParaNovels\Thi.Web\bin\Release\System.Web.Mvc.xml
+D:\Projects\ParaNovels\Thi.Web\bin\Release\System.Web.Razor.xml
+D:\Projects\ParaNovels\Thi.Web\bin\Release\System.Web.WebPages.xml
+D:\Projects\ParaNovels\Thi.Web\bin\Release\System.Web.WebPages.Deployment.xml
+D:\Projects\ParaNovels\Thi.Web\bin\Release\System.Web.WebPages.Razor.xml

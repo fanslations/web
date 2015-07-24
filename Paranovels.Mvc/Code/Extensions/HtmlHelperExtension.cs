@@ -26,12 +26,12 @@ namespace Paranovels.Mvc
             //var inlineEdit = @"{{""Model"":""{0}"", ""ID"":""{1}"", ""Name"":""{2}"",""Value"":""{3}"",""Type"":""{4}""}}";
             //inlineEdit = string.Format(inlineEdit, html.ViewData.ModelMetadata.ModelType.Name, html.ViewData.Model.ID, updateField.PropertyName, "", updateField.ModelType);
 
-            var inlineEditModel = new { ID = html.ViewData.Model.ID, InlineEditProperty = updateField.PropertyName };
+            var inlineEditModelJson = string.Format(@"{{ ""ID"" : {0}, ""InlineEditProperty"" : ""{1}"" }}", html.ViewData.Model.ID, updateField.PropertyName);
 
             var tag = new TagBuilder("a");
             tag.AddCssClass("improve-this");
             tag.InnerHtml = customHtmlIcon ?? @"<i class=""fa fa-edit"">Edit</i>";
-            tag.Attributes.Add("data-inline-edit", JsonHelper.Serialize(inlineEditModel));
+            tag.Attributes.Add("data-inline-edit", inlineEditModelJson);
             if (htmlAttributes != null)
             {
                 tag.MergeAttributes(htmlAttributes);
@@ -46,12 +46,12 @@ namespace Paranovels.Mvc
             string customHtmlIcon = null) where TModel : class, IModel, new()
         {
             var propertyName = model.GetPropertyInfo(expressionUpdateField).Name;
-            var inlineEditModel = new { ID = model.ID, InlineEditProperty = propertyName };
+            var inlineEditModelJson = string.Format(@"{{ ""ID"" : {0}, ""InlineEditProperty"" : ""{1}"" }}", model.ID, propertyName);
 
             var tag = new TagBuilder("a");
             tag.AddCssClass("improve-this");
             tag.InnerHtml = customHtmlIcon ?? @"<i class=""fa fa-edit"">Edit</i>";
-            tag.Attributes.Add("data-inline-edit", JsonHelper.Serialize(inlineEditModel));
+            tag.Attributes.Add("data-inline-edit", inlineEditModelJson);
             if (htmlAttributes != null)
             {
                 tag.MergeAttributes(htmlAttributes);

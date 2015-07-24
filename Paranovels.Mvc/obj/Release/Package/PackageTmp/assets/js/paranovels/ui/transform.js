@@ -15,24 +15,26 @@
                 }
             });
 
-            console.log('userIds', userIds);
-            $.ajax({
-                type: 'POST',
-                url: '/query/users',
-                data: JSON.stringify({ UserIDs: userIds }), //$form.serialize(),
-                dataType: 'json',
-                contentType: 'application/json;charset=UTF-8',
-                processData: false,
-                async: false,
-                cache: false,
-            }).done(function (responseData) {
-                for (var i = 0; i < responseData.length; i++) {
-                    if (cache['user' + responseData[i].UserID] == null) {
-                        cache['user' + responseData[i].UserID] = responseData[i] || { FirstName: "", LastName: "" };
+            if (userIds.length > 0) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/query/users',
+                    data: JSON.stringify({ UserIDs: userIds }), //$form.serialize(),
+                    dataType: 'json',
+                    contentType: 'application/json;charset=UTF-8',
+                    processData: false,
+                    //async: false,
+                    cache: false,
+                }).done(function(responseData) {
+                    for (var i = 0; i < responseData.length; i++) {
+                        if (cache['user' + responseData[i].UserID] == null) {
+                            cache['user' + responseData[i].UserID] = responseData[i] || { FirstName: "", LastName: "" };
+                        }
                     }
-                }
-                transform();
-            });
+                    transform();
+                    userIds = []; // reset userIds
+                });
+            }
         };
 
         var transform = function() {

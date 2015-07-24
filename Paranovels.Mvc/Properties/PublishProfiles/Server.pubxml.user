@@ -32,7 +32,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/22/2015 13:03:37</publishTime>
     </File>
     <File Include="assets/css/paranovels.public.min.css">
-      <publishTime>07/23/2015 17:22:26</publishTime>
+      <publishTime>07/24/2015 12:35:34</publishTime>
     </File>
     <File Include="assets/css/paranovels/comment.css">
       <publishTime>07/20/2015 22:09:35</publishTime>
@@ -110,7 +110,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/16/2015 20:30:37</publishTime>
     </File>
     <File Include="assets/js/paranovels.public.min.js">
-      <publishTime>07/23/2015 17:22:31</publishTime>
+      <publishTime>07/24/2015 12:35:38</publishTime>
     </File>
     <File Include="assets/js/paranovels/ui/ajax-event.js">
       <publishTime>07/01/2015 10:27:02</publishTime>
@@ -131,7 +131,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/01/2015 09:48:00</publishTime>
     </File>
     <File Include="assets/js/paranovels/ui/transform.js">
-      <publishTime>07/08/2015 11:43:10</publishTime>
+      <publishTime>07/24/2015 12:08:15</publishTime>
     </File>
     <File Include="assets/js/paranovels/util/logger.js">
       <publishTime>07/01/2015 10:58:28</publishTime>
@@ -152,10 +152,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/14/2015 09:31:13</publishTime>
     </File>
     <File Include="bin/App_global.asax.compiled">
-      <publishTime>07/23/2015 17:22:35</publishTime>
+      <publishTime>07/24/2015 12:35:42</publishTime>
     </File>
     <File Include="bin/App_global.asax.dll">
-      <publishTime>07/23/2015 17:22:35</publishTime>
+      <publishTime>07/24/2015 12:35:42</publishTime>
     </File>
     <File Include="bin/Elmah.dll">
       <publishTime>06/23/2015 21:49:41</publishTime>
@@ -254,10 +254,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/22/2015 15:04:36</publishTime>
     </File>
     <File Include="bin/Paranovels.Facade.dll">
-      <publishTime>07/23/2015 09:31:14</publishTime>
+      <publishTime>07/24/2015 12:33:48</publishTime>
     </File>
     <File Include="bin/Paranovels.Mvc.dll">
-      <publishTime>07/23/2015 16:44:05</publishTime>
+      <publishTime>07/24/2015 12:33:49</publishTime>
     </File>
     <File Include="bin/Paranovels.Proxies.dll">
       <publishTime>07/22/2015 17:12:03</publishTime>
@@ -317,7 +317,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/22/2015 15:04:36</publishTime>
     </File>
     <File Include="bin/Thi.Web.dll">
-      <publishTime>07/22/2015 15:04:36</publishTime>
+      <publishTime>07/24/2015 12:33:48</publishTime>
     </File>
     <File Include="bin/WebGrease.dll">
       <publishTime>06/14/2015 09:31:16</publishTime>
@@ -338,7 +338,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/06/2015 11:59:24</publishTime>
     </File>
     <File Include="PrecompiledApp.config">
-      <publishTime>07/23/2015 17:22:32</publishTime>
+      <publishTime>07/24/2015 12:35:40</publishTime>
     </File>
     <File Include="robots.txt">
       <publishTime>07/01/2015 11:02:49</publishTime>
@@ -440,7 +440,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/23/2015 15:08:45</publishTime>
     </File>
     <File Include="Views/Release/Index.cshtml">
-      <publishTime>07/23/2015 16:48:48</publishTime>
+      <publishTime>07/23/2015 18:29:02</publishTime>
     </File>
     <File Include="Views/Release/_InlineEditPartial.cshtml">
       <publishTime>07/22/2015 16:18:16</publishTime>
@@ -464,13 +464,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/08/2015 11:22:38</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>07/23/2015 17:17:40</publishTime>
+      <publishTime>07/24/2015 12:30:55</publishTime>
     </File>
     <File Include="Views/Shared/_LayoutFooter.cshtml">
-      <publishTime>07/06/2015 10:04:03</publishTime>
+      <publishTime>07/24/2015 12:35:06</publishTime>
     </File>
     <File Include="Views/Shared/_LayoutHeader.cshtml">
-      <publishTime>07/23/2015 17:12:18</publishTime>
+      <publishTime>07/24/2015 12:28:41</publishTime>
     </File>
     <File Include="Views/Shared/_LoginPartial.cshtml">
       <publishTime>07/17/2015 14:57:10</publishTime>
@@ -491,7 +491,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/25/2015 19:27:59</publishTime>
     </File>
     <File Include="Views/Tag/List.cshtml">
-      <publishTime>07/23/2015 10:37:20</publishTime>
+      <publishTime>07/24/2015 12:12:37</publishTime>
     </File>
     <File Include="Views/Tag/_InlineEditPartial.cshtml">
       <publishTime>07/01/2015 20:42:43</publishTime>
@@ -533,7 +533,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/13/2015 09:49:10</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>07/09/2015 18:17:58</publishTime>
+      <publishTime>07/24/2015 11:36:05</publishTime>
     </File>
   </ItemGroup>
 </Project>

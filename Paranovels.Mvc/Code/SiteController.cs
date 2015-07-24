@@ -14,6 +14,7 @@ using Thi.Web;
 
 namespace Paranovels.Mvc
 {
+    [Stopwatch]
     public class SiteController : Controller
     {
         protected SearchModel<T> CreateSearchModel<T>(T criteria, string prefix = "") where T : BaseCriteria

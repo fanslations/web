@@ -63,3 +63,13 @@ D:\Projects\ParaNovels\Paranovels.Facade\obj\Release\Paranovels.Facade.csproj.Ap
 D:\Projects\ParaNovels\Paranovels.Facade\obj\Release\Paranovels.Facade.csprojResolveAssemblyReference.cache
 D:\Projects\ParaNovels\Paranovels.Facade\obj\Release\Paranovels.Facade.dll
 D:\Projects\ParaNovels\Paranovels.Facade\obj\Release\Paranovels.Facade.pdb
+D:\Projects\ParaNovels\Paranovels.Facade\bin\Release\System.Web.Mvc.dll
+D:\Projects\ParaNovels\Paranovels.Facade\bin\Release\System.Web.Razor.dll
+D:\Projects\ParaNovels\Paranovels.Facade\bin\Release\System.Web.WebPages.Razor.dll
+D:\Projects\ParaNovels\Paranovels.Facade\bin\Release\System.Web.WebPages.dll
+D:\Projects\ParaNovels\Paranovels.Facade\bin\Release\System.Web.WebPages.Deployment.dll
+D:\Projects\ParaNovels\Paranovels.Facade\bin\Release\System.Web.Mvc.xml
+D:\Projects\ParaNovels\Paranovels.Facade\bin\Release\System.Web.Razor.xml
+D:\Projects\ParaNovels\Paranovels.Facade\bin\Release\System.Web.WebPages.Razor.xml
+D:\Projects\ParaNovels\Paranovels.Facade\bin\Release\System.Web.WebPages.xml
+D:\Projects\ParaNovels\Paranovels.Facade\bin\Release\System.Web.WebPages.Deployment.xml
