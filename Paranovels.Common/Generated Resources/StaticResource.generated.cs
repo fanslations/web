@@ -65,9 +65,9 @@ namespace Paranovels.Common //.Generated Resources
         public partial class ConnectorType 
         {		
 			/// <summary>
-			/// Link translations group to data feed url
+			/// Link group to data feed url
 			/// </summary>
-			[Description("Link translations group to data feed url")]
+			[Description("Link group to data feed url")]
 			public const int GROUP_FEED = 5;
 				
 			/// <summary>
@@ -77,16 +77,10 @@ namespace Paranovels.Common //.Generated Resources
 			public const int GROUP_GLOSSARY = 7;
 				
 			/// <summary>
-			/// Link novel to a novel author
+			/// Link novel to an author
 			/// </summary>
-			[Description("Link novel to a novel author")]
+			[Description("Link novel to an author")]
 			public const int NOVEL_AUTHOR = 1;
-				
-			/// <summary>
-			/// Link translations group to data feed url
-			/// </summary>
-			[Description("Link translations group to data feed url")]
-			public const int NOVEL_FEED = 6;
 				
 			/// <summary>
 			/// Novel Glossary
@@ -95,21 +89,39 @@ namespace Paranovels.Common //.Generated Resources
 			public const int NOVEL_GLOSSARY = 8;
 				
 			/// <summary>
-			/// Link novel tracker to novel categories
+			/// Link series to an author
 			/// </summary>
-			[Description("Link novel tracker to novel categories")]
+			[Description("Link series to an author")]
+			public const int SERIES_AUTHOR = 11;
+				
+			/// <summary>
+			/// Link series to data feed url
+			/// </summary>
+			[Description("Link series to data feed url")]
+			public const int SERIES_FEED = 6;
+				
+			/// <summary>
+			/// Series Glossary
+			/// </summary>
+			[Description("Series Glossary")]
+			public const int SERIES_GLOSSARY = 10;
+				
+			/// <summary>
+			/// Link series to novel categories
+			/// </summary>
+			[Description("Link series to novel categories")]
 			public const int SERIES_TAGCATEGORY = 3;
 				
 			/// <summary>
-			/// Link novel tracker to novel contains
+			/// Link series to novel contains
 			/// </summary>
-			[Description("Link novel tracker to novel contains")]
+			[Description("Link series to novel contains")]
 			public const int SERIES_TAGCONTAIN = 4;
 				
 			/// <summary>
-			/// Link novel tracker to novel genres
+			/// Link series to novel genres
 			/// </summary>
-			[Description("Link novel tracker to novel genres")]
+			[Description("Link series to novel genres")]
 			public const int SERIES_TAGGENRE = 2;
 				
 			/// <summary>
@@ -121,21 +133,25 @@ namespace Paranovels.Common //.Generated Resources
 			
 			public const string ClassName = "ConnectorType";
 			public static readonly Dictionary<int,string> Translate = new Dictionary<int,string> {
-												{5,"Link translations group to data feed url"},
+												{5,"Link group to data feed url"},
 							
 												{7,"Group Glossary"},
 							
-												{1,"Link novel to a novel author"},
-							
-												{6,"Link translations group to data feed url"},
+												{1,"Link novel to an author"},
 							
 												{8,"Novel Glossary"},
 							
-												{3,"Link novel tracker to novel categories"},
+												{11,"Link series to an author"},
 							
-												{4,"Link novel tracker to novel contains"},
+												{6,"Link series to data feed url"},
 							
-												{2,"Link novel tracker to novel genres"},
+												{10,"Series Glossary"},
+							
+												{3,"Link series to novel categories"},
+							
+												{4,"Link series to novel contains"},
+							
+												{2,"Link series to novel genres"},
 							
 												{9,"Link seriesto user list"},
 							
@@ -492,6 +508,64 @@ namespace Paranovels.Common //.Generated Resources
 												{2,"Series"},
 							
 												{8,"Tag"},
+							
+						}; // end translate dictionary
+        }	
+        /// <summary>
+        /// SpamReportType auto generated class.
+        /// </summary>
+        public partial class SpamReportType 
+        {		
+			/// <summary>
+			/// Breaking rules
+			/// </summary>
+			[Description("Breaking rules")]
+			public const int BREAKING = 400;
+				
+			/// <summary>
+			/// Copyrighted material
+			/// </summary>
+			[Description("Copyrighted material")]
+			public const int COPYRIGHTED = 300;
+				
+			/// <summary>
+			/// Other
+			/// </summary>
+			[Description("Other")]
+			public const int OTHER = 999;
+				
+			/// <summary>
+			/// Pornography or sexually explicit material
+			/// </summary>
+			[Description("Pornography or sexually explicit material")]
+			public const int PORNOGRAPHY = 200;
+				
+			/// <summary>
+			/// Unwanted commercial content or spam
+			/// </summary>
+			[Description("Unwanted commercial content or spam")]
+			public const int SPAM = 100;
+				
+			/// <summary>
+			/// Vote manipulation
+			/// </summary>
+			[Description("Vote manipulation")]
+			public const int VOTE = 500;
+				
+			
+			public const string ClassName = "SpamReportType";
+			public static readonly Dictionary<int,string> Translate = new Dictionary<int,string> {
+												{400,"Breaking rules"},
+							
+												{300,"Copyrighted material"},
+							
+												{999,"Other"},
+							
+												{200,"Pornography or sexually explicit material"},
+							
+												{100,"Unwanted commercial content or spam"},
+							
+												{500,"Vote manipulation"},
 							
 						}; // end translate dictionary
         }	

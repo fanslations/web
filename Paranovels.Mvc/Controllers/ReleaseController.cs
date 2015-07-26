@@ -42,6 +42,10 @@ namespace Paranovels.Mvc.Controllers
         [HttpPost]
         public JsonResult Form(ReleaseForm form, HttpPostedFileBase image, string imagePath)
         {
+            if (!string.IsNullOrWhiteSpace(form.Url))
+            {
+                form.UrlHash = form.Url.GetIntHash();
+            }
             return SaveChanges(form);
         }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Paranovels.Common;
 using Paranovels.DataModels;
 using Paranovels.ViewModels;
 using Thi.Core;
@@ -34,6 +35,7 @@ namespace Paranovels.Services
         public PagedList<CommentGrid> Search(SearchModel<CommentCriteria> searchModel)
         {
             var qComment = Table<UserComment>().All();
+            var qSummarize = View<Summarize>().Where(w => w.SourceTable == R.SourceTable.COMMENT);
 
             var c = searchModel.Criteria;
 
@@ -46,19 +48,33 @@ namespace Paranovels.Services
                 qComment = qComment.Where(w => c.SourceIDs.Contains(w.SourceID) && w.SourceTable == c.SourceTable);
             }
 
-            var results = qComment.Select(s => new CommentGrid
-            {
-                UserCommentID = s.UserCommentID,
-                InsertedBy =  s.InsertedBy,
-                InsertedDate = s.InsertedDate,
-                UpdatedBy = s.UpdatedBy,
-                UpdatedDate = s.UpdatedDate,
-                IsDeleted = s.IsDeleted,
-                UserID = s.UserID,
-                SourceID = s.SourceID,
-                SourceTable = s.SourceTable,
-                Comment = s.Comment
-            });
+            var results = qComment.GroupJoin(qSummarize, uc => uc.UserCommentID, s => s.SourceID,
+                (uc, s) => new {Comment = uc, Summarize = s.DefaultIfEmpty()})
+                .SelectMany(sm => sm.Summarize.Select(s => new CommentGrid
+                {
+                    UserCommentID = sm.Comment.UserCommentID,
+                    InsertedBy = sm.Comment.InsertedBy,
+                    InsertedDate = sm.Comment.InsertedDate,
+                    UpdatedBy = sm.Comment.UpdatedBy,
+                    UpdatedDate = sm.Comment.UpdatedDate,
+                    IsDeleted = sm.Comment.IsDeleted,
+                    UserID = sm.Comment.UserID,
+                    SourceID = sm.Comment.SourceID,
+                    SourceTable = sm.Comment.SourceTable,
+                    Comment = sm.Comment.Comment,
+
+                    CommentCount = s.CommentCount,
+                    ViewCount = s.ViewCount,
+                    VoteUp = s.VoteUp,
+                    VoteDown = s.VoteDown,
+                    QualityCount = s.QualityCount,
+                    QualityScore = s.QualityScore
+
+                }));
+
+            // apply sorted
+            results = results.Sort(c);
+
             return results.ToPagedList(searchModel.PagedListConfig);
         }
 

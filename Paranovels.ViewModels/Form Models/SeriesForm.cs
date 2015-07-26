@@ -16,5 +16,6 @@ namespace Paranovels.ViewModels
         public IList<int> Categories { get; set; }
         public IList<int> Genres { get; set; }
         public IList<int> Contains { get; set; }
+        public IList<Feed> Feeds { get; set; } 
     }
 }

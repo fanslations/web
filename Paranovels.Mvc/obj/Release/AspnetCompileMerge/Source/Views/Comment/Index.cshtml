@@ -8,6 +8,21 @@
 
     var session = User.GetSession();
     var criteria = ViewBag.Criteria as CommentCriteria ?? new CommentCriteria();
+
+    var sortedModel = new SortedModel
+    {
+        Sorted = Request.QueryString["sorted"] ?? "new",
+        SortOptions = new Dictionary<string, string>
+        {
+            {"best", "best"},
+            {"comments", "comments"},
+            {"controversial", "controversial"},
+            {"new", "new"},
+            {"old", "old"},
+            {"top", "top"},
+            {"votes", "votes"},
+        }
+    };
 }
 
 <script>
@@ -46,12 +61,17 @@
                 vm.new = {};
                 vm.reply = {};
                 vm.edit = {};
+                vm.delete = {};
+                vm.report = { Type: 0, Comment: ''};
                 vm.commentIds = @JsonHelper.Serialize(Model.Data.Select(s => s.UserCommentID).ToList());
+                
                 vm.init = init;
                 vm.checkReply = checkReply;
-                vm.replyTo = replyTo;
-
+                
                 vm.saveNewComment = saveNewComment;
+                vm.cancelAll = cancelAll;
+
+                vm.replyComment = replyComment;
                 vm.saveReplyComment = saveReplyComment;
                 vm.cancelReplyComment = cancelReplyComment;
 
@@ -62,6 +82,11 @@
                 vm.deleteComment = deleteComment;
                 vm.saveDeleteComment = saveDeleteComment;
                 vm.cancelDeleteComment = cancelDeleteComment;
+
+                vm.reportComment = reportComment;
+                vm.saveReportComment = saveReportComment;
+                vm.cancelReportComment = cancelReportComment;
+                
                 vm.init();
 
 
@@ -80,15 +105,25 @@
                         vm.new.Comment = '';
                         window.location.reload();
                     }).error(function(xhr) {
-                        toastr["error"]('Sorry! Unable to save your comment');
+                        toastr["error"]('Sorry! Unable to save comment');
                     });
                 };
 
+                function cancelAll() {
+                    cancelEditComment();
+                    cancelReplyComment();
+                    cancelReportComment();
+                    cancelDeleteComment();
+                };
+
                 function editComment(commentId) {
+                    cancelAll();
+
                     vm.edit.ID = commentId;
                     vm.edit.InlineEditProperty = 'Comment';
                     vm.edit.Comment = $('#c' + commentId + ' .comment-content').text();
                     $('#edit-form').removeClass('hidden').insertAfter($('#c' + commentId));
+                    $('#edit' + commentId).addClass('on');
                 }
                 function saveEditComment() {
 
@@ -97,41 +132,72 @@
                         $('#c' + vm.edit.ID + ' .comment-content').text(vm.edit.Comment);
                         cancelEditComment();
                     }).error(function(xhr) {
-                        toastr["error"]('Sorry! Unable to save your reply');
+                        toastr["error"]('Sorry! Unable to save reply');
                     });
                 };
                 function cancelEditComment() {
-                    vm.edit = {};
                     $('#edit-form').addClass('hidden');
+                    $('#edit' + vm.edit.ID).removeClass('on');
+                    vm.edit = {};
                 }
 
                 function deleteComment(commentId) {
-                    vm.edit.ID = commentId;
-                    vm.edit.InlineEditProperty = 'IsDeleted';
-                    vm.edit.IsDeleted = true;
-                    $('#d' + commentId).addClass('hidden');
+                    cancelAll();
+
+                    vm.delete.ID = commentId;
+                    vm.delete.InlineEditProperty = 'IsDeleted';
+                    vm.delete.IsDeleted = true;
+                    $('#delete' + commentId).addClass('hidden');
                     $('#cd' + commentId).removeClass('hidden');
                 }
                 function saveDeleteComment() {
 
-                    $http.post('@Url.Action("Form", "Comment")', vm.edit, {
+                    $http.post('@Url.Action("Form", "Comment")', vm.delete, {
                     }).success(function(data) {
-                        $('#c' + vm.edit.ID).text("This comment has been removed.");
+                        $('#c' + vm.delete.ID).text("This comment has been removed.");
                         cancelDeleteComment();
                     }).error(function(xhr) {
-                        toastr["error"]('Sorry! Unable to save your reply');
+                        toastr["error"]('Sorry! Unable to delete comment');
                     });
                 };
                 function cancelDeleteComment() {
-                    $('#d' + vm.edit.ID).removeClass('hidden');
-                    $('#cd' + vm.edit.ID).addClass('hidden');
-                    vm.edit = {};
+                    $('#delete' + vm.delete.ID).removeClass('hidden');
+                    $('#cd' + vm.delete.ID).addClass('hidden');
+                    vm.delete = {};
                 }
 
-                function replyTo(commentId) {
+                function reportComment(commentId) {
+                    cancelAll();
+
+                    vm.report.SourceID = commentId;
+                    vm.report.SourceTable = @R.SourceTable.COMMENT;
+                    $('#report-form').removeClass('hidden').insertAfter($('#c' + commentId));
+                    $('#report' + commentId).addClass('on');
+                }
+
+                function saveReportComment() {
+
+                    $http.post('@Url.Action("SpamReport", "Comment")', vm.report, {
+                    }).success(function(data) {
+                        toastr["success"]('Successful');
+                        cancelReportComment();
+                    }).error(function(xhr) {
+                        toastr["error"]('Sorry! Unable to send report.');
+                    });
+                };
+                function cancelReportComment() {
+                    $('#report-form').addClass('hidden');
+                    $('#report' + vm.report.SourceID).removeClass('on');
+                    vm.report = {};
+                }
+
+                function replyComment(commentId) {
+                    cancelAll();
+
                     vm.reply.SourceID = commentId;
                     vm.reply.SourceTable = @R.SourceTable.COMMENT;
                     $('#reply-form').removeClass('hidden').insertAfter($('#c' + commentId));
+                    $('#reply' + commentId).addClass('on');
                 }
 
                 function saveReplyComment() {
@@ -145,9 +211,11 @@
                     });
                 };
                 function cancelReplyComment() {
-                    vm.reply = {};
                     $('#reply-form').addClass('hidden');
+                    $('#reply' + vm.reply.SourceID).removeClass('on');
+                    vm.reply = {};
                 }
+
                 function checkReply() {
                     $http.post('@Url.Action("Comments", "Query")', { SourceTable : @R.SourceTable.COMMENT, SourceIDs : vm.commentIds }, {
 
@@ -219,58 +287,12 @@
         });
     });
 </script>
-
+<div class="content">
+    @{
+        Html.RenderPartial("_Sorted", sortedModel);
+    }
+</div>
 <div id="commentApp" ng-controller="CommentController as vm">
-    <div id="new-form">
-        <form action="@Url.Action("Form", "Comment")" method="POST" class="position-relative">
-            <div class="form-group">
-                <label for="new-comment" class="sr-only">Comment</label>
-                <textarea id="new-comment" name="Comment" class="form-control" rows="4" placeholder="Enter your comment here..." ng-model="vm.new.Comment" required style="padding-right: 120px;"></textarea>
-            </div>
-            <div class="form-group clearfix position-absolute bottom-0px right-0px" style="margin-bottom: 20px; margin-right: 10px;">
-                <button type="button" class="btn btn-primary col-xs-7" ng-click="vm.saveNewComment()"><i class="fa fa-plus-circle"></i>Submit</button>
-            </div>
-        </form>
-    </div>
-    <div id="reply-form" class="hidden">
-        <form action="@Url.Action("Form", "Comment")" method="POST" class="position-relative">
-            <div class="form-group">
-                <label for="reply-comment" class="sr-only">Comment</label>
-                <textarea id="reply-comment" name="Comment" class="form-control" rows="4" placeholder="Enter your comment here..." ng-model="vm.reply.Comment" required style="height: auto !important; padding-right: 120px;"></textarea>
-            </div>
-            <div class="form-group clearfix position-absolute bottom-0px right-0px" style="margin: 10px;">
-                <button type="button" class="btn btn-primary btn-block" ng-click="vm.saveReplyComment()"><i class="fa fa-plus-circle"></i>Submit</button>
-                <button type="button" class="btn btn-default btn-block" ng-click="vm.cancelReplyComment()"><i class="fa fa-times-circle"></i>Cancel</button>
-            </div>
-        </form>
-    </div>
-    <div id="edit-form" class="hidden">
-        <form action="@Url.Action("Form", "Comment")" method="POST" class="position-relative">
-            <div class="form-group">
-                <label for="edit-comment" class="sr-only">Comment</label>
-                <textarea id="edit-comment" name="Comment" class="form-control" rows="4" placeholder="Enter your comment here..." ng-model="vm.edit.Comment" required style="height: auto !important; padding-right: 120px;"></textarea>
-            </div>
-            <div class="form-group clearfix position-absolute bottom-0px right-0px" style="margin: 10px;">
-                <button type="button" class="btn btn-primary btn-block" ng-click="vm.saveEditComment()"><i class="fa fa-check-circle"></i>Update</button>
-                <button type="button" class="btn btn-default btn-block" ng-click="vm.cancelEditComment()"><i class="fa fa-times-circle"></i>Cancel</button>
-            </div>
-        </form>
-    </div>
-    <div id="report-form" class="hidden">
-        <form action="@Url.Action("Form", "Comment")" method="POST" class="position-relative">
-            <div class="form-group">
-                
-            </div>
-            <div class="form-group">
-                <label for="edit-comment" class="sr-only">Comment</label>
-                <textarea id="edit-comment" name="Comment" class="form-control" rows="4" placeholder="Enter your comment here..." ng-model="vm.edit.Comment" required style="height: auto !important; padding-right: 120px;"></textarea>
-            </div>
-            <div class="form-group clearfix position-absolute bottom-0px right-0px" style="margin: 10px;">
-                <button type="button" class="btn btn-primary btn-block" ng-click="vm.saveEditComment()"><i class="fa fa-check-circle"></i>Update</button>
-                <button type="button" class="btn btn-default btn-block" ng-click="vm.cancelEditComment()"><i class="fa fa-times-circle"></i>Cancel</button>
-            </div>
-        </form>
-    </div>
     <div class="comments">
         @foreach (var item in Model.Data)
         {
@@ -283,18 +305,31 @@
                     else
                     {
                         <div class="comment-info">
-                            <span>@(item.Commenter)</span>
-                            <time class="timeago pull-right" datetime="@item.UpdatedDate">@item.UpdatedDate</time>
+                            <strong>@(item.Commenter)</strong>
+                            <time class="timeago small pull-right" datetime="@item.UpdatedDate">@item.UpdatedDate</time>
                         </div>
                         <div class="comment-content">@item.Comment</div>
                         <ul class="comment-options">
-                            <li><a href="#reply" ng-click="vm.replyTo(@item.UserCommentID, $event)">reply</a></li>
-                            <li class="@(item.InsertedBy == session.UserID ? "" : "hidden")"><a href="#edit" ng-click="vm.editComment(@item.UserCommentID, $event)">edit</a></li>
-                            <li class="@(item.InsertedBy == session.UserID ? "" : "hidden")">
-                                <a id="d@(item.UserCommentID)" href="#delete" ng-click="vm.deleteComment(@item.UserCommentID, $event)">delete</a>
-                                <div id="cd@(item.UserCommentID)" class="hidden"><span class="color-red">are you sure?</span> <a class="cursor-pointer" ng-click="vm.saveDeleteComment(@item.UserCommentID, $event)">Yes</a> / <a class="cursor-pointer" ng-click="vm.cancelDeleteComment(@item.UserCommentID, $event)">NO</a></div>
+                            <li>
+                                <a id="reply@(item.UserCommentID)" role="button" ng-click="vm.replyComment(@item.UserCommentID, $event)"><i class="fa fa-reply"></i>reply</a>
                             </li>
-                            <li><a>report</a></li>
+                            <li class="@(item.InsertedBy == session.UserID ? "" : "hidden")">
+                                <a id="edit@(item.UserCommentID)" role="button" ng-click="vm.editComment(@item.UserCommentID, $event)"><i class="fa fa-edit"></i>edit</a>
+                            </li>
+                            <li class="@(item.InsertedBy == session.UserID ? "" : "hidden")">
+                                <a id="delete@(item.UserCommentID)" role="button" ng-click="vm.deleteComment(@item.UserCommentID, $event)"><i class="fa fa-trash"></i>delete</a>
+                                <div id="cd@(item.UserCommentID)" class="hidden delete-confirm"><span class="color-red">are you sure?</span> <a class="cursor-pointer" ng-click="vm.saveDeleteComment(@item.UserCommentID, $event)">Yes</a> / <a class="cursor-pointer" ng-click="vm.cancelDeleteComment(@item.UserCommentID, $event)">NO</a></div>
+                            </li>
+                            <li>
+                                <div class="comment vote @(item.Voted.GetValueOrDefault() == 1 ? "likes" : item.Voted.GetValueOrDefault() == -1 ? "dislikes" : "")">
+                                    <a role="button" class="action vote-up" data-vote='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.COMMENT, "Vote": 1}' title="i like this"><i class="fa fa-thumbs-o-up"></i></a>
+                                    <span class="score @((item.VoteUp + item.VoteDown) < 0 ? "dislikes" : "likes")">@(item.VoteUp.GetValueOrDefault() - item.VoteDown.GetValueOrDefault())</span>
+                                    <a role="button" class="action vote-down" data-vote='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.COMMENT, "Vote": -1}' title="i dislike this"><i class="fa fa-thumbs-o-down"></i></a>
+                                </div>
+                            </li>
+                            <li>
+                                <a id="report@(item.UserCommentID)" role="button" ng-click="vm.reportComment(@item.UserCommentID, $event)"><i class="fa fa-flag"></i>report</a>
+                            </li>
                         </ul>
                     }
                 </div>
@@ -302,25 +337,88 @@
             </div>
         }
     </div>
-    @Html.Raw(Model.ToPagination(Request.RawUrl, 0))
+    <div class="form margin-top-10px">
+        <div id="new-form" class="well well-sm no-margin">
+            <form ng-submit="vm.saveNewComment()">
+                <div class="form-group">
+                    <label for="new-comment" class="sr-only">Comment</label>
+                    <textarea id="new-comment" name="Comment" class="form-control" rows="4" placeholder="Enter your comment here..." ng-model="vm.new.Comment" required></textarea>
+                </div>
+                <div class="clearfix">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-comment"></i>Post Comment</button>
+                </div>
+            </form>
+        </div>
+        <div id="reply-form" class="hidden well well-sm no-margin">
+            <form ng-submit="vm.saveReplyComment()">
+                <div class="form-group">
+                    <label for="reply-comment" class="sr-only">Comment</label>
+                    <textarea id="reply-comment" name="Comment" class="form-control" rows="4" placeholder="Enter your comment here..." ng-model="vm.reply.Comment" required style="height: 50px !important;"></textarea>
+                </div>
+                <div class="clearfix">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-reply"></i>Post Reply</button>
+                    <button type="button" class="btn btn-default" ng-click="vm.cancelReplyComment()"><i class="fa fa-times-circle"></i>Cancel</button>
+                </div>
+            </form>
+        </div>
+        <div id="edit-form" class="hidden well well-sm no-margin">
+            <form ng-submit="vm.saveEditComment()">
+                <div class="form-group">
+                    <label for="edit-comment" class="sr-only">Comment</label>
+                    <textarea id="edit-comment" name="Comment" class="form-control" rows="4" placeholder="Enter your comment here..." ng-model="vm.edit.Comment" required style="height: 50px !important;"></textarea>
+                </div>
+                <div class="clearfix">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-edit"></i>Update Comment</button>
+                    <button type="button" class="btn btn-default" ng-click="vm.cancelEditComment()"><i class="fa fa-times-circle"></i>Cancel</button>
+                </div>
+            </form>
+        </div>
+        <div id="report-form" class="hidden well well-sm no-margin">
+            <form ng-submit="vm.saveReportComment()">
+                <div class="form-group">
+                    @foreach (var item in R.SpamReportType.Translate.OrderBy(o => o.Key))
+                    {
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="Type" value="@item.Key" ng-model="vm.report.Type" />
+                                @item.Value
+                            </label>
+                        </div>
+                    }
+                </div>
+                <div class="form-group">
+                    <label for="report-comment" class="sr-only">Additional information</label>
+                    <textarea id="report-comment" name="Comment" class="form-control" rows="4" placeholder="Enter additional information here..." ng-model="vm.report.Comment" style="height: 50px !important;"></textarea>
+                </div>
+                <div class="clearfix">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-flag"></i>Submit Report</button>
+                    <button type="button" class="btn btn-default" ng-click="vm.cancelReportComment()"><i class="fa fa-times-circle"></i>Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <div id="comment-template" class="hidden comment">
     <div id="{{'c' + comment.UserCommentID}}">
         <div class="comment-info">
-            <span>{{comment.Commenter}}</span><time class="timeago pull-right" datetime="{{comment.UpdatedDate}}" title="{{comment.UpdatedDate}}">{{comment.UpdatedDate | timeago}}</time>
+            <strong>{{comment.Commenter}}</strong><time class="timeago small pull-right" datetime="{{comment.UpdatedDate}}" title="{{comment.UpdatedDate}}">{{comment.UpdatedDate | timeago}}</time>
         </div>
         <div class="comment-content">{{comment.Comment}}</div>
         <ul class="comment-options">
-            <li><a href="#reply" ng-click="$parent.vm.replyTo(comment.UserCommentID, $event)">reply</a></li>
-
-            <li ng-class="comment.InsertedBy == @session.UserID ? '' : 'hidden'"><a href=" #edit" ng-click="$parent.vm.editComment(comment.UserCommentID, $event)">edit</a></li>
-            <li ng-class="comment.InsertedBy == @session.UserID ? '' : 'hidden'">
-                <a id="{{'d' + comment.UserCommentID}}" href="#delete" ng-click="$parent.vm.deleteComment(comment.UserCommentID, $event)">delete</a>
-                <div id="{{'cd' + comment.UserCommentID}}" class="hidden"><span class="color-red">are you sure?</span> <a class="cursor-pointer" ng-click="$parent.vm.saveDeleteComment(comment.UserCommentID, $event)">Yes</a> / <a class="cursor-pointer" ng-click="$parent.vm.cancelDeleteComment(comment.UserCommentID, $event)">NO</a></div>
-
+            <li>
+                <a id="{{'reply' + comment.UserCommentID}}" role="button" ng-click="$parent.vm.replyComment(comment.UserCommentID, $event)"><i class="fa fa-reply"></i>reply</a>
             </li>
-            <li><a>report</a></li>
+            <li ng-class="comment.InsertedBy == @session.UserID ? '' : 'hidden'">
+                <a id="{{'edit' + comment.UserCommentID}}" role="button" ng-click="$parent.vm.editComment(comment.UserCommentID, $event)"><i class="fa fa-edit"></i>edit</a>
+            </li>
+            <li ng-class="comment.InsertedBy == @session.UserID ? '' : 'hidden'">
+                <a id="{{'delete' + comment.UserCommentID}}" role="button" ng-click="$parent.vm.deleteComment(comment.UserCommentID, $event)"><i class="fa fa-trash"></i>delete</a>
+                <div id="{{'cd' + comment.UserCommentID}}" class="hidden"><span class="color-red">are you sure?</span> <a role="button" ng-click="$parent.vm.saveDeleteComment(comment.UserCommentID, $event)">Yes</a> / <a role="button" ng-click="$parent.vm.cancelDeleteComment(comment.UserCommentID, $event)">NO</a></div>
+            </li>
+            <li>
+                <a id="{{'report' + comment.UserCommentID}}" role="button" ng-click="$parent.vm.reportComment(comment.UserCommentID, $event)"><i class="fa fa-flag"></i>report</a>
+            </li>
         </ul>
     </div>
     <div id="{{'r' + comment.UserCommentID}}" class="replies"></div>

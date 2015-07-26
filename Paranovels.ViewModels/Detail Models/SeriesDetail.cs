@@ -24,6 +24,10 @@ namespace Paranovels.ViewModels
         [NotMapped]
         public Group Group { get; set; }
         [NotMapped]
-        public List<Release> Releases { get; set; } 
+        public List<Release> Releases { get; set; }
+        [NotMapped]
+        public List<Feed> Feeds { get; set; }
+        [NotMapped]
+        public List<Glossary> Glossaries { get; set; }
     }
 }

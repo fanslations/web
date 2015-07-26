@@ -91,3 +91,8 @@
     display: table-cell;
     width: 100%;
 }
+
+
+.form-group {
+    margin-bottom: 10px;
+}

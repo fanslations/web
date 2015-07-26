@@ -14,7 +14,7 @@ namespace Paranovels.Facade
 {
     public class SeriesFacade : IFacade
     {
-        public int AddTranslationScene(SeriesForm form)
+        public int AddSeries(SeriesForm form)
         {
             using (var uow = UnitOfWorkFactory.Create<NovelContext>())
             {
@@ -23,7 +23,7 @@ namespace Paranovels.Facade
 
                 var connectorService = new ConnectorService(uow);
 
-                if (form.Categories != null || form.InlineEditProperty == "Categories")
+                if (form.Categories != null || form.InlineEditProperty == form.PropertyName(m => m.Categories))
                 {
                     form.Categories = form.Categories ?? new List<int>();
                     var connectorForm = new GenericForm<Connector>
@@ -33,7 +33,7 @@ namespace Paranovels.Facade
                     };
                     connectorService.Connect(connectorForm, form.Categories);
                 }
-                if (form.Genres != null || form.InlineEditProperty == "Genres")
+                if (form.Genres != null || form.InlineEditProperty == form.PropertyName(m => m.Genres))
                 {
                     form.Genres = form.Genres ?? new List<int>();
                     var connectorForm = new GenericForm<Connector>
@@ -43,7 +43,7 @@ namespace Paranovels.Facade
                     };
                     connectorService.Connect(connectorForm, form.Genres);
                 }
-                if (form.Contains != null || form.InlineEditProperty == "Contains")
+                if (form.Contains != null || form.InlineEditProperty == form.PropertyName(m => m.Contains))
                 {
                     form.Contains = form.Contains ?? new List<int>();
                     var connectorForm = new GenericForm<Connector>
@@ -54,11 +54,41 @@ namespace Paranovels.Facade
                     connectorService.Connect(connectorForm, form.Contains);
                 }
 
+                if (form.Feeds != null || form.InlineEditProperty == form.PropertyName(m => m.Feeds))
+                {
+                    var feedService = new FeedService(uow);
+                    foreach (var feed in form.Feeds)
+                    {
+                        feed.UrlHash = feed.Url.GetIntHash();
+                        feed.Status = feed.Status == 0 ? R.FeedStatus.ACTIVE : feed.Status;
+                        var feedForm = new GenericForm<Feed>
+                        {
+                            ByUserID = form.ByUserID,
+                            DataModel = feed
+                        };
+                        var feedID = feedService.SaveChanges(feedForm);
+
+                        // add to connector only if it a new feed
+                        if (feed.FeedID == 0)
+                        {
+                            // connect series to feed
+                            var connectorForm = new ConnectorForm()
+                            {
+                                ByUserID = form.ByUserID,
+                                ConnectorType = R.ConnectorType.SERIES_FEED,
+                                SourceID = id,
+                                TargetID = feedID
+                            };
+                            connectorService.SaveChanges(connectorForm);
+                        }
+                    }
+                }
+
                 return id;
             }
         }
 
-        public SeriesDetail GetTranslationScene(SeriesCriteria criteria)
+        public SeriesDetail GetSeries(SeriesCriteria criteria)
         {
             using (var uow = UnitOfWorkFactory.Create<NovelContext>())
             {
@@ -89,6 +119,14 @@ namespace Paranovels.Facade
                 detail.UserListConnector = service.View<Connector>().Where(w=> w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.SourceID == detail.ID && userListIDs.Contains(w.TargetID)).SingleOrDefault();
 
                 detail.Releases = service.View<Release>().Where(w => w.SeriesID == detail.SeriesID).ToList();
+
+                detail.Feeds = service.View<Connector>()
+                                .Where(w => w.ConnectorType == R.ConnectorType.SERIES_FEED && w.SourceID == detail.SeriesID)
+                                .Join(service.View<Feed>().All(), c => c.TargetID, f => f.FeedID, (c, f) => f).ToList();
+
+                detail.Glossaries = service.View<Connector>()
+                    .Where(w => w.ConnectorType == R.ConnectorType.SERIES_GLOSSARY && w.SourceID == detail.SeriesID)
+                    .Join(service.View<Glossary>().All(), c => c.TargetID, f => f.GlossaryID, (c, f) => f).ToList();
                 return detail;
             }
         }

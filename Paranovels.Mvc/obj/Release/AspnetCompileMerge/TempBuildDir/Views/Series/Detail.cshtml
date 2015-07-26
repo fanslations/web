@@ -9,6 +9,7 @@
     ViewBag.Title = Model.Title;
     Layout = "~/Views/Shared/_Layout.cshtml";
 
+    var tab = Request.QueryString["Tab"] ?? "Comments";
 }
 <section class="section">
     <div class="header">
@@ -58,6 +59,20 @@
             </div>
         </div>
         <div class="detail-group">
+            <strong>Categories</strong>
+            <div>
+                @Html.Raw(string.Join(", ", Model.Categories.Select(s => string.Format(@"<a href=""{1}"">{0}</a>", s.Name, Url.Action("Detail", "Tag", new { ID = s.TagID, Seo = s.Name.ToSeo() })))).FormatString())
+                @Html.ImproveThis(m => m.Categories)
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Genres</strong>
+            <div>
+                @Html.Raw(string.Join(", ", Model.Genres.Select(s => string.Format(@"<a href=""{1}"">{0}</a>", s.Name, Url.Action("Detail", "Tag", new { ID = s.TagID, Seo = s.Name.ToSeo() })))).FormatString())
+                @Html.ImproveThis(m => m.Genres)
+            </div>
+        </div>
+        <div class="detail-group">
             <strong>Updated Date</strong>
             <div>@Html.Raw(Model.UpdatedDate.FormatDate())</div>
         </div>
@@ -91,7 +106,7 @@
             <div>
                 @{
                     var daysOfRelease = Model.Releases.Where(w => w.Date > DateTime.Now.AddDays(DAYS * -1)).GroupBy(o=> o.Date.DayOfWeek).OrderByDescending(o=> o.Count()).Select(s=>s.Key).ToList();
-             
+
                 }
                 @string.Join(", ", daysOfRelease)
             </div>
@@ -109,24 +124,44 @@
                 <a href="@Model.RawUrl" target="_blank">@Model.RawUrl</a>
                 @if (string.IsNullOrWhiteSpace(Model.RawUrl))
                 {
-                    <text>No raw source url available. Click on 'Edit' to help us update it.</text>
+                <text>No raw source url available. Click on 'Edit' to help us update it.</text>
                 }
                 @Html.ImproveThis(m => m.RawUrl)
             </div>
         </div>
-
-        <div class="detail-group">
-            <strong>Categories</strong>
+        @*<div class="detail-group">
+            <strong>Website</strong>
             <div>
-                @Html.Raw(string.Join(", ", Model.Categories.Select(s => string.Format(@"<a href=""{1}"">{0}</a>", s.Name, Url.Action("Detail", "Tag", new { ID = s.TagID, Seo = s.Name.ToSeo() })))).FormatString())
-                @Html.ImproveThis(m => m.Categories)
+                @if (string.IsNullOrWhiteSpace(Model.Url))
+                {
+                    Html.Raw(Model.Url.FormatString());
+                }
+                else
+                {
+                    <a href="@Model.Url" target="_blank">@Model.Url<i class="fa fa-external-link right"></i></a>
+                }
+                @Html.ImproveThis(m => m.Url)
             </div>
-        </div>
+        </div>*@
         <div class="detail-group">
-            <strong>Genres</strong>
+            <strong>Rss Feed</strong>
             <div>
-                @Html.Raw(string.Join(", ", Model.Genres.Select(s => string.Format(@"<a href=""{1}"">{0}</a>", s.Name, Url.Action("Detail", "Tag", new { ID = s.TagID, Seo = s.Name.ToSeo() })))).FormatString())
-                @Html.ImproveThis(m => m.Genres)
+                <ul class="list-unstyled no-margin">
+                    <li>
+                        @Html.Raw(Model.Feeds.Count > 0 ? "" : "No rss feed available. Help us add a rss feed and track this series.")
+                        @foreach (var item in Model.Feeds)
+                        {
+                            <ul class="list-inline list-unstyled">
+                                <li>
+                                    <a href="@item.Url">@item.Url</a>
+                                </li>
+                            </ul>
+                        }
+                    </li>
+                    <li>
+                        @Html.ImproveThis(m => m.Feeds, customHtmlIcon: @"<i class=""fa fa-plus-circle""></i>Add new rss feed")
+                    </li>
+                </ul>
             </div>
         </div>
         <div class="detail-group">
@@ -134,44 +169,57 @@
             <div>
                 @if (Model.GroupID > 0)
                 {
-                    <a href="@Url.Action("Detail", "Group", new {ID = Model.GroupID, Seo=Model.Group.Name.ToSeo()})">@Html.Raw(Model.Group.Name.FormatString())</a>
+                <a href="@Url.Action("Detail", "Group", new {ID = Model.GroupID, Seo=Model.Group.Name.ToSeo()})">@Html.Raw(Model.Group.Name.FormatString())</a>
                 }
                 else
                 {
-                    @Html.Raw("".FormatString());
+                @Html.Raw("".FormatString());
                 }
                 @Html.ImproveThis(m => m.GroupID)
             </div>
         </div>
     </div>
 </section>
-<div class="subheader">
-    <h2 class="title">Releases</h2>
-</div>
-<div class="content section">
-    @{
-        Html.RenderPartial("~/Views/Release/_Release.cshtml", new PagedList<ReleaseGrid>
-        {
-            Data = Model.Releases.Select(s => new ReleaseGrid
-            {
-                ReleaseID = s.ReleaseID,
-                Title = s.Title,
-                Date = s.Date,
-                Url = s.Url,
-
-            }).ToList()
-        });
-    }
-
-</div>
-
 <section class="section">
-    <div class="header">
-        <h2>Comments</h2>
-    </div>
     <div class="content">
-        @{
-            Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.SeriesID, SourceTable = R.SourceTable.SERIES });
-        }
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="@(tab.Equals("Comments",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                <a href="?Tab=Comments" aria-controls="home" role="tab">Comments</a>
+            </li>
+            <li role="presentation" class="@(tab.Equals("Releases",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                <a href="?Tab=Releases" aria-controls="home" role="tab">Releases</a>
+            </li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            @if (tab.Equals("Comments", StringComparison.OrdinalIgnoreCase))
+            {
+                <div role="tabpanel" class="tab-pane active" id="comments">
+                    @{
+                        Html.RenderAction("Index", "Comment", new CommentCriteria {SourceID = Model.SeriesID, SourceTable = R.SourceTable.SERIES, Sorted = Request.QueryString["sorted"]});
+                    }
+                </div>
+            }
+            @if (tab.Equals("Releases", StringComparison.OrdinalIgnoreCase))
+            {
+                <div role="tabpanel" class="tab-pane active section" id="releases">
+                    @{
+                        Html.RenderPartial("~/Views/Release/_Release.cshtml", new PagedList<ReleaseGrid>
+                        {
+                            Data = Model.Releases.Select(s => new ReleaseGrid
+                            {
+                                ReleaseID = s.ReleaseID,
+                                Title = s.Title,
+                                Date = s.Date,
+                                Url = s.Url,
+                                Series = Model,
+                                Group = Model.Group
+                            }).AsQueryable().Sort(new BaseCriteria {Sorted = Request.QueryString["sorted"]}).ToList()
+                        });
+                    }
+                </div>
+            }
+        </div>
     </div>
 </section>

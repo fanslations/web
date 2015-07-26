@@ -26,7 +26,7 @@ namespace Paranovels.Facade
                 return new NovelFacade().AddContent(formModel as ContentForm);
 
             if (formModel.GetType() == typeof (SeriesForm))
-                return new SeriesFacade().AddTranslationScene(formModel as SeriesForm);
+                return new SeriesFacade().AddSeries(formModel as SeriesForm);
             
             if (formModel.GetType() == typeof(TagForm))
                 return new TagFacade().AddTag(formModel as TagForm);
@@ -48,6 +48,9 @@ namespace Paranovels.Facade
 
             if (formModel.GetType() == typeof(PreferenceForm))
                 return new UserFacade().AddPreference(formModel as PreferenceForm);
+
+            if (formModel.GetType() == typeof(SpamReportForm))
+                return new SpamReportFacade().AddSpamReport(formModel as SpamReportForm);
 
             return -1;
         }

@@ -21,31 +21,36 @@ namespace Paranovels.Facade
                 var service = new GroupService(uow);
                 var id = service.SaveChanges(form);
 
-                if (form.InlineEditProperty == form.PropertyName(m => m.Feeds))
+                var connectorService = new ConnectorService(uow);
+
+                if (form.Feeds != null || form.InlineEditProperty == form.PropertyName(m => m.Feeds))
                 {
                     var feedService = new FeedService(uow);
-                    var feedForm = new GenericForm<Feed>
+                    foreach (var feed in form.Feeds)
                     {
-                        ByUserID = form.ByUserID,
-                        DataModel = new Feed
+                        feed.UrlHash = feed.Url.GetIntHash();
+                        feed.Status = feed.Status == 0 ? R.FeedStatus.ACTIVE : feed.Status;
+                        var feedForm = new GenericForm<Feed>
                         {
-                            Url = form.Feeds,
-                            UrlHash = form.Feeds.GetIntHash(),
-                            Status = R.FeedStatus.ACTIVE,
-                        }
-                    };
-                    var feedID = feedService.SaveChanges(feedForm);
+                            ByUserID = form.ByUserID,
+                            DataModel = feed
+                        };
+                        var feedID = feedService.SaveChanges(feedForm);
 
-                    // connect group to feed
-                    var connectorService = new ConnectorService(uow);
-                    var connectorForm = new ConnectorForm()
-                    {
-                        ByUserID = form.ByUserID,
-                        ConnectorType = R.ConnectorType.GROUP_FEED,
-                        SourceID = id,
-                        TargetID = feedID
-                    };
-                    connectorService.SaveChanges(connectorForm);
+                        // add to connector only if it a new feed
+                        if (feed.FeedID == 0)
+                        {
+                            // connect series to feed
+                            var connectorForm = new ConnectorForm()
+                            {
+                                ByUserID = form.ByUserID,
+                                ConnectorType = R.ConnectorType.GROUP_FEED,
+                                SourceID = id,
+                                TargetID = feedID
+                            };
+                            connectorService.SaveChanges(connectorForm);
+                        }
+                    }
                 }
 
                 if (form.Glossaries != null && form.InlineEditProperty == form.PropertyName(m => m.Glossaries))
@@ -60,7 +65,6 @@ namespace Paranovels.Facade
                         var glossaryID = glossaryService.SaveChanges(glossaryForm);
 
                         // connect group to glossary
-                        var connectorService = new ConnectorService(uow);
                         var connectorForm = new ConnectorForm()
                         {
                             ByUserID = form.ByUserID,

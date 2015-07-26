@@ -80,7 +80,7 @@
             </div>
         </div>
         <div class="detail-group">
-            <strong>Translation Quality</strong>
+            <strong>Rating</strong>
             <div>@DisplayRating(Model.Summarize)</div>
         </div>
         <div class="detail-group">
@@ -114,13 +114,20 @@
     </div>
 
 </section>
-<section id="comments" class="section">
-    <div class="header">
-        <h2>@Model.Summarize.CommentCount Comments</h2>
-    </div>
+
+<section class="section">
     <div class="content">
-        @{
-            Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.ReleaseID, SourceTable = R.SourceTable.RELEASE });
-        }
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#comments" aria-controls="home" role="tab" data-toggle="tab">Comments (@Model.Summarize.CommentCount)</a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="comments">
+                @{
+                    Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.ReleaseID, SourceTable = R.SourceTable.RELEASE, Sorted = Request.QueryString["sorted"] });
+                }
+            </div>
+        </div>
     </div>
 </section>

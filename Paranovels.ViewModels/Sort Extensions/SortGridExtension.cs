@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace Paranovels.ViewModels
 {
@@ -71,6 +72,39 @@ namespace Paranovels.ViewModels
                     break;
                 default:
                     grids = grids.OrderByDescending(o => o.Date);
+                    break;
+            }
+            return grids;
+        }
+
+        public static IQueryable<CommentGrid> Sort(this IQueryable<CommentGrid> grids, BaseCriteria criteria)
+        {
+            criteria.Sorted = criteria.Sorted ?? "new";
+            switch (criteria.Sorted)
+            {
+                case "best":
+                    grids = grids.OrderByDescending(o => o.VoteUp + o.VoteDown + o.CommentCount);
+                    break;
+                case "comments":
+                    grids = grids.OrderByDescending(o => o.CommentCount);
+                    break;
+                case "controversial":
+                    grids = grids.OrderByDescending(o => (o.VoteUp + o.VoteDown) + (Math.Abs(o.VoteUp.Value + o.VoteDown.Value) * -1));
+                    break;
+                case "new":
+                    grids = grids.OrderByDescending(o => o.InsertedDate);
+                    break;
+                case "old":
+                    grids = grids.OrderBy(o => o.InsertedDate);
+                    break;
+                case "top":
+                    grids = grids.OrderByDescending(o => o.VoteUp);
+                    break;
+                case "votes":
+                    grids = grids.OrderByDescending(o => o.VoteUp + o.VoteDown);
+                    break;
+                default:
+                    grids = grids.OrderByDescending(o => o.InsertedDate);
                     break;
             }
             return grids;

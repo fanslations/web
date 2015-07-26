@@ -56,18 +56,31 @@
 {
     <li class="row-list">
         <div class="col-first">
-            <div class="vote @(item.Voted.GetValueOrDefault() == 1 ? "likes" : item.Voted.GetValueOrDefault() == -1 ? "dislikes" : "")">
-                <div class="action vote-up" data-vote='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Vote": 1}'><i class="fa fa-chevron-up"></i></div>
-                <div class="score @((item.VoteUp + item.VoteDown) < 0 ? "dislikes" : "likes")">@(item.VoteUp.GetValueOrDefault() + item.VoteDown.GetValueOrDefault())</div>
-                <div class="action vote-down" data-vote='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Vote": -1}'><i class="fa fa-chevron-down"></i></div>
-            </div>
-            <div class="read @(item.IsRead ? "yes" : "no")" title="@(item.IsRead ? "Your already read this release" : "Mark this as read")">
-                <div class="action read" data-read='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE}'><i class="fa @("fa-check")"></i></div>
-            </div>
+            @if (item.Voted.HasValue)
+            {
+                <div class="vote @(item.Voted.GetValueOrDefault() == 1 ? "likes" : item.Voted.GetValueOrDefault() == -1 ? "dislikes" : "")">
+                    <div class="action vote-up" data-vote='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Vote": 1}'><i class="fa fa-chevron-up"></i></div>
+                    <div class="score @((item.VoteUp + item.VoteDown) < 0 ? "dislikes" : "likes")">@(item.VoteUp.GetValueOrDefault() - item.VoteDown.GetValueOrDefault())</div>
+                    <div class="action vote-down" data-vote='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Vote": -1}'><i class="fa fa-chevron-down"></i></div>
+                </div>
+            }
+            @if (item.IsRead.HasValue)
+            {
+                <div class="read @(item.IsRead.GetValueOrDefault() ? "yes" : "no")" title="@(item.IsRead.GetValueOrDefault() ? "Your already read this release" : "Mark this as read")">
+                    <div class="action read" data-read='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE}'><i class="fa @("fa-check")"></i></div>
+                </div>
+            }
         </div>
         <div class="col-content">
-            <div class="fs-12em">
-                <a href="@Url.Action("Out", "Release", new { ID = item.ReleaseID, Url = item.Url, Seo = item.Title.ToSeo() })">@item.Title</a>
+            <div>
+                @if (item.CommentCount.HasValue)
+                {
+                    <a href="@Url.Action("Out", "Release", new {ID = item.ReleaseID, Url = item.Url, Seo = item.Title.ToSeo()})" class="fs-12em">@item.Title</a>
+                }
+                else
+                {
+                    <a href="@Url.Action("Detail", "Release", new {ID = item.ReleaseID, Seo = item.Title.ToSeo()})" class="fs-12em">@item.Title</a>
+                }
                 @if (item.Series == null)
                 {
                     @item.ImproveThis(m => m.Title, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Release") } })
@@ -75,12 +88,21 @@
             </div>
             <ul class="list-unstyled list-inline fs-09em">
                 <li title="Release Date"><i class="fa fa-clock-o"></i><time class="timeago" datetime="@item.Date">@item.Date</time></li>
-                <li title="Comments"><i class="fa fa-comments-o"></i><a href="@Url.Action("Detail", "Release", new { ID = item.ReleaseID, Seo = item.Title.ToSeo() })#comments">@item.CommentCount.GetValueOrDefault() comments</a></li>
-                <li title="Translation Quality Rating"><i class="fa fa-diamond" title="@(item.QualityRated == 0 ? "You haven't  rated this" : string.Format("You rated {0:0.0} star(s)", item.QualityRated / 2))"></i>@DisplayRating(item)</li>
+                @if (item.QualityRated.HasValue)
+                {
+                    <li title="Comments">
+                        <i class="fa fa-comments-o"></i><a href="@Url.Action("Detail", "Release", new {ID = item.ReleaseID, Seo = item.Title.ToSeo()})#comments">@item.CommentCount.GetValueOrDefault() comments</a>
+                    </li>
+                    <li title="Rating">
+                        <i class="fa fa-diamond" title="@(item.QualityRated == 0 ? "You haven't  rated this" : string.Format("You rated {0:0.0} star(s)", item.QualityRated/2))"></i>@DisplayRating(item)
+                    </li>
+                }
                 @if (item.Series != null)
                 {
                     <li title="Series Title">
-                        <i class="fa fa-book"></i><a href="@Url.Action("Detail","Series", new{ ID= item.Series.ID, Seo = item.Series.Title.ToSeo()})">@item.Series.Title</a>
+                        <i class="fa fa-book">
+
+                        </i><a href="@Url.Action("Detail","Series", new{ ID= item.Series.ID, Seo = item.Series.Title.ToSeo()})">@item.Series.Title</a>
                     </li>
                 }
                 @if (item.Group != null)

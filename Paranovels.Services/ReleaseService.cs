@@ -22,7 +22,7 @@ namespace Paranovels.Services
         {
             var tRelease = Table<Release>();
 
-            var release = tRelease.GetOrAdd(w => w.ReleaseID == form.ReleaseID || w.UrlHash == form.UrlHash);
+            var release = tRelease.GetOrAdd(w => w.ReleaseID == form.ReleaseID || (form.ReleaseID == 0 && w.UrlHash == form.UrlHash));
             MapProperty(form, release, form.InlineEditProperty);
             UpdateAuditFields(release, form.ByUserID);
 

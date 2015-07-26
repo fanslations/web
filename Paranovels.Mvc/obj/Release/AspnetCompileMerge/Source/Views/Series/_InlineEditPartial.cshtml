@@ -1,4 +1,5 @@
 ﻿@using Paranovels.Common
+@using Paranovels.DataModels
 @using Paranovels.ViewModels
 @using Thi.Core
 @model InlineEditForm<SeriesDetail>
@@ -142,6 +143,12 @@
             {
                 <label for="@Model.InlineEditProperty" class="sr-only">Raw Source Url</label>
                 <input id="@Model.InlineEditProperty" type="url" class="form-control" name="@Model.InlineEditProperty" required value="@Model.Model.RawUrl" />
+            }
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Feeds))
+            {
+                var feed = new Feed();
+                <label for="@Model.InlineEditProperty" class="sr-only">Rss Feed Url</label>
+                <input id="@Model.InlineEditProperty" type="url" class="form-control" name="@(Model.InlineEditProperty)[0].@feed.PropertyName(m=>m.Url)" required />
             }
             else
             {

@@ -24,7 +24,7 @@ namespace Paranovels.Mvc.Controllers
         public ActionResult Detail(SeriesCriteria criteria)
         {
             criteria.ByUserID = UserSession.UserID;
-            var detail = Facade<SeriesFacade>().GetTranslationScene(criteria);
+            var detail = Facade<SeriesFacade>().GetSeries(criteria);
             
             // log views
             Facade<UserActionFacade>().Viewing(UserSession.UserID, detail.SeriesID, R.SourceTable.SERIES);
@@ -52,7 +52,7 @@ namespace Paranovels.Mvc.Controllers
 
         public ActionResult InlineEdit(InlineEditForm<SeriesDetail> form)
         {
-            form.Model = Facade<SeriesFacade>().GetTranslationScene(new SeriesCriteria { ID = form.ID });
+            form.Model = Facade<SeriesFacade>().GetSeries(new SeriesCriteria { ID = form.ID });
             return View("_InlineEditPartial", form);
         }
     }

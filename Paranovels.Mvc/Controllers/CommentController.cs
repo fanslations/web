@@ -26,6 +26,7 @@ namespace Paranovels.Mvc.Controllers
         [HttpPost]
         public JsonResult Form(CommentForm form)
         {
+            form.UserID = UserSession.UserID;
             return SaveChanges(form);
         }
 
@@ -33,6 +34,12 @@ namespace Paranovels.Mvc.Controllers
         {
             form.Model = Facade<CommentFacade>().Get(new CommentCriteria { ID = form.ID });
             return View("_InlineEditPartial", form);
+        }
+
+        [HttpPost]
+        public JsonResult SpamReport(SpamReportForm form)
+        {
+            return SaveChanges(form);
         }
     }
 }

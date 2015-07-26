@@ -13,7 +13,7 @@ namespace Paranovels.ViewModels
         public int ByUserID { get; set; }
         public string InlineEditProperty { get; set; }
 
-        public string Feeds { get; set; }
+        public IList<Feed> Feeds { get; set; }
         public IList<Glossary> Glossaries { get; set; }
         public IList<int> Categories { get; set; }
         public IList<int> Genres { get; set; }

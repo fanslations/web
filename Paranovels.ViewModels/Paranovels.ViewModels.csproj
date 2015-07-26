@@ -64,6 +64,7 @@
     <Compile Include="Detail Models\SeriesDetail.cs" />
     <Compile Include="Detail Models\ChapterDetail.cs" />
     <Compile Include="Detail Models\NovelDetail.cs" />
+    <Compile Include="Form Models\SpamReportForm.cs" />
     <Compile Include="Form Models\GlossaryForm.cs" />
     <Compile Include="Form Models\ReleasetForm.cs" />
     <Compile Include="Form Models\ContentForm.cs" />

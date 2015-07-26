@@ -51,6 +51,7 @@
     <Compile Include="Generated\Novel.generated.cs" />
     <Compile Include="Generated\Release.generated.cs" />
     <Compile Include="Generated\Series.generated.cs" />
+    <Compile Include="Generated\SpamReport.generated.cs" />
     <Compile Include="Generated\StaticResource.generated.cs" />
     <Compile Include="Generated\Summarize.generated.cs" />
     <Compile Include="Generated\Tag.generated.cs" />

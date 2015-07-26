@@ -27,6 +27,6 @@ namespace Paranovels.ViewModels
         // by current user
         public int? Voted { get; set; }
         public int? QualityRated { get; set; }
-        public bool IsRead { get; set; }
+        public bool? IsRead { get; set; }
     }
 }
