@@ -1,0 +1,35 @@
+﻿@using Paranovels.Common
+@using Paranovels.DataModels
+@model Paranovels.ViewModels.SeriesDetail   
+     
+@if (Model.ID > 0)
+{
+    <div class="content">
+        <ul class="list-unstyled list-inline">
+            <li><strong><i class="fa fa-list-alt"></i>Your lists:</strong></li>
+            @foreach (var item in Model.UserLists)
+            {
+                var connector = Model.Connectors.SingleOrDefault(w => w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.TargetID == item.UserListID) ?? new Connector { IsDeleted = true };
+                <li class="action connect" data-connect='{ "ConnectorID": @(connector.ID), "ConnectorType": @R.ConnectorType.SERIES_USERLIST, "SourceID": @Model.ID, "TargetID": @item.ID, "IsDeleted": "@(connector.IsDeleted == false)" }' role="button">
+                    @if (connector.IsDeleted == false)
+                    {
+                        <span title="Remove from @item.Name"><span style="@item.Color.Translate(R.Color.Translate)">@Html.Raw(item.Type.Translate(R.ListType.Translate))</span>@item.Name</span>
+                    }
+                    else
+                    {
+                        <span title="Add to @item.Name">@Html.Raw(item.Type.Translate(R.ListType.Translate))@item.Name</span>
+                    }
+                </li>
+            }
+
+            @if (Model.UserLists == null || !Model.UserLists.Any())
+            {
+                <li><a href="/userlist">You donot have any list <i class="fa fa-plus-circle"></i>Add new list</a></li>
+            }
+            else
+            {
+                <li><a href="/userlist"><i class="fa fa-plus-circle"></i>Add new list</a></li>
+            }
+        </ul>
+    </div>
+}
