@@ -18,38 +18,18 @@
             @Model.Title
         </h1>
     </div>
+    @{ Html.RenderPartial("~/Views/UserList/_AddSeriesToList.cshtml", Model); }
     <div class="content">
-        <ul class="list-unstyled list-inline mylist">
-            <li><strong><i class="fa fa-list-fal"></i>Your reading list</strong></li>
-            @foreach (var item in Model.UserLists)
+        <div class="detail-group improve-img">
+            @if (string.IsNullOrWhiteSpace(Model.ImageUrl))
             {
-                <li class="action connect" data-connect='{ "ConnectorID": @( (Model.UserListConnector ?? new Connector()).ID ), "ConnectorType": @R.ConnectorType.SERIES_USERLIST, "SourceID": @Model.ID, "TargetID": @item.ID}' role="button">
-                    @if (Model.UserListConnector != null && Model.UserListConnector.IsDeleted == false && Model.UserListConnector.TargetID == item.UserListID)
-                    {
-                        <span title="Remove from @item.Name"><i class="fa fa-check color-gold"></i>@item.Name</span>
-                    }
-                    else
-                    {
-                        <span title="Move to @item.Name"><i class="fa fa-check"></i>@item.Name</span>
-                    }
-                </li>
-            }
-
-            @if (Model.UserLists == null || !Model.UserLists.Any())
-            {
-                <li><a href="/userlist">You donot have any list <i class="fa fa-plus-circle"></i>Add new list</a></li>
+                @Html.ImproveThis(m => m.ImageUrl, customHtmlIcon: @"<i class="" fa fa-upload""></i>Upload cover image for " + Model.Title)
             }
             else
             {
-                <li><a href="/userlist"><i class="fa fa-plus-circle"></i>Add new list</a></li>
+                <img src="@Model.ImageUrl.ToGoogleDriveImageUrl()" class="center-block img-responsive" title="@Model.Title's cover image" />
+                @Html.ImproveThis(m => m.ImageUrl, customHtmlIcon: @"<i class="" fa fa-upload""></i>Edit")
             }
-
-        </ul>
-    </div>
-    <div class="content">
-        <div class="detail-group improve-img">
-            <img src="@Model.ImageUrl.ToGoogleDriveImageUrl()" class="center-block img-responsive" title="@Model.Title's cover image" />
-            @Html.ImproveThis(m => m.ImageUrl)
         </div>
         <div class="detail-group">
             <strong class="sr-only">Synopsis</strong>
@@ -124,7 +104,7 @@
                 <a href="@Model.RawUrl" target="_blank">@Model.RawUrl</a>
                 @if (string.IsNullOrWhiteSpace(Model.RawUrl))
                 {
-                <text>No raw source url available. Click on 'Edit' to help us update it.</text>
+                    <text>No raw source url available. Click on 'Edit' to help us update it.</text>
                 }
                 @Html.ImproveThis(m => m.RawUrl)
             </div>
@@ -169,11 +149,11 @@
             <div>
                 @if (Model.GroupID > 0)
                 {
-                <a href="@Url.Action("Detail", "Group", new {ID = Model.GroupID, Seo=Model.Group.Name.ToSeo()})">@Html.Raw(Model.Group.Name.FormatString())</a>
+                    <a href="@Url.Action("Detail", "Group", new {ID = Model.GroupID, Seo=Model.Group.Name.ToSeo()})">@Html.Raw(Model.Group.Name.FormatString())</a>
                 }
                 else
                 {
-                @Html.Raw("".FormatString());
+                    @Html.Raw("".FormatString());
                 }
                 @Html.ImproveThis(m => m.GroupID)
             </div>
@@ -214,7 +194,10 @@
                                 Date = s.Date,
                                 Url = s.Url,
                                 Series = Model,
-                                Group = Model.Group
+                                Group = Model.Group,
+                                UserLists = new List<UserList>(),
+                                Connectors = new List<Connector>(),
+                                
                             }).AsQueryable().Sort(new BaseCriteria {Sorted = Request.QueryString["sorted"]}).ToList()
                         });
                     }

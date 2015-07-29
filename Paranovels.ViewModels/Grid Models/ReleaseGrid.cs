@@ -15,6 +15,10 @@ namespace Paranovels.ViewModels
         public Group Group { get; set; }
         [NotMapped]
         public Series Series { get; set; }
+        [NotMapped]
+        public List<UserList> UserLists { get; set; }
+        [NotMapped]
+        public List<Connector> Connectors { get; set; }
 
         // from Summarize
         public int? CommentCount { get; set; }

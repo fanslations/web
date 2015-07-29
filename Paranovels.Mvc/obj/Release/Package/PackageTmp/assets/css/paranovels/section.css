@@ -94,7 +94,15 @@
         padding: 0;
         list-style: none;
     }
-
+    
+        .section > .grid .row-mores {
+            display: table;
+            width: 100%;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+            padding: 15px 50px;
+            background: whitesmoke;
+        }
         .section > .grid .row-list {
             display: table;
             width: 100%;

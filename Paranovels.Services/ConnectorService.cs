@@ -21,9 +21,8 @@ namespace Paranovels.Services
         {
             var tConnector = Table<Connector>();
 
-            var connector = tConnector.GetOrAdd(w => w.ConnectorID == form.ConnectorID || (w.ConnectorType == form.ConnectorType && w.SourceID == form.SourceID && w.TargetID == form.TargetID));
-            // special feature of connector - disconnect when connection already exist
-            form.IsDeleted = (!connector.IsDeleted && connector.ConnectorID > 0 && connector.TargetID == form.TargetID);
+            var connector = tConnector.GetOrAdd(w => w.ConnectorID == form.ConnectorID || 
+                (form.ConnectorID == 0 && w.ConnectorType == form.ConnectorType && w.SourceID == form.SourceID && w.TargetID == form.TargetID));
 
             MapProperty(form, connector, form.InlineEditProperty); 
             UpdateAuditFields(connector, form.ByUserID);

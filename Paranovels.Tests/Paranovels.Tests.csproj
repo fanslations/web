@@ -60,7 +60,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Paranovels.Facade\UnitTest1.cs" />
+    <Compile Include="Paranovels.Facade\FeedFacade_Tests.cs" />
     <Compile Include="Paranovels.Proxies\FeedChecker_UnitTest.cs" />
     <Compile Include="Paranovels.Services\Group_UnitTest.cs" />
     <Compile Include="Thi.Core\PropertyMapper_UnitTest.cs" />

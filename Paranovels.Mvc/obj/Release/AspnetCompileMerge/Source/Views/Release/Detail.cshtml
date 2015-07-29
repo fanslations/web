@@ -50,6 +50,7 @@
             @Model.Title
         </h1>
     </div>
+    @{ Html.RenderPartial("~/Views/UserList/_AddSeriesToList.cshtml", new SeriesDetail { SeriesID = Model.SeriesID, UserLists = Model.UserLists, Connectors = Model.Connectors }); }
     <div class="content">
         <div class="detail-group">
             <strong class="sr-only">Summary</strong>

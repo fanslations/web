@@ -43,9 +43,14 @@ namespace Paranovels.Services
             {
                 qComment = qComment.Where(w => w.SourceID == c.SourceID && w.SourceTable == c.SourceTable);
             }
-            if(c.SourceTable > 0 && c.SourceIDs != null && c.SourceIDs.Any())
+            if(c.SourceTable > 0 && c.SourceID == 0 && c.SourceIDs != null)
             {
                 qComment = qComment.Where(w => c.SourceIDs.Contains(w.SourceID) && w.SourceTable == c.SourceTable);
+            }
+            // if SourceID == 0 and SourceIDs == null then don't return any comment
+            if (c.SourceID == 0 && c.SourceIDs == null)
+            {
+                qComment = qComment.Where(w => w.UserCommentID == 0);
             }
 
             var results = qComment.GroupJoin(qSummarize, uc => uc.UserCommentID, s => s.SourceID,

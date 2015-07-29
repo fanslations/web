@@ -16,6 +16,7 @@ namespace Paranovels.Mvc.Controllers
             var searchModel = CreateSearchModel(criteria);
             var pagedList = Facade<ListFacade>().Search(searchModel);
 
+            ViewBag.ListTemplates = Facade<ListFacade>().GetListTemplates();
             return View(pagedList);
         }
 

@@ -150,7 +150,9 @@
                                 Date = s.Date,
                                 Url = s.Url,
                                 //Series = Model.
-                                Group = Model
+                                Group = Model,
+                                UserLists = new List<UserList>(),
+                                Connectors = new List<Connector>(),
                             }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
                         });
                     }

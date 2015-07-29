@@ -115,8 +115,8 @@ namespace Paranovels.Facade
 
                 // get data for user lists
                 detail.UserLists = service.View<UserList>().Where(w => w.IsDeleted == false && w.UserID == criteria.ByUserID).ToList();
-                var userListIDs = detail.UserLists.Select(s => s.UserListID).ToList();
-                detail.UserListConnector = service.View<Connector>().Where(w=> w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.SourceID == detail.ID && userListIDs.Contains(w.TargetID)).SingleOrDefault();
+
+                detail.Connectors = service.View<Connector>().Where(w => w.IsDeleted == false && w.SourceID == detail.ID).ToList();
 
                 detail.Releases = service.View<Release>().Where(w => w.SeriesID == detail.SeriesID).ToList();
 
@@ -143,6 +143,12 @@ namespace Paranovels.Facade
                 detail.Group = service.View<Group>().Where(w => w.GroupID == detail.GroupID).SingleOrDefault() ?? new Group();
 
                 detail.Summarize = service.View<Summarize>().Where(w=> w.SourceTable == R.SourceTable.RELEASE && w.SourceID == detail.ReleaseID).SingleOrDefault() ?? new Summarize();
+
+                // get data for user lists
+
+                detail.UserLists = service.View<UserList>().Where(w => w.IsDeleted == false && w.UserID == criteria.ByUserID).ToList();
+
+                detail.Connectors = service.View<Connector>().Where(w => w.IsDeleted == false && w.SourceID == detail.SeriesID).ToList();
 
                 return detail;
             }

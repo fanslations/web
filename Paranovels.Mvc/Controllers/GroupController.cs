@@ -38,9 +38,9 @@ namespace Paranovels.Mvc.Controllers
             return new ContentResult() { Content = "OK"};
         }
 
-        public JsonResult CheckFeedUpdate(int id = 30)
+        public JsonResult CheckFeedUpdate(int id = 5)
         {
-            var results = Facade<GroupFacade>().CheckFeedUpdate(id * -1);
+            var results = Facade<FeedFacade>().CheckFeed(R.ConnectorType.GROUP_FEED, id);
             return Json(results, JsonRequestBehavior.AllowGet);
         }
 

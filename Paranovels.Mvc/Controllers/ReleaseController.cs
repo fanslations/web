@@ -23,8 +23,6 @@ namespace Paranovels.Mvc.Controllers
 
         public ActionResult Detail(ReleaseCriteria criteria)
         {
-            var searchModel = CreateSearchModel(criteria);
-
             var detail = Facade<SeriesFacade>().GetRelease(criteria);
 
             return View(detail);
@@ -32,8 +30,12 @@ namespace Paranovels.Mvc.Controllers
 
         public RedirectResult Out(int id, string url)
         {
+            var userID = UserSession.UserID;
             // log views
-            Facade<UserActionFacade>().Viewing(UserSession.UserID, id, R.SourceTable.RELEASE);
+            Facade<UserActionFacade>().Viewing(userID, id, R.SourceTable.RELEASE);
+            // mark as read
+            Facade<UserActionFacade>().Reading(new ReadForm { ByUserID = userID, UserID = userID, SourceID = id, SourceTable = R.SourceTable.RELEASE});
+
             return RedirectPermanent(url);
         }
 

@@ -12,6 +12,10 @@ namespace Paranovels.ViewModels
     public class ReleaseDetail: Release, IDetailModel
     {
         [NotMapped]
+        public List<UserList> UserLists { get; set; }
+        [NotMapped]
+        public List<Connector> Connectors { get; set; }
+        [NotMapped]
         public Series Series { get; set; }
         [NotMapped]
         public Group Group { get; set; }

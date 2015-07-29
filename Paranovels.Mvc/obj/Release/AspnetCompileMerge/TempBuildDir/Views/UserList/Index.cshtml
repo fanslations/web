@@ -1,4 +1,5 @@
 ﻿@using Paranovels.Common
+@using Paranovels.DataModels
 @using Paranovels.ViewModels
 @using Thi.Core
 @model Thi.Core.PagedList<Paranovels.DataModels.UserList>
@@ -7,6 +8,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var formModel = new ListForm();
+    var listTemplates = (IList<UserList>)ViewBag.ListTemplates ?? new List<UserList>();
 }
 
 @section CurrentMenu
@@ -14,7 +16,7 @@
     <section class="menu-section">
         <h2 class="menu-section-title">Current</h2>
         <ul class="menu-section-list">
-            <li><a href="#add-container" class="action toggle" data-toggle='{ "target": "#add-container"}' role="button"><i class=" fa fa-plus"></i>Add new list</a></li>
+            <li><a href="#custom-list" class="action toggle" data-toggle='{ "target": "#custom-list"}' role="button"><i class=" fa fa-plus"></i>Add new list</a></li>
         </ul>
     </section>
 }
@@ -27,39 +29,97 @@
         </h1>
         <a class="action right toggle" data-toggle='{ "target": "#add-container"}'><i class="fa fa-plus"></i></a>
     </div>
-    <div id="add-container" class="form">
-        <form class="" method="POST" action="@Url.Action("Form")" data-form-ajax='{}'>
-            <div class="hidden">
-                
+    <div class="content">
+        <section class="section">
+            <div class="header">
+                <h2 class="title">
+                    Your Lists
+                </h2>
             </div>
-            <div class="form-group">
-                <label id="label-name" for="name">List Name</label>
-                <input id="name" name="@formModel.PropertyName(m => m.Name)" type="text" class="form-control" placeholder="Enter list name" aria-labelledby="label-name" required />
-            </div>
-            <div class="form-group">
-                <label id="label-description" for="description">List description</label>
-                <textarea id="description" name="@formModel.PropertyName(m => m.Description)" class="form-control" placeholder="Enter list description" aria-labelledby="label-description" required></textarea>
-            </div>
-            <div class="form-group clearfix">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-plus-circle"></i>Add List</button>
-                <button type="button" class="btn btn-default action toggle" data-toggle='{ "target": "#add-container"}'><i class="fa fa-times-circle"></i>Cancel</button>
-            </div>
-        </form>
+
+            <ul class="grid">
+                @foreach (var item in Model.Data)
+                {
+                    <li class="row-list">
+                        <div class="col-content">
+                            <strong>
+                                <a href="@Url.Action("Detail", new{ ID = item.UserListID, Seo = item.Name.ToSeo() })">@Html.Raw(item.Type.Translate(R.ListType.Translate))@item.Name</a>
+                            </strong>
+                            <p>@Html.Raw(item.Description.FormatString())</p>
+                        </div>
+                    </li>
+
+                }
+            </ul>
+            @Html.Raw(Model.ToPagination(Request.RawUrl, 0))
+        </section>
     </div>
-    <ul class="grid">
-        @foreach (var item in Model.Data)
-        {
-            <li class="row-list">
-                <div class="col-content">
-                    <div>
-                        <a href="@Url.Action("Detail", new{ ID = item.UserListID, Seo = item.Name.ToSeo() })">@item.Name</a>
+    <div id="list-templates" class="content">
+        <section class="section">
+            <div class="header">
+                <h2 class="title">
+                    List Templates
+                </h2>
+            </div>
+
+            <ul class="grid">
+                @foreach (var item in listTemplates.OrderBy(o => o.Name))
+                {
+                    if (Model.Data.All(w => w.Type != item.Type))
+                    {
+                <li class="row-list">
+                    <div class="col-content">
+                        <strong>@item.Name</strong>
+                        <p>@item.Description</p>
                     </div>
-                    <div>@Html.Raw(item.Description.FormatString())</div>
-                </div>
-            </li>
+                    <div class="col-image">
+                        <form action="@Url.Action("Form", "UserList")" method="POST" data-form-ajax='{}'>
+                            <div class="hidden">
+                                <input type="hidden" name="@formModel.PropertyName(m=>m.ShareLevel)" value="@item.ShareLevel" />
+                                <input type="hidden" name="@formModel.PropertyName(m=>m.Type)" value="@item.Type" />
+                                <input type="hidden" name="@formModel.PropertyName(m=>m.Color)" value="@item.Color" />
+                                <input type="hidden" name="@formModel.PropertyName(m=>m.Name)" value="@item.Name" />
+                                <input type="hidden" name="@formModel.PropertyName(m=>m.Description)" value="@item.Description" />
+                                <input type="hidden" name="ReturnUrl" value="@Request.RawUrl" />
+                            </div>
+                            <button type="submit" class="btn btn-primary">@Html.Raw(item.Type.Translate(R.ListType.Translate))Activate List</button>
+                        </form>
+                    </div>
+                </li>
+                    }
+                }
+                <li class="row-list">
+                    <div class="col-content">
+                        <strong>Custom List</strong>
+                        <p>Create your own custom list. You can create as many custom list as you wants.</p>
 
-        }
-    </ul>
-    @Html.Raw(Model.ToPagination(Request.RawUrl, 0))
+                    </div>
+                    <div class="col-image">
+                        <button type="button" class="btn btn-primary action toggle" data-toggle='{ "target":"#custom-list"}'">@Html.Raw(R.ListType.CUSTOM.Translate(R.ListType.Translate))Custom List</button>
+                    </div>
+                </li>
+                <li id="custom-list" class="row-list" style="display: none;">
+                    <p class="alert alert-info">Enter name and description below and click 'Create List' to create your new custom list.</p>
+                    <form action="@Url.Action("Form", "UserList")" method="POST" data-form-ajax='{}'>
+                        <div class="hidden">
+                            <input type="hidden" name="@formModel.PropertyName(m=>m.ShareLevel)" value="@R.ShareLevel.PUBLIC" />
+                            <input type="hidden" name="@formModel.PropertyName(m=>m.Type)" value="@R.ListType.CUSTOM" />
+                            <input type="hidden" name="@formModel.PropertyName(m=>m.Color)" value="@R.Color.DARK_BLUE" />
+                            <input type="hidden" name="ReturnUrl" value="@Request.RawUrl" />
+                        </div>
+                        <div class="form-group">
+                            <label id="label-name" for="name">List Name</label>
+                            <input id="name" name="@formModel.PropertyName(m => m.Name)" type="text" class="form-control" placeholder="Enter list name" aria-labelledby="label-name" required />
+                        </div>
+                        <div class="form-group">
+                            <label id="label-description" for="description">List description</label>
+                            <textarea id="description" name="@formModel.PropertyName(m => m.Description)" class="form-control" placeholder="Enter list description" aria-labelledby="label-description" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">@Html.Raw(R.ListType.CUSTOM.Translate(R.ListType.Translate))Create List</button>
+                        <button type="button" class="btn btn-default action toggle" data-toggle='{ "target":"#custom-list"}'><i class="fa fa-times"></i>Cancel</button>
+                    </form>
+                </li>
+            </ul>
+        </section>
+    </div>
 </section>
-

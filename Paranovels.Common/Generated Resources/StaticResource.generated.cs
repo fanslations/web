@@ -60,6 +60,56 @@ namespace Paranovels.Common //.Generated Resources
 						}; // end translate dictionary
         }	
         /// <summary>
+        /// Color auto generated class.
+        /// </summary>
+        public partial class Color 
+        {		
+			/// <summary>
+			/// color: darkblue;
+			/// </summary>
+			[Description("color: darkblue;")]
+			public const int DARK_BLUE = 2;
+				
+			/// <summary>
+			/// color: darkgreen;
+			/// </summary>
+			[Description("color: darkgreen;")]
+			public const int DARK_GREEN = 3;
+				
+			/// <summary>
+			/// color: darkorange;
+			/// </summary>
+			[Description("color: darkorange;")]
+			public const int DARK_ORANGE = 5;
+				
+			/// <summary>
+			/// color: darkpink;
+			/// </summary>
+			[Description("color: darkpink;")]
+			public const int DARK_PINK = 4;
+				
+			/// <summary>
+			/// color: darkred;
+			/// </summary>
+			[Description("color: darkred;")]
+			public const int DARK_RED = 1;
+				
+			
+			public const string ClassName = "Color";
+			public static readonly Dictionary<int,string> Translate = new Dictionary<int,string> {
+												{2,"color: darkblue;"},
+							
+												{3,"color: darkgreen;"},
+							
+												{5,"color: darkorange;"},
+							
+												{4,"color: darkpink;"},
+							
+												{1,"color: darkred;"},
+							
+						}; // end translate dictionary
+        }	
+        /// <summary>
         /// ConnectorType auto generated class.
         /// </summary>
         public partial class ConnectorType 
@@ -328,6 +378,88 @@ namespace Paranovels.Common //.Generated Resources
 						}; // end translate dictionary
         }	
         /// <summary>
+        /// ListType auto generated class.
+        /// </summary>
+        public partial class ListType 
+        {		
+			/// <summary>
+			/// <i class='fa fa-check'></i>
+			/// </summary>
+			[Description("<i class='fa fa-check'></i>")]
+			public const int COMPLETED = 300;
+				
+			/// <summary>
+			/// <i class='fa fa-circle'></i>
+			/// </summary>
+			[Description("<i class='fa fa-circle'></i>")]
+			public const int CUSTOM = 0;
+				
+			/// <summary>
+			/// <i class='fa fa-times'></i>
+			/// </summary>
+			[Description("<i class='fa fa-times'></i>")]
+			public const int DROPPED = 400;
+				
+			/// <summary>
+			/// <i class='fa fa-heart'></i>
+			/// </summary>
+			[Description("<i class='fa fa-heart'></i>")]
+			public const int FAVORITES = 600;
+				
+			/// <summary>
+			/// <i class='fa fa-paw'></i>
+			/// </summary>
+			[Description("<i class='fa fa-paw'></i>")]
+			public const int ON_HOLD = 500;
+				
+			/// <summary>
+			/// <i class='fa fa-laptop'></i>
+			/// </summary>
+			[Description("<i class='fa fa-laptop'></i>")]
+			public const int READING = 100;
+				
+			/// <summary>
+			/// <i class='fa fa-thumbs-up'></i>
+			/// </summary>
+			[Description("<i class='fa fa-thumbs-up'></i>")]
+			public const int RECOMMENDED = 700;
+				
+			/// <summary>
+			/// <i class='fa fa-eye'></i>
+			/// </summary>
+			[Description("<i class='fa fa-eye'></i>")]
+			public const int WATCH = 800;
+				
+			/// <summary>
+			/// <i class='fa fa-magic'></i>
+			/// </summary>
+			[Description("<i class='fa fa-magic'></i>")]
+			public const int WISH = 200;
+				
+			
+			public const string ClassName = "ListType";
+			public static readonly Dictionary<int,string> Translate = new Dictionary<int,string> {
+												{300,"<i class='fa fa-check'></i>"},
+							
+												{0,"<i class='fa fa-circle'></i>"},
+							
+												{400,"<i class='fa fa-times'></i>"},
+							
+												{600,"<i class='fa fa-heart'></i>"},
+							
+												{500,"<i class='fa fa-paw'></i>"},
+							
+												{100,"<i class='fa fa-laptop'></i>"},
+							
+												{700,"<i class='fa fa-thumbs-up'></i>"},
+							
+												{800,"<i class='fa fa-eye'></i>"},
+							
+												{200,"<i class='fa fa-magic'></i>"},
+							
+						}; // end translate dictionary
+        }	
+        /// <summary>
         /// NovelType auto generated class.
         /// </summary>
         public partial class NovelType 
@@ -434,6 +566,32 @@ namespace Paranovels.Common //.Generated Resources
 												{2,"Category Preferences"},
 							
 												{1,"Genre Preferences"},
+							
+						}; // end translate dictionary
+        }	
+        /// <summary>
+        /// ShareLevel auto generated class.
+        /// </summary>
+        public partial class ShareLevel 
+        {		
+			/// <summary>
+			/// Private
+			/// </summary>
+			[Description("Private")]
+			public const int PRIVATE = 0;
+				
+			/// <summary>
+			/// Public
+			/// </summary>
+			[Description("Public")]
+			public const int PUBLIC = 1000;
+				
+			
+			public const string ClassName = "ShareLevel";
+			public static readonly Dictionary<int,string> Translate = new Dictionary<int,string> {
+												{0,"Private"},
+							
+												{1000,"Public"},
 							
 						}; // end translate dictionary
         }	

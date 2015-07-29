@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -60,10 +61,12 @@ namespace Paranovels.Facade
             }
             return 0;
         }
-        public int CheckFeed(int minutes = -30)
+
+        public int CheckFeed(int connectorTypeFeed, int minutes = 5)
         {
+            int newReleaseCount = 0;
             var lastCheckedDate = DateTime.Now.AddMinutes(Math.Abs(minutes) * -1);
-            var map = new Dictionary<int, int>
+            var mapFeedGlossary = new Dictionary<int, int>
             {
                 {R.ConnectorType.SERIES_FEED, R.ConnectorType.SERIES_GLOSSARY},
                 {R.ConnectorType.GROUP_FEED, R.ConnectorType.GROUP_GLOSSARY}
@@ -74,25 +77,28 @@ namespace Paranovels.Facade
                 var service = new FeedService(uow);
                 var releaseService = new ReleaseService(uow);
 
+                var qFeed = service.View<Feed>().Where(w => w.Status == R.FeedStatus.ACTIVE && w.LastSuccessDate < lastCheckedDate);
                 var qConnector = service.View<Connector>().All();
-                var qFeed = service.View<Feed>().Where(w => w.Status == R.FeedStatus.ACTIVE && w.UpdatedDate < lastCheckedDate);
                 var qGlossary = service.View<Glossary>().All();
+                var qSeries = service.View<Series>().All();
 
-                var pendingUpdates = qConnector.Where(w => map.Keys.Contains(w.ConnectorType))
+                var pendingUpdates = qConnector.Where(w => w.ConnectorType == connectorTypeFeed)
                                                .Join(qFeed, c => c.TargetID, f => f.FeedID, (c, f) => new { Connector = c, Feed = f }).ToList();
+
                 foreach (var pendingUpdate in pendingUpdates)
                 {
                     var releases = GetNewReleases(pendingUpdate.Feed.Url);
-
-                    var connectorType = map[pendingUpdate.Connector.ConnectorType];
-                    var glossaries = qConnector.Where(w => w.ConnectorType == connectorType && w.SourceID == pendingUpdate.Connector.SourceID)
+                    releases = releases.Where(w => w.Date > pendingUpdate.Feed.LastSuccessDate).ToList(); // skip since the release date is older then the last feed date
+                    
+                    if(!releases.Any()) continue;
+                    
+                    var connectorTypeGlossary = mapFeedGlossary[pendingUpdate.Connector.ConnectorType];
+                    var glossaries = qConnector.Where(w => w.ConnectorType == connectorTypeGlossary && w.SourceID == pendingUpdate.Connector.SourceID)
                                                .Join(qGlossary, c => c.TargetID, g => g.GlossaryID, (c, g) => g).ToList();
 
-                    foreach (var release in releases)
+                    foreach (var release in releases) 
                     {
-                        if (release.Date < pendingUpdate.Feed.LastSuccessDate) continue; // skip since the release date is older then the last feed date
                         // fix release title
-
                         foreach (var glossary in glossaries)
                         {
                             release.Title = release.Title.Replace(glossary.Raw, glossary.Final);
@@ -101,29 +107,43 @@ namespace Paranovels.Facade
                         if (pendingUpdate.Connector.ConnectorType == R.ConnectorType.SERIES_FEED)
                         {
                             release.SeriesID = pendingUpdate.Connector.SourceID;
-                            release.GroupID = service.View<Series>().Where(w=> w.SeriesID == release.SeriesID)
-                                .Select(s => s.GroupID).FirstOrDefault();
+                           var series = qSeries.FirstOrDefault(w => w.SeriesID == release.SeriesID);
+                            if (series != null)
+                            {
+                                release.GroupID = series.GroupID;
+                            }
                         }
                         if (pendingUpdate.Connector.ConnectorType == R.ConnectorType.GROUP_FEED)
                         {
                             release.GroupID = pendingUpdate.Connector.SourceID;
-                            release.SeriesID = service.View<Series>()
-                                .Where(w => w.GroupID == release.GroupID)
-                                .Where(w => release.Title.Contains(w.Title))
-                                .Select(s => s.SeriesID).FirstOrDefault();
+                            Expression<Func<Series, bool>> seriesPredicate = s => release.Title.Contains(s.Title);
+
+                            // check to see how many series this group has
+                            var seriesCount = qSeries.Count(w => w.GroupID == release.GroupID);
+                            // if less than 2 then just use the first one otherwise match with title
+                            if(seriesCount < 2)
+                            {
+                                seriesPredicate = s => true;
+                            }
+                            var series = qSeries.Where(w => w.GroupID == release.GroupID).FirstOrDefault(seriesPredicate);
+                            if (series != null)
+                            {
+                                release.SeriesID = series.SeriesID;
+                            }
                         }
 
                         release.Summary = "";
                         releaseService.SaveChanges(release);
 
                         pendingUpdate.Feed.Total += 1;
+                        newReleaseCount += 1;
                     }
                     // update feed last process date
                     if (releases.Any()) pendingUpdate.Feed.LastSuccessDate = DateTime.Now;
                     service.SaveChanges(new GenericForm<Feed> { DataModel = pendingUpdate.Feed });
                 }
             }
-            return -1;
+            return newReleaseCount;
         }
 
         IList<ReleaseForm> GetNewReleases(string url)

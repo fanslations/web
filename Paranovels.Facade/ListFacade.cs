@@ -60,5 +60,13 @@ namespace Paranovels.Facade
                 return detail;
             }
         }
+
+        public IList<UserList> GetListTemplates()
+        {
+            using (var uow = UnitOfWorkFactory.Create<NovelContext>())
+            {
+                return uow.Repository<UserList>().Where(w => w.IsDeleted == false && w.UserID == 0).ToList();
+            }
+        }
     }
 }

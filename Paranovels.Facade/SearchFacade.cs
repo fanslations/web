@@ -92,6 +92,11 @@ namespace Paranovels.Facade
                 var seriesIDs = pagedList.Data.Select(s => s.SeriesID).Distinct();
                 var series = service.View<Series>().Where(w => seriesIDs.Contains(w.SeriesID)).ToList();
 
+                // user lists 
+                var userLists = service.View<UserList>().Where(w => w.IsDeleted == false && w.UserID == searchModel.Criteria.ByUserID).ToList();
+
+                var connectors = service.View<Connector>().Where(w => w.IsDeleted == false).ToList();
+
                 var releaseIDs = pagedList.Data.Select(s => s.ReleaseID).Distinct();
                 var userVotedReleaseIDs =
                     service.View<UserVote>().Where(w => w.SourceTable == R.SourceTable.RELEASE && releaseIDs.Contains(w.SourceID) && w.UserID == searchModel.Criteria.ByUserID)
@@ -108,13 +113,17 @@ namespace Paranovels.Facade
                 {
                     s.Group = groups.SingleOrDefault(w => w.GroupID == s.GroupID);
                     s.Series = series.SingleOrDefault(w => w.SeriesID == s.SeriesID);
+                    s.UserLists = userLists;
+                    s.Connectors = connectors.Where(w => w.SourceID == s.SeriesID).ToList();
 
                     s.Voted = userVotedReleaseIDs.Where(w => w.ReleaseID == s.ReleaseID).Select(s2 => s2.Vote).SingleOrDefault();
                     s.QualityRated = userQualityRatedReleaseIDs.Where(w => w.ReleaseID == s.ReleaseID).Select(s2 => s2.Rate).SingleOrDefault();
                     s.IsRead = userReadReleaseIDs.Any(w => w.ReleaseID == s.ReleaseID);
                     return s;
                 }).ToList();
+                
 
+                
                 return new PagedList<ReleaseGrid> { Config = pagedList.Config, Data = data };
             }
         }

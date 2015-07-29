@@ -55,5 +55,11 @@ namespace Paranovels.Mvc.Controllers
             form.Model = Facade<SeriesFacade>().GetSeries(new SeriesCriteria { ID = form.ID });
             return View("_InlineEditPartial", form);
         }
+
+        public JsonResult CheckFeedUpdate(int id = 5)
+        {
+            var results = Facade<FeedFacade>().CheckFeed(R.ConnectorType.SERIES_FEED, id);
+            return Json(results, JsonRequestBehavior.AllowGet);
+        }
     }
 }

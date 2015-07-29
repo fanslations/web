@@ -14,7 +14,7 @@ namespace Paranovels.ViewModels
         [NotMapped]
         public List<UserList> UserLists { get; set; }
         [NotMapped]
-        public Connector UserListConnector { get; set; }
+        public List<Connector> Connectors { get; set; }
         [NotMapped]
         public List<Tag> Categories { get; set; }
         [NotMapped]
