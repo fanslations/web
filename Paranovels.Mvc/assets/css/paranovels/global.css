@@ -1,0 +1,182 @@
+﻿body {
+
+    margin: 0 auto;
+    background-color: #EFEFEF;
+    box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.3);
+}
+
+.desktop {
+    max-width: 970px;
+}
+.mobile {
+    
+}
+.container {
+    width: 100%;
+    margin: 0 auto;
+}
+
+main {
+    min-height: 100%;
+    background: white;
+}
+
+.desktop main > div {
+     margin: 0;
+    padding: 0;
+    display: table-cell;
+    vertical-align: top;
+    width: 100%;
+    background: white;
+    border-right: 1px solid whitesmoke;
+}
+
+main > .side-menu {
+    margin: 0;
+    padding: 0px 10px;
+    display: table-cell;
+    vertical-align: top;
+    min-width: 256px;
+    background: white;
+}
+.side-menu ul {
+    list-style: none;
+}
+
+.side-menu .menu-section {
+  margin: 25px 0;
+}
+
+.side-menu .menu-section-title {
+  text-transform: uppercase;
+  color: darkgray;
+  font-weight: bold;
+  font-size: 13px;
+  letter-spacing: 1px;
+  padding: 0 20px;
+  margin:0;
+}
+
+.side-menu .menu-section-list {
+  padding:0;
+  margin: 10px 0;
+  list-style:none;
+}
+
+.side-menu .menu-section-list a {
+  display: block;
+  padding: 10px 20px;
+}
+
+.side-menu .menu-section-list a:hover {
+    background-color: #000000;
+    background-color: rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+
+/*.arrow_box {
+    position: relative;
+    background: #EFEFEF;
+    border: 1px solid #ccc;
+}
+
+    .arrow_box:after, .arrow_box:before {
+        top: 100%;
+        left: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+    }
+
+    .arrow_box:after {
+        border-color: rgba(136, 183, 213, 0);
+        border-top-color: #EFEFEF;
+        border-width: 10px;
+        margin-left: -10px;
+    }
+
+    .arrow_box:before {
+        border-color: rgba(194, 225, 245, 0);
+        border-top-color: #ccc;
+        border-width: 11px;
+        margin-left: -11px;
+    }*/
+
+[data-marked] {
+    display: none;
+}
+
+
+
+
+.cursor-pointer {
+    cursor: pointer !important;
+}
+
+.fa {
+    margin-left: 0;
+    margin-right: 3px;
+    width: 1em;
+    text-align: center;
+
+}
+
+    .fa.right {
+        margin-right: 0;
+        margin-left: 3px;
+    }
+
+.padding-5px {
+    padding: 5px !important;
+}
+
+.position-relative {
+    position: relative !important;
+}
+
+.position-absolute {
+    position: absolute !important;
+}
+
+.top-0px {
+    top: 0px;
+}
+
+.bottom-0px {
+    bottom: 0px;
+}
+
+.left-0px {
+    left: 0px;
+}
+
+.right-0px {
+    right: 0px;
+}
+
+.more-less .more-info {
+    display: none;
+}
+.more-less .more {
+    display: inline;
+}
+.more-less .less {
+    display: none;
+}
+.more-less.on .more-info {
+    display: inline;
+}
+.more-less.on .more {
+    display: none;
+}
+.more-less.on .less {
+    display: inline;
+}

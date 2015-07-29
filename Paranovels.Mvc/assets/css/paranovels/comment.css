@@ -1,0 +1,82 @@
+﻿.comments {
+    position: relative;
+}
+
+    .comments > .comment {
+        margin-top: 10px;
+        padding: 5px 10px;
+        border: 1px solid #efefef;
+        box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.3);
+    }
+
+.replies > .comment {
+    border-left: 1px dotted darkgray;
+    margin-top: 10px;
+    padding: 5px 10px;
+    position: relative;
+}
+
+    .replies > .comment:before {
+        display: inline-block;
+        content: "";
+        display: block;
+        border: 5px solid transparent;
+        border-bottom-color: darkgray;
+        position: absolute;
+        top: 10px;
+        left: 0;
+        transform: rotate(90deg);
+        z-index: 2;
+    }
+
+    .replies > .comment:hover {
+    }
+
+    .replies > .comment:before {
+    }
+
+.comment-options {
+    list-style: none;
+    margin: 10px 0 0 0;
+    padding: 0;
+}
+
+    .comment-options li {
+        display: inline-block;
+        position: relative;
+    }
+
+        .comment-options li > a {
+            margin-right: 10px;
+        }
+
+            .comment-options li > a i {
+                display: none;
+            }
+
+            .comment-options li > a:hover i {
+                display: inline;
+            }
+
+            .comment-options li > a.on > i {
+                color: darkgoldenrod;
+                display: inline;
+            }
+
+            .comment-options li > a.on:after {
+                display: inline-block;
+                content: "";
+                display: block;
+                border: 7px solid transparent;
+                border-bottom-color: #e3e3e3;
+                position: absolute;
+                bottom: 0px;
+                right: 0px;
+                z-index: 999999;
+            }
+
+        .comment-options li .delete-confirm {
+            padding: 0 10px;
+            border: 1px solid red;
+            border-radius: 3px;
+        }

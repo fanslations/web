@@ -1,0 +1,49 @@
+﻿.no-margin {
+    margin: 0 !important;
+}
+.no-padding {
+    padding: 0 !important;
+}
+
+.margin-top-10px {
+    margin-top: 10px !important;
+}
+.margin-bottom-10px {
+    margin-bottom: 10px !important;
+}
+
+.no-bold {
+    font-weight: normal !important;
+}
+.color-blue {
+    color: blue !important;
+}
+.color-green {
+    color: green !important;
+}
+.color-gold {
+    color: gold !important;
+}
+.color-red {
+    color: red !important;
+}
+
+.loaded {
+    display: none;
+}
+
+.opacity-1 {
+    opacity: 1 !important;
+}
+.opacity-0 {
+    opacity: 0= !important;
+}
+.opacity-03 {
+    opacity: 0.2 !important;
+}
+.opacity-05 {
+    opacity: 0.5 !important;
+}
+.opacity-07 {
+    opacity: 0.7 !important;
+}

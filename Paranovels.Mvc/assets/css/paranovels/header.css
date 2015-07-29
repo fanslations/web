@@ -1,0 +1,74 @@
+﻿header {
+    position: relative;
+    top: 0px;
+    margin: 0;
+    left: 0px;
+    width: 100% !important;
+    min-width: 943px;
+    background-color: #1D1F20;
+    background-image: linear-gradient(145deg, #1D1F20, #404348);
+    height: 64px;
+    z-index: 9999;
+    /*box-shadow: 0px 2px 1px 0px rgba(0,0,0,0.3);*/
+}
+
+    header .global {
+        width: 970px;
+        margin: 0 auto;
+    }
+
+        header .global ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        header .global li {
+            display: inline-block;
+        }
+
+        header .global .global-left {
+            float: left;
+            height: 60px;
+        }
+
+        header .global .logo {
+            font-size: 1.8em !important;
+            font-weight: bold;
+            color: #ffffff;
+            padding: 0 !important;
+        }
+
+        header .global .slideout {
+            font-size: 1.8em !important;
+            font-weight: bold;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        header .global li a {
+            font-style: normal;
+            font-weight: 600;
+            font-size: 1em;
+            padding: 0 10px;
+            line-height: 64px;
+            display: block;
+            color: white;
+            text-decoration: none;
+            position: relative;
+        }
+
+        header .global .global-right {
+            float: right;
+            height: 60px;
+        }
+
+footer {
+    position: relative;
+    border-top: 2px solid darkblue;
+    padding: 10px;
+    color: #ffffff;
+    background-color: #1D1F20;
+    background-image: linear-gradient(145deg, #1D1F20, #404348);
+    z-index: 9999;
+}
