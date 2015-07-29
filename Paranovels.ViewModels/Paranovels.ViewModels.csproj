@@ -88,7 +88,9 @@
     <Compile Include="Grid Models\SeriesGrid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Criteria Models\TranslatorCriteria.cs" />
-    <Compile Include="Sort Extensions\SortGridExtension.cs" />
+    <Compile Include="Sort Extensions\CommentGrid.SortExtension.cs" />
+    <Compile Include="Sort Extensions\ReleaseGrid.SortExtension.cs" />
+    <Compile Include="Sort Extensions\SeriesGrid.SortExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Paranovels.DataModels\Paranovels.DataModels.csproj">

@@ -31,6 +31,7 @@
             @ViewBag.Title
         </h1>
         <a class="action toggle right" role="button" data-toggle='{ "target":"#addtolist"}'><i class="fa fa-plus-circle"></i></a>
+        <a class="action toggle right" role="button" data-toggle='{ "target":"#settings"}'><i class="fa fa-gear"></i></a>
     </div>
     <div id="addtolist" class="form animated" style="display: none;">
         @{ var formModel = new ConnectorForm(); }
@@ -97,9 +98,71 @@
             </p>
         </form>
     </div>
+    <div id="settings" class="form animated" style="display: none;">
+        <div class="well well-sm no-margin" style="background: white;">
+            <div class="detail-group">
+                <strong>Name</strong>
+                <div>
+                    @Model.Name
+                    @Html.ImproveThis(m => m.Name)
+                </div>
+            </div>
+            <div class="detail-group">
+                <strong>Description</strong>
+                <div>
+                    @Model.Description
+                    @Html.ImproveThis(m => m.Description)
+                </div>
+            </div>
+            <div class="detail-group">
+                <strong>Icon</strong>
+                <div><span style="@(Model.IsColorIcon ? string.Format("color:{0};", Model.Color.ToColorHex()) : "")">@Html.Raw(Model.Type.Translate(R.ListType.Translate))</span></div>
+            </div>
+            <div class="detail-group">
+                <div class="detail-group">
+                    <strong>Color</strong>
+                    <div>
+                        <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                            <input type="hidden" name="ID" value="@Model.ID" />
+                            <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.Color)" />
+                            <input id="color" name="ColorHex" class="submit" type="text" value="@Model.Color.ToColorHex()" />
+                        </form>
+                        <script>
+                            window.pnHooks = window.pnHooks || [];
+                            window.pnHooks.push(function () {
+                                require(['colorpicker'], function () {
+                                    $('#color').colorPicker();
+                                    $('#color').on('change', function () {
+
+                                    });
+                                });
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <div class="detail-group">
+                <div class="detail-group">
+                    <strong></strong>
+                    <div>
+                        <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                            <input type="hidden" name="ID" value="@Model.ID" />
+                            <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.IsColorIcon)" />
+                            <label class="no-bold">
+                                <input name="@Model.PropertyName(m=>m.IsColorIcon)" class="submit" type="checkbox" value="true" checked="@(Model.IsColorIcon)" />
+                                Apply color to icon
+                            </label>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
     <div class="content">
         <p class="alert alert-info">
-            Series or Releases that in @Model.Name will have an icon <span style="@Model.Color.Translate(R.Color.Translate)">@Html.Raw(Model.Type.Translate(R.ListType.Translate))</span> in front of the title.
+            Series or Releases that in @Model.Name will have an icon <span style="@(Model.IsColorIcon ? string.Format("color:{0};", Model.Color.ToColorHex()) : "")">@Html.Raw(Model.Type.Translate(R.ListType.Translate))</span> in front of the title.
+            <a class="alert-link action toggle" role="button" data-toggle='{ "target":"#settings" }'>Click here to change list settings.</a>
         </p>
     </div>
     <div class="content">
@@ -110,40 +173,40 @@
     <div class="reading-list">
         @foreach (var item in Model.Series.AsQueryable().Sort(new BaseCriteria { Sorted = sortedModel.Sorted }))
         {
-        <div class="row-list">
+            <div class="row-list">
 
-            <div class="col-title">
+                <div class="col-title">
 
-                <a href="@Url.Action("Detail", "Series", new{ ID = item.SeriesID, Seo = item.Title.ToSeo() })">@item.Title</a>
+                    <a href="@Url.Action("Detail", "Series", new{ ID = item.SeriesID, Seo = item.Title.ToSeo() })">@item.Title</a>
 
-            </div>
-            <div class="col-status">
-                @if (item.Release != null)
+                </div>
+                <div class="col-status">
+                    @if (item.Release != null)
                     {
-                    <a href="@Url.Action("Detail", "Release", new { ID = item.Release.ReleaseID, Seo = item.Release.Title.ToSeo() })">@item.Release.Title</a>
+                        <a href="@Url.Action("Detail", "Release", new { ID = item.Release.ReleaseID, Seo = item.Release.Title.ToSeo() })">@item.Release.Title</a>
                     }
                     else
                     {
-                    <text>No release yet!</text>
+                        <text>No release yet!</text>
                     }
-            </div>
-            <div class="col-status">
-                @if (item.UserRead != null)
+                </div>
+                <div class="col-status">
+                    @if (item.UserRead != null)
                     {
-                    <a href="@Url.Action("Detail", "Release", new { ID = item.UserRead.ReleaseID, Seo = item.UserRead.Title.ToSeo() })">@item.UserRead.Title</a>
+                        <a href="@Url.Action("Detail", "Release", new { ID = item.UserRead.ReleaseID, Seo = item.UserRead.Title.ToSeo() })">@item.UserRead.Title</a>
                     }
                     else
                     {
-                    <text>You haven't mark any release as read yet!</text>
+                        <text>You haven't mark any release as read yet!</text>
                     }
+                </div>
+                <div class="col-rating">
+                    4.5
+                </div>
+                <div class="col-rating">
+                    3.6
+                </div>
             </div>
-            <div class="col-rating">
-                4.5
-            </div>
-            <div class="col-rating">
-                3.6
-            </div>
-        </div>
 
         }
     </div>

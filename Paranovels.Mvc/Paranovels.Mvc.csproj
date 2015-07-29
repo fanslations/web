@@ -399,6 +399,7 @@
     <Content Include="Views\Project\Index.cshtml" />
     <Content Include="Views\UserPreference\Index.cshtml" />
     <Content Include="Views\UserList\_AddSeriesToList.cshtml" />
+    <Content Include="Views\UserList\_InlineEditPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

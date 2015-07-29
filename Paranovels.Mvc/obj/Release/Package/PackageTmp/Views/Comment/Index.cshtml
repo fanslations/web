@@ -12,16 +12,7 @@
     var sortedModel = new SortedModel
     {
         Sorted = Request.QueryString["sorted"] ?? "new",
-        SortOptions = new Dictionary<string, string>
-        {
-            {"best", "best"},
-            {"comments", "comments"},
-            {"controversial", "controversial"},
-            {"new", "new"},
-            {"old", "old"},
-            {"top", "top"},
-            {"votes", "votes"},
-        }
+        SortOptions = Model.Data.AsQueryable().SortOptions()
     };
 }
 

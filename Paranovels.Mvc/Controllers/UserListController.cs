@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
 using Paranovels.Common;
 using Paranovels.Facade;
 using Paranovels.ViewModels;
+using Thi.Core;
 
 namespace Paranovels.Mvc.Controllers
 {
@@ -29,16 +31,20 @@ namespace Paranovels.Mvc.Controllers
         }
 
         [HttpPost]
-        public JsonResult Form(ListForm form)
+        public JsonResult Form(ListForm form, string colorHex)
         {
+            if (!string.IsNullOrWhiteSpace(colorHex))
+            {
+                form.Color = colorHex.ToColorInt();
+            }
             form.UserID = UserSession.UserID;
             return SaveChanges(form);
         }
 
-        //public ActionResult InlineEdit(InlineEditForm<ListDetail> form)
-        //{
-        //    form.Model = Facade<NovelFacade>().GetChapter(new ChapterCriteria { ID = form.ID });
-        //    return View("_InlineEditPartial", form);
-        //}
+        public ActionResult InlineEdit(InlineEditForm<ListDetail> form)
+        {
+            form.Model = Facade<ListFacade>().Get(new ListCriteria { ID = form.ID });
+            return View("_InlineEditPartial", form);
+        }
     }
 }

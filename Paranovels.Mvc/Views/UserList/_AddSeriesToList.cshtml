@@ -1,5 +1,6 @@
 ﻿@using Paranovels.Common
 @using Paranovels.DataModels
+@using Thi.Core
 @model Paranovels.ViewModels.SeriesDetail   
      
 @if (Model.ID > 0)
@@ -13,11 +14,11 @@
                 <li class="action connect" data-connect='{ "ConnectorID": @(connector.ID), "ConnectorType": @R.ConnectorType.SERIES_USERLIST, "SourceID": @Model.ID, "TargetID": @item.ID, "IsDeleted": "@(connector.IsDeleted == false)" }' role="button">
                     @if (connector.IsDeleted == false)
                     {
-                        <span title="Remove from @item.Name"><span style="@item.Color.Translate(R.Color.Translate)">@Html.Raw(item.Type.Translate(R.ListType.Translate))</span>@item.Name</span>
+                        <span title="Remove from @item.Name"><span style="@(item.IsColorIcon ? string.Format("color:{0};",item.Color.ToColorHex()) : "")">@Html.Raw(item.Type.Translate(R.ListType.Translate))</span>@item.Name</span>
                     }
                     else
                     {
-                        <span title="Add to @item.Name">@Html.Raw(item.Type.Translate(R.ListType.Translate))@item.Name</span>
+                        <span title="Add to @item.Name"><span class="opacity-03" style="@(item.IsColorIcon ? string.Format("color:{0};",item.Color.ToColorHex()) : "")">@Html.Raw(item.Type.Translate(R.ListType.Translate))</span>@item.Name</span>
                     }
                 </li>
             }

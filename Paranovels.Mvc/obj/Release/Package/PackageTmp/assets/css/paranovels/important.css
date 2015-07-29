@@ -12,6 +12,9 @@
     margin-bottom: 10px !important;
 }
 
+.no-bold {
+    font-weight: normal !important;
+}
 .color-blue {
     color: blue !important;
 }

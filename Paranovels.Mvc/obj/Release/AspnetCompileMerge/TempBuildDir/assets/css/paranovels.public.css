@@ -4,6 +4,7 @@
 @import url('../bower_components/tagsinput/dist/bootstrap-tagsinput.css');
 @import url('../bower_components/selectize/dist/css/selectize.bootstrap3.css');
 @import url('../bower_components/toastr/toastr.css');
+@import url('../bower_components/really-simple-colorpicker/css/colorPicker.css');
 @import url('paranovels/vendor.override.css');
 @import url('paranovels/global.css');
 @import url('paranovels/header.css');

@@ -60,6 +60,7 @@
     <Compile Include="Base Interface\IModel.cs" />
     <Compile Include="Base Object\BaseService.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="Extensions\ColorExtension.cs" />
     <Compile Include="Extensions\FormatExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Search Related\SearchExtension.cs" />
