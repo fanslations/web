@@ -29,7 +29,10 @@ namespace Paranovels.Services
             UpdateAuditFields(userPreference, form.ByUserID);
 
             // override default for score since it can be 0
-            userPreference.Score = form.Score;
+            if (form.InlineEditProperty == userPreference.PropertyName(m => m.Score))
+            {
+                userPreference.Score = form.Score;
+            }
 
             // save
             SaveChanges();

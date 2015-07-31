@@ -26,6 +26,12 @@ namespace Paranovels.Services
             MapProperty(form, userList, form.InlineEditProperty);
             UpdateAuditFields(userList, form.ByUserID);
 
+            // override
+            if (form.InlineEditProperty == form.PropertyName(m => m.ShareLevel))
+            {
+                userList.ShareLevel = form.ShareLevel;
+            }
+
             // save
             SaveChanges();
 

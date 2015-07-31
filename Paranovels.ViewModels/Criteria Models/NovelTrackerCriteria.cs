@@ -7,8 +7,8 @@ using Thi.Core;
 
 namespace Paranovels.ViewModels
 {
-    public class NovelTrackerCriteria : BaseCriteria
+    public class ReviewCriteria : BaseCriteria
     {
-        public string Title { get; set; }
+
     }
 }

@@ -1,6 +1,4 @@
-﻿@using Elmah.ContentSyndication
-@using Microsoft.Ajax.Utilities
-@using Paranovels.Common
+﻿@using Paranovels.Common
 @using Paranovels.DataModels
 @using Paranovels.ViewModels
 @using Thi.Core
@@ -41,14 +39,14 @@
         <div class="detail-group">
             <strong>Categories</strong>
             <div>
-                @Html.Raw(string.Join(", ", Model.Categories.Select(s => string.Format(@"<a href=""{1}"">{0}</a>", s.Name, Url.Action("Detail", "Tag", new { ID = s.TagID, Seo = s.Name.ToSeo() })))).FormatString())
+                @Html.Raw(string.Join(", ", Model.Categories.Select(s => string.Format(@"<a href=""{1}"">{0}</a>", s.Name, Url.Action("Detail", "Tag", new { ID = s.TagID, Seo = s.Name.ToSeo() })))).FormatString(0, 20, "Do know the genres of this series? Click on 'Edit' to help us update it."))
                 @Html.ImproveThis(m => m.Categories)
             </div>
         </div>
         <div class="detail-group">
             <strong>Genres</strong>
             <div>
-                @Html.Raw(string.Join(", ", Model.Genres.Select(s => string.Format(@"<a href=""{1}"">{0}</a>", s.Name, Url.Action("Detail", "Tag", new { ID = s.TagID, Seo = s.Name.ToSeo() })))).FormatString())
+                @Html.Raw(string.Join(", ", Model.Genres.Select(s => string.Format(@"<a href=""{1}"">{0}</a>", s.Name, Url.Action("Detail", "Tag", new { ID = s.TagID, Seo = s.Name.ToSeo() })))).FormatString(0, 20, "Do know the genres of this series? Click on 'Edit' to help us update it."))
                 @Html.ImproveThis(m => m.Genres)
             </div>
         </div>
@@ -59,12 +57,16 @@
         <div class="detail-group">
             <strong>Status</strong>
             <div>
-                @Model.Status.Translate(R.TranslationStatus.Translate)
+                @Model.Status.Translate(R.TranslationStatus.Translate).FormatString(0, 20, "Do know the status of this series? Click on 'Edit' to help us update it.")
                 @Html.ImproveThis(m => m.Status)
             </div>
         </div>
         <div class="detail-group">
-            <strong>Last Release</strong>
+            <strong>Rating</strong>
+            <div>@RatingHelper.DisplayRating(Model.Summarize)</div>
+        </div>
+        <div class="detail-group">
+            <strong>Latest Release</strong>
             <div>
                 @{ var release = Model.Releases.OrderByDescending(o => o.Date).FirstOrDefault() ?? new Release(); }
                 <a href="@Url.Action("Detail", "Release", new { ID = release.ReleaseID, Seo = release.Title.ToSeo()})">@release.Title</a> - @release.Date.FormatDate()

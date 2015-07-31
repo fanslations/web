@@ -1,9 +1,8 @@
-﻿@using System.Activities.Expressions
-@using Paranovels.Common
+﻿@using Paranovels.Common
 @using Paranovels.DataModels
 @using Paranovels.ViewModels
 @using Thi.Core
-@model Thi.Core.PagedList<Paranovels.ViewModels.SeriesGrid>
+@model PagedList<SeriesGrid>
 @{
     ViewBag.Title = "Series";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -34,7 +33,7 @@
         <a class="action right toggle" data-toggle='{ "target": "#add-container"}' role="button"><i class="fa fa-plus-circle"></i></a>
         <a class="action right toggle" data-toggle='{ "target": "#search-container"}' role="button"><i class="fa fa-search"></i></a>
     </div>
-    @{ Html.RenderPartial("_Search", Request.QueryString.ToCriteria<NovelTrackerCriteria>()); }
+    @{ Html.RenderPartial("_Search", Request.QueryString.ToCriteria<SeriesCriteria>()); }
     <div id="add-container" class="form" style="@(Request.QueryString["do"] == "add" ? "display:block;" : "display:none;")">
         @{ var formModel = new SeriesForm(); }
         <form class="" method="POST" action="@Url.Action("Form")" data-form-ajax='{}'>
@@ -60,43 +59,6 @@
             Html.RenderPartial("_Sorted", sortedModel);
         }
     </div>
-    <ul class="grid">
-        @foreach (var item in Model.Data)
-        {
-            <li class="row-list">
-                <div class="col-image">
-                    <a href="#" class="">
-                        <img src="@item.ImageUrl.ToGoogleDriveImageUrl()" class="img-rounded" alt="@item.Title's cover" />
-                    </a>
-                </div>
-                <div class="col-content">
-                    <div>
-                        <a href="@Url.Action("Detail", new{ ID = item.SeriesID, Seo = item.Title.ToSeo() })">@item.Title</a>
-                    </div>
-                    <div>@Html.Raw(item.Synopsis.FormatString(100))</div>
-                    <ul class="list-unstyled list-inline">
-                        <li title="Status">
-                            <i class="fa fa-certificate"></i><a href="@Url.Action("Index", new{ Query = "status:" + item.Status})">@Html.Raw(item.Status.Translate(R.TranslationStatus.Translate).FormatString())</a>
-                        </li>
-                        <li class="divider divider-pipe divider-black"></li>
-                        <li title="Updated Date"><i class="fa fa-calendar"></i>@Html.Raw(item.UpdatedDate.FormatDate())</li>
-                        @if (item.Release != null)
-                        {
-                            <li class="divider divider-pipe divider-black"></li>
-                            <li title="Latest Release"><i class="fa fa-rss"></i>@Html.Raw(item.Release.Title.FormatString())</li>
-                        }
-                        @if (item.Group != null)
-                        {
-                            <li class="divider divider-pipe divider-black"></li>
-                            <li title="Translations Group">
-                                <i class="fa fa-group"></i><a href="@Url.Action("Detail", "Group", new { ID = item.Group.GroupID, Seo = item.Group.Name.ToSeo() })">@item.Group.Name</a>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            </li>
-
-        }
-    </ul>
+    @{ Html.RenderPartial("_SeriesGridPartial", Model); }
     @Html.Raw(Model.ToPagination(Request.RawUrl, 0))
 </section>

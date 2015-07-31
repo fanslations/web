@@ -1,10 +1,17 @@
 ﻿@using Paranovels.Common
+@using Paranovels.DataModels
 @using Paranovels.ViewModels
 @using Thi.Core
-@model Thi.Core.PagedList<Paranovels.DataModels.Group>
+@model Thi.Core.PagedList<GroupGrid>
 @{
     ViewBag.Title = "Translations Groups";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var sortedModel = new SortedModel
+    {
+        Sorted = Request.QueryString["sorted"] ?? "new",
+        SortOptions = Model.Data.AsQueryable().SortOptions()
+    };
 }
 @section CurrentMenu
 {
@@ -44,22 +51,58 @@
             </div>
         </form>
     </div>
+    <div class="content">
+        @{
+            Html.RenderPartial("_Sorted", sortedModel);
+        }
+    </div>
     <ul class="grid">
         @foreach (var item in Model.Data)
         {
-
+            var summarize = new Summarize
+            {
+                ID = item.ID,
+                SourceID = item.ID,
+                SourceTable = R.SourceTable.GROUP,
+                QualityCount = item.QualityCount.GetValueOrDefault(),
+                QualityScore = item.QualityScore.GetValueOrDefault()
+            };
+            var latestRelease = item.Releases.OrderByDescending(o => o.Date).FirstOrDefault() ?? new Release();
             <li class="row-list">
+                <div class="col-first">
+                    @if (item.Voted.HasValue)
+                    {
+                        <div class="vote @(item.Voted.GetValueOrDefault() == 1 ? "likes" : item.Voted.GetValueOrDefault() == -1 ? "dislikes" : "")">
+                            <div class="action vote-up" data-vote='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.GROUP, "Vote": 1}'><i class="fa fa-chevron-up"></i></div>
+                            <div class="score @((item.VoteUp + item.VoteDown) < 0 ? "dislikes" : "likes")">@(item.VoteUp.GetValueOrDefault() - item.VoteDown.GetValueOrDefault())</div>
+                            <div class="action vote-down" data-vote='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.GROUP, "Vote": -1}'><i class="fa fa-chevron-down"></i></div>
+                        </div>
+                    }
+                </div>
                 <div class="col-content">
                     <div>
                         <a href="@Url.Action("Detail", new{ ID = item.GroupID, Seo = item.Name.ToSeo() })">@item.Name</a>
                     </div>
                     <div>@item.About</div>
                     <ul class="list-unstyled list-inline">
-                        <li title="Status"><i class="fa fa-certificate"></i>@item.Status.Translate(R.GroupStatus.Translate)</li>
-                        <li class="divider divider-pipe divider-black"></li>
-                        <li title="Updated Date"><i class="fa fa-calendar"></i>@item.UpdatedDate.FormatDate()</li>
-                        <li class="divider divider-pipe divider-black"></li>
-                        <li title="Latest Release"><i class="fa fa-rss"></i>@item.Status.Translate(R.TranslationStatus.Translate)</li>
+                        <li title="Updated Date">
+                            <i class="fa fa-calendar"></i>@item.UpdatedDate.FormatDate()
+                        </li>
+                        <li title="Status">
+                            <i class="fa fa-certificate"></i>@item.Status.Translate(R.GroupStatus.Translate)
+                        </li>
+                        <li title="Comments">
+                            <i class="fa fa-comments-o"></i><a href="@Url.Action("Detail", "Group", new {ID = item.GroupID, Seo = item.Name.ToSeo()})#comments">@item.CommentCount.GetValueOrDefault() comments</a>
+                        </li>
+                        <li title="Rating">
+                            <i class="fa fa-diamond" title="@(item.QualityRated == 0 ? "You haven't  rated this" : string.Format("You rated {0:0.0} star(s)", item.QualityRated/2))"></i>@RatingHelper.DisplayRating(summarize)
+                        </li>
+                        @if (latestRelease.ID > 0)
+                        {
+                            <li title="Latest Release">
+                                <i class="fa fa-rss"></i><a href="@Url.Action("Detail", "Release", new {latestRelease.ID, Seo = latestRelease.Title})">@Html.Raw(latestRelease.Title.FormatString())</a>
+                            </li>
+                        }       
                     </ul>
                 </div>
             </li>

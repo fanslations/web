@@ -48,9 +48,10 @@ namespace Paranovels.Services
             return groupDetail;
         }
 
-        public PagedList<Group> Search(SearchModel<GroupCriteria> searchModel)
+        public PagedList<GroupGrid> Search(SearchModel<GroupCriteria> searchModel)
         {
             var qGroup = View<Group>().All();
+            var qSummarize = View<Summarize>().Where(w => w.SourceTable == R.SourceTable.GROUP);
 
             var c = searchModel.Criteria;
 
@@ -64,7 +65,29 @@ namespace Paranovels.Services
                 qGroup = qGroup.Search(columns, c.Query.ToSearchKeywords()) as IQueryable<Group>;
             }
 
-            return qGroup.ToPagedList(searchModel.PagedListConfig);
+            var results = qGroup.GroupJoin(qSummarize, r => r.GroupID, s => s.SourceID,
+                (r, s) => new {Group = r, Summarize = s.DefaultIfEmpty()})
+                .SelectMany(sm => sm.Summarize.Select(s => new GroupGrid
+                {
+                    GroupID = sm.Group.GroupID,
+                    UpdatedDate = sm.Group.UpdatedDate,
+                    Name = sm.Group.Name,
+                    Url = sm.Group.Url,
+                    About = sm.Group.About,
+
+                    CommentCount = s.CommentCount,
+                    ViewCount = s.ViewCount,
+                    VoteUp = s.VoteUp,
+                    VoteDown = s.VoteDown,
+                    QualityCount = s.QualityCount,
+                    QualityScore = s.QualityScore
+
+                }));
+
+            // apply sort
+            results = results.Sort(c);
+
+            return results.ToPagedList(searchModel.PagedListConfig);
         }
     }
 }

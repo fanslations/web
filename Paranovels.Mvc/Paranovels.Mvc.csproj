@@ -328,6 +328,7 @@
     <Content Include="assets\fonts\fontawesome-webfont.woff" />
     <Content Include="assets\fonts\fontawesome-webfont.woff2" />
     <Content Include="assets\fonts\FontAwesome.otf" />
+    <Content Include="App_Code\RatingHelper.cshtml" />
     <None Include="Properties\PublishProfiles\Azure.pubxml" />
     <None Include="Properties\PublishProfiles\fanslations.pubxml" />
     <None Include="Properties\PublishProfiles\Server.pubxml" />
@@ -400,9 +401,9 @@
     <Content Include="Views\UserPreference\Index.cshtml" />
     <Content Include="Views\UserList\_AddSeriesToList.cshtml" />
     <Content Include="Views\UserList\_InlineEditPartial.cshtml" />
+    <Content Include="Views\Series\_SeriesGridPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Views\Api\" />
     <Folder Include="Views\Content\" />
     <Folder Include="Views\Glossary\" />

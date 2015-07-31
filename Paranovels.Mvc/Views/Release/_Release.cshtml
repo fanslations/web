@@ -11,40 +11,16 @@
     };
 }
 
-@helper DisplayRating(ReleaseGrid item)
-{
-    Func<ReleaseGrid, int, string> checkRating = (r, rating) =>
-    {
-        if (r.QualityCount.GetValueOrDefault() == 0) return "";
-        return (r.QualityScore / r.QualityCount) == rating ? "checked" : "data-a=" + ((double)r.QualityScore.GetValueOrDefault() / r.QualityCount.GetValueOrDefault());
-    };
-    <fieldset class="rating">
-        <legend class="sr-only">Translation Quality Rating</legend>
-        <input type="radio" id="star5-@(item.ID)" name="rating@(item.ID)" value="10" @checkRating(item, 10) />
-        <label class="full action rate" for="star5-@(item.ID)" title="Awesome - 5 stars" data-rate='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 10}'></label>
-        <input type="radio" id="star4half-@(item.ID)" name="rating@(item.ID)" value="9" @checkRating(item, 9) />
-        <label class="half action rate" for="star4half-@(item.ID)" title="Pretty good - 4.5 stars" data-rate='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 9}'></label>
-        <input type="radio" id="star4-@(item.ID)" name="rating@(item.ID)" value="8" @checkRating(item, 8) />
-        <label class="full action rate" for="star4-@(item.ID)" title="Pretty good - 4 stars" data-rate='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 8}'></label>
-        <input type="radio" id="star3half-@(item.ID)" name="rating@(item.ID)" value="7" @checkRating(item, 7) />
-        <label class="half action rate" for="star3half-@(item.ID)" title="Meh - 3.5 stars" data-rate='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 7}'></label>
-        <input type="radio" id="star3-@(item.ID)" name="rating@(item.ID)" value="6" @checkRating(item, 6) />
-        <label class="full action rate" for="star3-@(item.ID)" title="Meh - 3 stars" data-rate='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 6}'></label>
-        <input type="radio" id="star2half-@(item.ID)" name="rating@(item.ID)" value="5" @checkRating(item, 5) />
-        <label class="half action rate" for="star2half-@(item.ID)" title="Kinda bad - 2.5 stars" data-rate='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 5}'></label>
-        <input type="radio" id="star2-@(item.ID)" name="rating@(item.ID)" value="4" @checkRating(item, 4) />
-        <label class="full action rate" for="star2-@(item.ID)" title="Kinda bad - 2 stars" data-rate='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 4}'></label>
-        <input type="radio" id="star1half-@(item.ID)" name="rating@(item.ID)" value="3" @checkRating(item, 3) />
-        <label class="half action rate" for="star1half-@(item.ID)" title="Meh - 1.5 stars" data-rate='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 3}'></label>
-        <input type="radio" id="star1-@(item.ID)" name="rating@(item.ID)" value="2" @checkRating(item, 2) />
-        <label class="full action rate" for="star1-@(item.ID)" title="Sucks big time - 1 star" data-rate='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 2}'></label>
-        <input type="radio" id="starhalf-@(item.ID)" name="rating@(item.ID)" value="1" @checkRating(item, 1) />
-        <label class="half action rate" for="starhalf-@(item.ID)" title="Sucks big time - 0.5 stars" data-rate='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Rate": 1}'></label>
-    </fieldset>
-}
-
 @helper DisplayGrid(ReleaseGrid item, string cssClass = "row-list")
 {
+    var summarize = new Summarize
+    {
+        ID = item.ID,
+        SourceID = item.ID,
+        SourceTable = R.SourceTable.RELEASE,
+        QualityCount = item.QualityCount.GetValueOrDefault(),
+        QualityScore = item.QualityScore.GetValueOrDefault()
+    };
     <li class="@cssClass">
         <div class="col-first">
             @if (item.Voted.HasValue)
@@ -66,16 +42,18 @@
             <div>
                 @foreach (var list in item.UserLists ?? new List<UserList>())
                 {
-                    var connector = item.Connectors.SingleOrDefault(w => w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.TargetID == list.UserListID);
-                    if (connector != null && connector.IsDeleted == false)
+                    if (list.IsPlaceInFrontOfTitle)
                     {
-                        <span style="@(list.IsColorIcon ? string.Format("color:{0};",list.Color.ToColorHex()) : "")" title="this indicated that it in your @list.Name">@Html.Raw(list.Type.Translate(R.ListType.Translate))</span>
+                        var connector = item.Connectors.SingleOrDefault(w => w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.TargetID == list.UserListID);
+                        if (connector != null && connector.IsDeleted == false)
+                        {
+                            <span style="@(list.IsColorIcon ? string.Format("color:{0};", list.Color.ToColorHex()) : "")" title="this indicated that it in your @list.Name">@Html.Raw(list.Type.Translate(R.ListType.Translate))</span>
+                        }
                     }
-
                 }
                 @if (item.CommentCount.HasValue)
                 {
-                    <a href="@Url.Action("Out", "Release", new {ID = item.ReleaseID, Url = item.Url, Seo = item.Title.ToSeo()})" class="fs-12em">@item.Title</a>
+                    <a href="@Url.Action("Read", "Release", new {ID = item.ReleaseID, Url = item.Url, Seo = item.Title.ToSeo()})" class="fs-12em">@item.Title</a>
                 }
                 else
                 {
@@ -94,7 +72,7 @@
                         <i class="fa fa-comments-o"></i><a href="@Url.Action("Detail", "Release", new {ID = item.ReleaseID, Seo = item.Title.ToSeo()})#comments">@item.CommentCount.GetValueOrDefault() comments</a>
                     </li>
                     <li title="Rating">
-                        <i class="fa fa-diamond" title="@(item.QualityRated == 0 ? "You haven't  rated this" : string.Format("You rated {0:0.0} star(s)", item.QualityRated/2))"></i>@DisplayRating(item)
+                        <i class="fa fa-diamond" title="@(item.QualityRated == 0 ? "You haven't  rated this" : string.Format("You rated {0:0.0} star(s)", item.QualityRated/2))"></i>@RatingHelper.DisplayRating(summarize)
                     </li>
                 }
                 @if (item.Series != null)
@@ -129,7 +107,7 @@
         foreach (var date in Model.Data.GroupBy(g => g.Date.Date).Select(s => s.Key))
         {
             var dateItems = Model.Data.Where(w => w.Date.Date == date).ToList();
-            
+
             <div class="subheader @(date == DateTime.Now.Date ? "hidden" : "")">
                 <h2 class="title">@date.ToLongDateString()</h2>
             </div>
@@ -167,7 +145,7 @@
                     <a role="button" class="" onclick="$('.already-read').removeClass('hidden'); $('#view-mores').addClass('hidden');" href="javascript:;">
                         <i class="fa fa-history"></i>@Model.Data.Count(w => w.IsRead == true) already read release(s) hidden. <strong>Click to View</strong>
                     </a>
-                </li> 
+                </li>
             }
             @foreach (var item in Model.Data.Where(w => w.IsRead == true))
             {

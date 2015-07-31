@@ -46,16 +46,19 @@ namespace Paranovels.Facade
                         .Where(w => w.IsDeleted == false && w.ConnectorType == R.ConnectorType.SERIES_USERLIST)
                         .Where(w => w.TargetID == detail.UserListID).Select(s => s.SourceID).ToList();
 
-                var searchModel = new SearchModel<NovelTrackerCriteria>()
+                detail.Series = new SeriesService(uow).Search(new SearchModel<SeriesCriteria>
                 {
-                    Criteria = new NovelTrackerCriteria
-                    {
-                        ByUserID = criteria.ByUserID,
-                        IDs = listSeriesIDs,
-                    },
-                    PagedListConfig = new PagedListConfig {PageSize = 99999}
-                };
-                detail.Series = new SearchFacade().Search(searchModel).Data;
+                    Criteria = new SeriesCriteria { IDs = listSeriesIDs },
+                    PagedListConfig = new PagedListConfig { PageSize = int.MaxValue }
+                }).Data;
+
+                detail.Releases = service.View<Release>().Where(w => listSeriesIDs.Contains(w.SeriesID)).ToList();
+
+                var releaseIDs = detail.Releases.Select(s => s.ReleaseID);
+                detail.Reads = service.View<UserRead>().Where(w => w.UserID == criteria.ByUserID)
+                    .Where(w => w.SourceTable == R.SourceTable.RELEASE)
+                    .Where(w => releaseIDs.Contains(w.SourceID)).ToList();
+
 
                 return detail;
             }

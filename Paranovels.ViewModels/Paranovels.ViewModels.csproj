@@ -84,12 +84,14 @@
     <Compile Include="Form Models\NovelForm.cs" />
     <Compile Include="Form Models\UserForm.cs" />
     <Compile Include="Grid Models\CommentGrid.cs" />
+    <Compile Include="Grid Models\GroupGrid.cs" />
     <Compile Include="Grid Models\ReleaseGrid.cs" />
     <Compile Include="Grid Models\SeriesGrid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Criteria Models\TranslatorCriteria.cs" />
     <Compile Include="Sort Extensions\CommentGrid.SortExtension.cs" />
     <Compile Include="Sort Extensions\ReleaseGrid.SortExtension.cs" />
+    <Compile Include="Sort Extensions\GroupGrid.SortExtension.cs" />
     <Compile Include="Sort Extensions\SeriesGrid.SortExtension.cs" />
   </ItemGroup>
   <ItemGroup>

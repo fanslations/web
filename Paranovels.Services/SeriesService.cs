@@ -48,7 +48,7 @@ namespace Paranovels.Services
             return translationSceneDetail;
         }
 
-        public PagedList<SeriesGrid> Search(SearchModel<NovelTrackerCriteria> searchModel)
+        public PagedList<SeriesGrid> Search(SearchModel<SeriesCriteria> searchModel)
         {
             var qSeries = View<Series>().All();
             var qSummarize = View<Summarize>().Where(w => w.SourceTable == R.SourceTable.SERIES);

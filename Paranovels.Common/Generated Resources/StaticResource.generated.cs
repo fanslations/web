@@ -60,9 +60,9 @@ namespace Paranovels.Common //.Generated Resources
 						}; // end translate dictionary
         }	
         /// <summary>
-        /// Color auto generated class.
+        /// ColorX auto generated class.
         /// </summary>
-        public partial class Color 
+        public partial class ColorX 
         {		
 			/// <summary>
 			/// color: darkblue;
@@ -95,7 +95,7 @@ namespace Paranovels.Common //.Generated Resources
 			public const int DARK_RED = 1;
 				
 			
-			public const string ClassName = "Color";
+			public const string ClassName = "ColorX";
 			public static readonly Dictionary<int,string> Translate = new Dictionary<int,string> {
 												{2,"color: darkblue;"},
 							
@@ -389,9 +389,9 @@ namespace Paranovels.Common //.Generated Resources
 			public const int COMPLETED = 300;
 				
 			/// <summary>
-			/// <i class='fa fa-circle'></i>
+			/// <i class='fa fa-list-alt'></i>
 			/// </summary>
-			[Description("<i class='fa fa-circle'></i>")]
+			[Description("<i class='fa fa-list-alt'></i>")]
 			public const int CUSTOM = 0;
 				
 			/// <summary>
@@ -405,6 +405,12 @@ namespace Paranovels.Common //.Generated Resources
 			/// </summary>
 			[Description("<i class='fa fa-heart'></i>")]
 			public const int FAVORITES = 600;
+				
+			/// <summary>
+			/// <i class='fa fa-eye-slash'></i>
+			/// </summary>
+			[Description("<i class='fa fa-eye-slash'></i>")]
+			public const int IGNORED = 900;
 				
 			/// <summary>
 			/// <i class='fa fa-paw'></i>
@@ -441,11 +447,13 @@ namespace Paranovels.Common //.Generated Resources
 			public static readonly Dictionary<int,string> Translate = new Dictionary<int,string> {
 												{300,"<i class='fa fa-check'></i>"},
 							
-												{0,"<i class='fa fa-circle'></i>"},
+												{0,"<i class='fa fa-list-alt'></i>"},
 							
 												{400,"<i class='fa fa-times'></i>"},
 							
 												{600,"<i class='fa fa-heart'></i>"},
+							
+												{900,"<i class='fa fa-eye-slash'></i>"},
 							
 												{500,"<i class='fa fa-paw'></i>"},
 							

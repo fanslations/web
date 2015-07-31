@@ -1,4 +1,4 @@
-// This class was automatically generated with love by ST4bby 7/29/2015 4:24:38 PM.
+// This class was automatically generated with love by ST4bby 7/31/2015 9:48:13 AM.
 // Read more at http://jbubriski.github.com/ST4bby/
 
 namespace Paranovels.DataModels
@@ -51,5 +51,8 @@ namespace Paranovels.DataModels
 		
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("IsColorIcon", TypeName = "bit"), Display(Name="Is Color Icon")]
 		public bool IsColorIcon { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("IsPlaceInFrontOfTitle", TypeName = "bit"), Display(Name="Is Place In Front Of Title")]
+		public bool IsPlaceInFrontOfTitle { get; set; }
 	}
 }

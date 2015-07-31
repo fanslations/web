@@ -11,5 +11,9 @@ namespace Paranovels.ViewModels
     public class ListDetail: UserList, IDetailModel
     {
         public IList<SeriesGrid> Series { get; set; }
+
+        public IList<Release> Releases { get; set; }
+
+        public IList<UserRead> Reads { get; set; } 
     }
 }

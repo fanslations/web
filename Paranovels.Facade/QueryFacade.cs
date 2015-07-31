@@ -30,12 +30,11 @@ namespace Paranovels.Facade
         {
             using (var uow = UnitOfWorkFactory.Create<NovelContext>())
             {
-                var service = new GroupService(uow);
-                return service.Search(new SearchModel<GroupCriteria>
-                {
-                    Criteria = criteria,
-                    PagedListConfig = new PagedListConfig() { PageSize = 999999 }
-                }).Data;
+                var qGroup = uow.Repository<Group>().All();
+
+                var groups = qGroup.Where(w => w.Name.Contains(criteria.Query));
+
+                return groups.ToList();
             }
         }
 
@@ -43,8 +42,8 @@ namespace Paranovels.Facade
         {
             using (var uow = UnitOfWorkFactory.Create<NovelContext>())
             {
-                var tUserVote = uow.Repository<UserVote>();
-                var userVotedIDs = tUserVote.Where(w => w.UserID == criteria.ByUserID && w.SourceTable == criteria.SourceTable).Select(s => s.SourceID).ToList();
+                var qUserVote = uow.Repository<UserVote>().All();
+                var userVotedIDs = qUserVote.Where(w => w.UserID == criteria.ByUserID && w.SourceTable == criteria.SourceTable).Select(s => s.SourceID).ToList();
 
                 return userVotedIDs;
             }
@@ -54,9 +53,9 @@ namespace Paranovels.Facade
         {
             using (var uow = UnitOfWorkFactory.Create<NovelContext>())
             {
-                var tSeries = uow.Repository<Series>();
+                var qSeries = uow.Repository<Series>().All();
 
-                var series = tSeries.Where(w => w.Title.Contains(criteria.Query));
+                var series = qSeries.Where(w => w.Title.Contains(criteria.Query));
 
                 return series.ToList();
             }

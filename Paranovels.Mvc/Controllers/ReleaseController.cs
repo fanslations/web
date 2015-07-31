@@ -33,12 +33,18 @@ namespace Paranovels.Mvc.Controllers
             var userID = UserSession.UserID;
             // log views
             Facade<UserActionFacade>().Viewing(userID, id, R.SourceTable.RELEASE);
-            // mark as read
-            Facade<UserActionFacade>().Reading(new ReadForm { ByUserID = userID, UserID = userID, SourceID = id, SourceTable = R.SourceTable.RELEASE});
 
             return RedirectPermanent(url);
         }
 
+        public RedirectResult Read(int id, string url)
+        {
+            var userID = UserSession.UserID;
+            // mark as read
+            Facade<UserActionFacade>().Reading(new ReadForm { ByUserID = userID, UserID = userID, SourceID = id, SourceTable = R.SourceTable.RELEASE });
+
+            return RedirectPermanent(url);
+        }
 
 
         [HttpPost]

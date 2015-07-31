@@ -33,11 +33,24 @@ namespace Paranovels.Mvc.Controllers
         [HttpPost]
         public JsonResult Form(ListForm form, string colorHex)
         {
+            var userID = UserSession.UserID;
+            // list exist then only allow user to change settings
+            if (form.ID > 0 && form.UserID != userID)
+            {
+                var result = new
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = "Unauthorized",
+                };
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+
+            form.UserID = userID;
             if (!string.IsNullOrWhiteSpace(colorHex))
             {
                 form.Color = colorHex.ToColorInt();
             }
-            form.UserID = UserSession.UserID;
+            
             return SaveChanges(form);
         }
 

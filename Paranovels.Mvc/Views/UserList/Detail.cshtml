@@ -4,25 +4,18 @@
 @using Thi.Core
 @model Paranovels.ViewModels.ListDetail
 @{
-    ViewBag.Title = "My List - " + Model.Name;
+    ViewBag.Title = Model.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var session = User.GetSession();
 
     var sortedModel = new SortedModel
     {
-        Sorted = Request.QueryString["sorted"] ?? "new",
-        SortOptions = new Dictionary<string, string>
-        {
-            {"best", "best"},
-            {"reads", "most read"},
-            {"votes", "most voted"},
-            {"views", "most viewed"},
-            {"new", "new"},
-            {"old", "old"},
-            {"quality", "quality"},
-            {"top", "top voted"},
-        }
+        Sorted = Request.QueryString["sorted"] ?? "title",
+        SortOptions = Model.Series.AsQueryable().SortOptions()
     };
 }
+
 
 <section class="section">
     <div class="header">
@@ -30,9 +23,19 @@
         <h1 class="title">
             @ViewBag.Title
         </h1>
-        <a class="action toggle right" role="button" data-toggle='{ "target":"#addtolist"}'><i class="fa fa-plus-circle"></i></a>
-        <a class="action toggle right" role="button" data-toggle='{ "target":"#settings"}'><i class="fa fa-gear"></i></a>
+        @if (Model.UserID == session.UserID)
+        {
+            <a class="action toggle right" role="button" data-toggle='{ "target":"#addtolist"}'><i class="fa fa-plus-circle"></i></a>
+            <a class="action toggle right" role="button" data-toggle='{ "target":"#settings"}'><i class="fa fa-gear"></i></a>
+        }
     </div>
+    @if (Model.ShareLevel != R.ShareLevel.PUBLIC && Model.UserID != session.UserID)
+    {
+        <div class="content">
+            <div class="alert alert-danger">This list is not public and you donot have permission to view it.</div>
+        </div>
+        return;
+    }
     <div id="addtolist" class="form animated" style="display: none;">
         @{ var formModel = new ConnectorForm(); }
         @*<script>
@@ -115,6 +118,26 @@
                 </div>
             </div>
             <div class="detail-group">
+                <div class="detail-group">
+                    <strong>Sharing</strong>
+                    <div>
+                        <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                            <input type="hidden" name="ID" value="@Model.ID" />
+                            <input type="hidden" name="UserID" value="@Model.UserID" />
+                            <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.ShareLevel)" />
+                            @foreach (var level in R.ShareLevel.Translate)
+                            {
+                                <label class="radio-inline">
+                                    <input name="@Model.PropertyName(m => m.ShareLevel)" class="submit" type="radio" value="@(level.Key)" checked="@(Model.ShareLevel == level.Key)" />
+                                    @level.Value
+                                </label>
+                            }
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="detail-group">
                 <strong>Icon</strong>
                 <div><span style="@(Model.IsColorIcon ? string.Format("color:{0};", Model.Color.ToColorHex()) : "")">@Html.Raw(Model.Type.Translate(R.ListType.Translate))</span></div>
             </div>
@@ -124,6 +147,7 @@
                     <div>
                         <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
                             <input type="hidden" name="ID" value="@Model.ID" />
+                            <input type="hidden" name="UserID" value="@Model.UserID" />
                             <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.Color)" />
                             <input id="color" name="ColorHex" class="submit" type="text" value="@Model.Color.ToColorHex()" />
                         </form>
@@ -147,6 +171,7 @@
                     <div>
                         <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
                             <input type="hidden" name="ID" value="@Model.ID" />
+                            <input type="hidden" name="UserID" value="@Model.UserID" />
                             <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.IsColorIcon)" />
                             <label class="no-bold">
                                 <input name="@Model.PropertyName(m=>m.IsColorIcon)" class="submit" type="checkbox" value="true" checked="@(Model.IsColorIcon)" />
@@ -156,12 +181,27 @@
                     </div>
                 </div>
             </div>
-
+            <div class="detail-group">
+                <div class="detail-group">
+                    <strong></strong>
+                    <div>
+                        <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                            <input type="hidden" name="ID" value="@Model.ID" />
+                            <input type="hidden" name="UserID" value="@Model.UserID" />
+                            <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.IsPlaceInFrontOfTitle)" />
+                            <label class="no-bold">
+                                <input name="@Model.PropertyName(m => m.IsPlaceInFrontOfTitle)" class="submit" type="checkbox" value="true" checked="@(Model.IsPlaceInFrontOfTitle)" />
+                                Place icon in front of title in home, release, series page
+                            </label>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="content">
         <p class="alert alert-info">
-            Series or Releases that in @Model.Name will have an icon <span style="@(Model.IsColorIcon ? string.Format("color:{0};", Model.Color.ToColorHex()) : "")">@Html.Raw(Model.Type.Translate(R.ListType.Translate))</span> in front of the title.
+            Series or Releases that in @Model.Name @(Model.IsPlaceInFrontOfTitle ? "will" : "will NOT") have an icon <span style="@(Model.IsColorIcon ? string.Format("color:{0};", Model.Color.ToColorHex()) : "")">@Html.Raw(Model.Type.Translate(R.ListType.Translate))</span> in front of the title.
             <a class="alert-link action toggle" role="button" data-toggle='{ "target":"#settings" }'>Click here to change list settings.</a>
         </p>
     </div>
@@ -170,44 +210,76 @@
             Html.RenderPartial("_Sorted", sortedModel);
         }
     </div>
-    <div class="reading-list">
-        @foreach (var item in Model.Series.AsQueryable().Sort(new BaseCriteria { Sorted = sortedModel.Sorted }))
-        {
-            <div class="row-list">
+    <div class="content">
+        <table class="table table-condensed table-responsive">
+            <tr>
+                <th>Series Title</th>
+                <th>New Release</th>
+                <th>Your Rating</th>
+                <th>Average Rating</th>
+            </tr>
+            @foreach (var item in Model.Series.AsQueryable().Sort(new BaseCriteria { Sorted = sortedModel.Sorted }))
+            {
+                var read = Model.Releases.Where(w => w.SeriesID == item.SeriesID).Where(w => Model.Reads.Any(a => a.SourceID == w.ReleaseID)).OrderByDescending(o => o.Date).FirstOrDefault() ?? new Release();
+                var unreads = Model.Releases.Where(w => w.SeriesID == item.SeriesID).Where(w => w.Date > read.Date).ToList();
 
-                <div class="col-title">
+                <tbody class="no-border">
+                    <tr>
+                        <td>
 
-                    <a href="@Url.Action("Detail", "Series", new{ ID = item.SeriesID, Seo = item.Title.ToSeo() })">@item.Title</a>
+                            <a class="btn-block" href="@Url.Action("Detail", "Series", new{ ID = item.SeriesID, Seo = item.Title.ToSeo() })">@item.Title</a>
 
-                </div>
-                <div class="col-status">
-                    @if (item.Release != null)
-                    {
-                        <a href="@Url.Action("Detail", "Release", new { ID = item.Release.ReleaseID, Seo = item.Release.Title.ToSeo() })">@item.Release.Title</a>
-                    }
-                    else
-                    {
-                        <text>No release yet!</text>
-                    }
-                </div>
-                <div class="col-status">
-                    @if (item.UserRead != null)
-                    {
-                        <a href="@Url.Action("Detail", "Release", new { ID = item.UserRead.ReleaseID, Seo = item.UserRead.Title.ToSeo() })">@item.UserRead.Title</a>
-                    }
-                    else
-                    {
-                        <text>You haven't mark any release as read yet!</text>
-                    }
-                </div>
-                <div class="col-rating">
-                    4.5
-                </div>
-                <div class="col-rating">
-                    3.6
-                </div>
-            </div>
+                        </td>
+                        <td>
+                            @if (unreads.Any())
+                            {
+                                <a role="button" class="action toggle btn-block" data-toggle='{"target":".detail@(item.ID)"}'>@unreads.Count()<i class="fa fa-caret-down"></i></a>
+                            }
+                            else
+                            {
+                                <a role="button" class="action toggle btn-block" data-toggle='{"target":".detail@(item.ID)"}'>0<i class="fa fa-caret-down"></i></a>
+                            }
+                        </td>
+                        <td>4.5</td>
+                        <td>4.5</td>
+                    </tr>
+                    <tr class="animated detail@(item.ID)" style="display: none;">
+                        <td class="no-border text-left">
+                            You read
 
-        }
+                        </td>
+                        <td class="no-border" colspan="3">
+
+                            @if (read.ReleaseID > 0)
+                            {
+                                <a href="@Url.Action("Detail", "Release" , new { id=read.ReleaseID, seo=read.Title.ToSeo() })">@read.Title</a>
+                            }
+                            else
+                            {
+                                <text>You haven't read any release yet!</text>
+                            }
+                        </td>
+                    </tr>
+                    <tr class="animated detail@(item.ID)" style="display: none;">
+                        <td class="no-border text-left">
+                            New Release(s)
+                        </td>
+                        <td class="no-border" colspan="3">
+                            @foreach (var unread in unreads)
+                            {
+                                <div class="clearfix">
+                                    <a class="" href="@Url.Action("Detail", "Release", new { unread.ID, Seo = unread.Title.ToSeo() })">@unread.Title</a>
+                                    <a class="pull-right" href="@Url.Action("Read", "Release", new { unread.ID, unread.Url, Seo = unread.Title.ToSeo() })" target="_blank">Read It<i class="fa fa-external-link right"></i></a>
+                                </div>
+                            }
+                            @if (!unreads.Any())
+                            {
+                                <div>There are no new release! <a class="" href="@Url.Action("Index","Release", new{ Do = "add", SeriesID = item.SeriesID })">Click to submit new release.</a></div>
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+            }
+        </table>
     </div>
 </section>

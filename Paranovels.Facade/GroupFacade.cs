@@ -86,6 +86,8 @@ namespace Paranovels.Facade
                 var service = new GroupService(uow);
                 var detail = service.Get(criteria);
 
+                detail.Series = service.View<Series>().Where(w => w.GroupID == detail.GroupID).ToList();
+
                 detail.Releases = service.View<Release>().Where(w => w.GroupID == detail.GroupID).ToList();
 
                 detail.Feeds = service.View<Connector>()
@@ -96,6 +98,7 @@ namespace Paranovels.Facade
                     .Where(w => w.ConnectorType == R.ConnectorType.GROUP_GLOSSARY && w.SourceID == detail.GroupID)
                     .Join(service.View<Glossary>().All(), c => c.TargetID, f => f.GlossaryID, (c, f) => f).ToList();
 
+                detail.Summarize = service.View<Summarize>().Where(w => w.SourceTable == R.SourceTable.GROUP && w.SourceID == detail.GroupID).SingleOrDefault() ?? new Summarize();
                 return detail;
             }
         }

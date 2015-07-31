@@ -14,7 +14,7 @@ namespace Paranovels.Mvc.Controllers
     public class SeriesController : SiteController
     {
         // GET: TranslationScene
-        public ActionResult Index(NovelTrackerCriteria criteria)
+        public ActionResult Index(SeriesCriteria criteria)
         {
             var searchModel = CreateSearchModel(criteria);
             var pagedList = Facade<SearchFacade>().Search(searchModel);

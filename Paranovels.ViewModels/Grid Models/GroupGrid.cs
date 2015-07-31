@@ -9,19 +9,10 @@ using Thi.Core;
 
 namespace Paranovels.ViewModels
 {
-    public class SeriesGrid: Series, IDetailModel
+    public class GroupGrid: Group, IDetailModel
     {
         [NotMapped]
-        public List<UserList> UserLists { get; set; }
-        [NotMapped]
-        public List<Connector> Connectors { get; set; }
-
-        [NotMapped]
-        public Group Group { get; set; }
-        [NotMapped]
         public IList<Release> Releases { get; set; }
-        [NotMapped]
-        public List<Tag> Categories { get; set; }
 
         // from Summarize
         public int? CommentCount { get; set; }

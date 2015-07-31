@@ -19,5 +19,8 @@ namespace Paranovels.ViewModels
         public List<Feed> Feeds { get; set; }
         [NotMapped]
         public List<Glossary> Glossaries { get; set; }
+
+        [NotMapped]
+        public Summarize Summarize { get; set; }
     }
 }

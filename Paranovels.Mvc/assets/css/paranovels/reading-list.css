@@ -35,10 +35,12 @@
 
 .reading-list {
     padding: 0;
+            display: table;
+                    width: 100%;
 }
 
-    .reading-list .row-list {
-        display: table;
+    .reading-list .row {
+        display: table-row;
         width: 100%;
         margin-bottom: 5px;
         padding: 5px 10px;
@@ -46,18 +48,13 @@
         border-bottom: 1px dotted #efefef;
     }
 
-    .reading-list .col-title {
-        width: 15% !important;
+    .reading-list .row .col {
         display: table-cell;
+        padding: 5px 10px;
     }
 
-    .reading-list .col-status {
-        width: 20% !important;
-        display: table-cell;
+        .reading-list .row .col.title {
+            width: 20%;
     }
 
-    .reading-list .col-rating {
-        width: 5% !important;
-        display: table-cell;
-    }
 

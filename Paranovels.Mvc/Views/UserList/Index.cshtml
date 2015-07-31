@@ -43,7 +43,9 @@
                     <li class="row-list">
                         <div class="col-content">
                             <strong>
-                                <a href="@Url.Action("Detail", new{ ID = item.UserListID, Seo = item.Name.ToSeo() })">@Html.Raw(item.Type.Translate(R.ListType.Translate))@item.Name</a>
+                                <a href="@Url.Action("Detail", new{ ID = item.UserListID, Seo = item.Name.ToSeo() })">
+                                    <span style="color: @(item.Color.ToColorHex());">@Html.Raw(item.Type.Translate(R.ListType.Translate))</span>@item.Name
+                                </a>
                             </strong>
                             <p>@Html.Raw(item.Description.FormatString())</p>
                         </div>
