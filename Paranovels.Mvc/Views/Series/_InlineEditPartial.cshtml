@@ -133,6 +133,13 @@
                 </label>
                 <input type="hidden" name="ImagePath" value="/Fanslations/Novels/@Model.Model.Title.ToSeo()" />
             }
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Title))
+            {
+                <div class="form-group">
+                    <label for="@Model.InlineEditProperty" class="sr-only">@Model.InlineEditProperty</label>
+                    <input id="@Model.InlineEditProperty" type="text" class="form-control" name="@Model.InlineEditProperty" value="@Model.Model.Title" required />
+                </div>
+            }
             else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Synopsis))
             {
                 <label for="@Model.InlineEditProperty" class="sr-only">@Model.InlineEditProperty</label>

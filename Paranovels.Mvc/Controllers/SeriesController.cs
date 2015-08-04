@@ -27,7 +27,8 @@ namespace Paranovels.Mvc.Controllers
             var detail = Facade<SeriesFacade>().GetSeries(criteria);
             
             // log views
-            Facade<UserActionFacade>().Viewing(UserSession.UserID, detail.SeriesID, R.SourceTable.SERIES);
+            var viewForm = new ViewForm { UserID = UserSession.UserID, SourceID = detail.SeriesID, SourceTable = R.SourceTable.SERIES };
+            Facade<UserActionFacade>().Viewing(viewForm);
 
             return View(detail);
         }

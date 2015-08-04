@@ -20,7 +20,7 @@
         'selectize': '../bower_components/selectize/dist/js/standalone/selectize',
         'toastr': '../bower_components/toastr/toastr',
         'slideout': '../bower_components/slideout.js/dist/slideout',
-        'colorpicker': '../bower_components/really-simple-colorpicker/js/jquery.colorPicker'
+        'colorpicker': '../bower_components/jQuery-ColorPicker/colorpicker'
     },
     shim: {
         'jquery': {

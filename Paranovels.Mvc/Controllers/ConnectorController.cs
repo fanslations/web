@@ -14,6 +14,7 @@ namespace Paranovels.Mvc.Controllers
         [HttpPost]
         public JsonResult Form(ConnectorForm form)
         {
+            form.ByUserID = UserSession.UserID;
             var score = Facade<ConnectorFacade>().AddConnector(form);
             return Json(score, JsonRequestBehavior.AllowGet);
         }

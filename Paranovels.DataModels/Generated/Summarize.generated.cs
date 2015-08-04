@@ -1,4 +1,4 @@
-// This class was automatically generated with love by ST4bby 7/31/2015 9:48:15 AM.
+// This class was automatically generated with love by ST4bby 8/3/2015 12:14:25 AM.
 // Read more at http://jbubriski.github.com/ST4bby/
 
 namespace Paranovels.DataModels
@@ -54,5 +54,17 @@ namespace Paranovels.DataModels
 		
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("QualityScore", TypeName = "int"), Display(Name="Quality Score")]
 		public int QualityScore { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("ReadCount", TypeName = "int"), Display(Name="Read Count")]
+		public int ReadCount { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("FavoriteCount", TypeName = "int"), Display(Name="Favorite Count")]
+		public int FavoriteCount { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("RecommendCount", TypeName = "int"), Display(Name="Recommend Count")]
+		public int RecommendCount { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("SubscribeCount", TypeName = "int"), Display(Name="Subscribe Count")]
+		public int SubscribeCount { get; set; }
 	}
 }

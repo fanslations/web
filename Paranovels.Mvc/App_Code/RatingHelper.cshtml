@@ -3,6 +3,7 @@
 
 @helper DisplayRating(Summarize item)
 {
+    var id = DateTime.Now.Millisecond;
     Func<Summarize, int, string> checkRating = (r, rating) =>
     {
         if (r.QualityCount == 0) return "";
@@ -10,25 +11,25 @@
     };
     <fieldset class="rating">
         <legend class="sr-only">Translation Quality Rating</legend>
-        <input type="radio" id="star5-@(item.ID)" name="rating@(item.ID)" value="10" @checkRating(item, 10) />
-        <label class="full action rate" for="star5-@(item.ID)" title="Awesome - 5 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 10}'></label>
-        <input type="radio" id="star4half-@(item.ID)" name="rating@(item.ID)" value="9" @checkRating(item, 9) />
-        <label class="half action rate" for="star4half-@(item.ID)" title="Pretty good - 4.5 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 9}'></label>
-        <input type="radio" id="star4-@(item.ID)" name="rating@(item.ID)" value="8" @checkRating(item, 8) />
-        <label class="full action rate" for="star4-@(item.ID)" title="Pretty good - 4 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 8}'></label>
-        <input type="radio" id="star3half-@(item.ID)" name="rating@(item.ID)" value="7" @checkRating(item, 7) />
-        <label class="half action rate" for="star3half-@(item.ID)" title="Meh - 3.5 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 7}'></label>
-        <input type="radio" id="star3-@(item.ID)" name="rating@(item.ID)" value="6" @checkRating(item, 6) />
-        <label class="full action rate" for="star3-@(item.ID)" title="Meh - 3 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 6}'></label>
-        <input type="radio" id="star2half-@(item.ID)" name="rating@(item.ID)" value="5" @checkRating(item, 5) />
-        <label class="half action rate" for="star2half-@(item.ID)" title="Kinda bad - 2.5 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 5}'></label>
-        <input type="radio" id="star2-@(item.ID)" name="rating@(item.ID)" value="4" @checkRating(item, 4) />
-        <label class="full action rate" for="star2-@(item.ID)" title="Kinda bad - 2 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 4}'></label>
-        <input type="radio" id="star1half-@(item.ID)" name="rating@(item.ID)" value="3" @checkRating(item, 3) />
-        <label class="half action rate" for="star1half-@(item.ID)" title="Meh - 1.5 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 3}'></label>
-        <input type="radio" id="star1-@(item.ID)" name="rating@(item.ID)" value="2" @checkRating(item, 2) />
-        <label class="full action rate" for="star1-@(item.ID)" title="Sucks big time - 1 star" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 2}'></label>
-        <input type="radio" id="starhalf-@(item.ID)" name="rating@(item.ID)" value="1" @checkRating(item, 1) />
-        <label class="half action rate" for="starhalf-@(item.ID)" title="Sucks big time - 0.5 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 1}'></label>
+        <input type="radio" id="star5-@(id)" name="rating@(id)" value="10" @checkRating(item, 10) />
+        <label class="full action rate" for="star5-@(id)" title="Awesome - 5 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 10}'></label>
+        <input type="radio" id="star4half-@(id)" name="rating@(id)" value="9" @checkRating(item, 9) />
+        <label class="half action rate" for="star4half-@(id)" title="Pretty good - 4.5 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 9}'></label>
+        <input type="radio" id="star4-@(id)" name="rating@(id)" value="8" @checkRating(item, 8) />
+        <label class="full action rate" for="star4-@(id)" title="Pretty good - 4 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 8}'></label>
+        <input type="radio" id="star3half-@(item.ID)" name="rating@(id)" value="7" @checkRating(item, 7) />
+        <label class="half action rate" for="star3half-@(id)" title="It ok - 3.5 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 7}'></label>
+        <input type="radio" id="star3-@(id)" name="rating@(id)" value="6" @checkRating(item, 6) />
+        <label class="full action rate" for="star3-@(id)" title="It ok - 3 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 6}'></label>
+        <input type="radio" id="star2half-@(id)" name="rating@(id)" value="5" @checkRating(item, 5) />
+        <label class="half action rate" for="star2half-@(id)" title="Kinda bad - 2.5 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 5}'></label>
+        <input type="radio" id="star2-@(id)" name="rating@(id)" value="4" @checkRating(item, 4) />
+        <label class="full action rate" for="star2-@(id)" title="Kinda bad - 2 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 4}'></label>
+        <input type="radio" id="star1half-@(id)" name="rating@(id)" value="3" @checkRating(item, 3) />
+        <label class="half action rate" for="star1half-@(id)" title="It sucks - 1.5 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 3}'></label>
+        <input type="radio" id="star1-@(id)" name="rating@(id)" value="2" @checkRating(item, 2) />
+        <label class="full action rate" for="star1-@(id)" title="It sucks - 1 star" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 2}'></label>
+        <input type="radio" id="starhalf-@(id)" name="rating@(id)" value="1" @checkRating(item, 1) />
+        <label class="half action rate" for="starhalf-@(id)" title="Sucks big time - 0.5 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 1}'></label>
     </fieldset>
 }

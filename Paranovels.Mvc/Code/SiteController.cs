@@ -79,7 +79,7 @@ namespace Paranovels.Mvc
             var result = new
             {
                 IsSuccessful = id > 0,
-                RedirectUrl = string.IsNullOrWhiteSpace(callbackUrl) ? Request.QueryString["ReturnUrl"] ?? Request.Form["ReturnUrl"] ?? Url.Action("Detail", new { ID = id, Seo = Request.Form["seo"].ToSeo() }) : string.Format(callbackUrl, id),
+                RedirectUrl = string.IsNullOrWhiteSpace(callbackUrl) ? Request.QueryString["ReturnUrl"] ?? Request.Form["ReturnUrl"] ?? Url.Action("Detail", new { ID = id, Seo = (Request.Form["seo"] ?? "new").ToSeo() }) : string.Format(callbackUrl, id),
                 ErrorMessage = id < 0 ? "Unable to save data." : "",
             };
 
@@ -90,11 +90,7 @@ namespace Paranovels.Mvc
         {
             get
             {
-                var criteria = new UserCriteria();
-                criteria.Username = User.Identity.IsAuthenticated ? User.Identity.GetUserName() : WebHelper.GetClientIpAddress();
-                var authSession = Facade<UserFacade>().GetAuthSession(criteria);
-          
-                return authSession;
+                return User.GetSession();
             }
         }
     }

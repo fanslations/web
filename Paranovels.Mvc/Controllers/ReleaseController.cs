@@ -23,26 +23,42 @@ namespace Paranovels.Mvc.Controllers
 
         public ActionResult Detail(ReleaseCriteria criteria)
         {
+            criteria.ByUserID = UserSession.UserID;
             var detail = Facade<SeriesFacade>().GetRelease(criteria);
-
+            // log views
+            var viewForm = new ViewForm { UserID = UserSession.UserID, SourceID = detail.ReleaseID, SourceTable = R.SourceTable.RELEASE };
+            Facade<UserActionFacade>().Viewing(viewForm);
             return View(detail);
         }
 
         public RedirectResult Out(int id, string url)
         {
-            var userID = UserSession.UserID;
-            // log views
-            Facade<UserActionFacade>().Viewing(userID, id, R.SourceTable.RELEASE);
-
             return RedirectPermanent(url);
         }
 
-        public RedirectResult Read(int id, string url)
+        public RedirectResult Read(int id, string url, int seriesID, IList<int> listIDs)
         {
-            var userID = UserSession.UserID;
+            var session = UserSession;
             // mark as read
-            Facade<UserActionFacade>().Reading(new ReadForm { ByUserID = userID, UserID = userID, SourceID = id, SourceTable = R.SourceTable.RELEASE });
+            var readForm = new ReadForm { UserID = session.UserID, SourceID = id, SourceTable = R.SourceTable.RELEASE };
+            Facade<UserActionFacade>().Reading(readForm);
 
+            // add series to list
+            if (seriesID > 0 && listIDs != null)
+            {
+                foreach (var listID in listIDs)
+                {
+                    var form = new ConnectorForm
+                    {
+                        ByUserID = UserSession.UserID,
+                        ConnectorType = R.ConnectorType.SERIES_USERLIST,
+                        SourceID = seriesID,
+                        TargetID = listID
+                    };
+                    Facade<ConnectorFacade>().AddConnector(form);
+                }
+            }
+            
             return RedirectPermanent(url);
         }
 

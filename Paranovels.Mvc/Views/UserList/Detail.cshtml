@@ -118,91 +118,152 @@
                 </div>
             </div>
             <div class="detail-group">
-                <div class="detail-group">
-                    <strong>Sharing</strong>
-                    <div>
-                        <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
-                            <input type="hidden" name="ID" value="@Model.ID" />
-                            <input type="hidden" name="UserID" value="@Model.UserID" />
-                            <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.ShareLevel)" />
-                            @foreach (var level in R.ShareLevel.Translate)
-                            {
-                                <label class="radio-inline">
-                                    <input name="@Model.PropertyName(m => m.ShareLevel)" class="submit" type="radio" value="@(level.Key)" checked="@(Model.ShareLevel == level.Key)" />
-                                    @level.Value
-                                </label>
-                            }
+                <strong>Sharing</strong>
+                <div>
+                    <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                        <input type="hidden" name="ID" value="@Model.ID" />
+                        <input type="hidden" name="UserID" value="@Model.UserID" />
+                        <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.ShareLevel)" />
+                        @foreach (var level in R.ShareLevel.Translate)
+                        {
+                            <label class="radio-inline">
+                                <input name="@Model.PropertyName(m => m.ShareLevel)" class="submit" type="radio" value="@(level.Key)" checked="@(Model.ShareLevel == level.Key)" />
+                                @level.Value
+                            </label>
+                        }
 
-                        </form>
-                    </div>
+                    </form>
                 </div>
             </div>
             <div class="detail-group">
                 <strong>Icon</strong>
-                <div><span style="@(Model.IsColorIcon ? string.Format("color:{0};", Model.Color.ToColorHex()) : "")">@Html.Raw(Model.Type.Translate(R.ListType.Translate))</span></div>
+                <div>
+                    <span id="icon" style="@(Model.IsColorIcon ? string.Format("color:{0};", Model.Color.ToColorHex()) : "")">@Html.Raw(Model.Type.Translate(R.ListType.Translate))</span> (custom icon coming soon)
+                </div>
             </div>
             <div class="detail-group">
-                <div class="detail-group">
-                    <strong>Color</strong>
-                    <div>
-                        <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
-                            <input type="hidden" name="ID" value="@Model.ID" />
-                            <input type="hidden" name="UserID" value="@Model.UserID" />
-                            <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.Color)" />
-                            <input id="color" name="ColorHex" class="submit" type="text" value="@Model.Color.ToColorHex()" />
-                        </form>
-                        <script>
-                            window.pnHooks = window.pnHooks || [];
-                            window.pnHooks.push(function () {
-                                require(['colorpicker'], function () {
-                                    $('#color').colorPicker();
-                                    $('#color').on('change', function () {
+                <strong>Color</strong>
+                <div>
+                    <form id="color-form" action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                        <input type="hidden" name="ID" value="@Model.ID" />
+                        <input type="hidden" name="UserID" value="@Model.UserID" />
+                        <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.Color)" />
+                        <input id="color" name="ColorHex" type="hidden" pattern="#[a-zA-z0-9]{6}" value="@Model.Color.ToColorHex()" />
+                    </form>
+                    <span id="colorselector" class="colorSelector" style="background-color: @Model.Color.ToColorHex();"></span>
+                    <script>
+                        window.pnHooks = window.pnHooks || [];
+                        window.pnHooks.push(function () {
+                            require(['colorpicker'], function () {
+                                $('#colorselector').ColorPicker({
+                                    onSubmit: function (hsb, hex, rgb, el, parent) {
+                                        $(el).ColorPickerHide();
+                                    },
+                                    onShow: function (colpkr) {
+                                        $(colpkr).fadeIn(500);
+                                        return false;
+                                    },
+                                    onHide: function (colpkr) {
+                                        // save changed color
+                                        $('#color-form').submit();
 
-                                    });
+                                        $(colpkr).fadeOut(500);
+                                        return false;
+                                    },
+                                    onChange: function (hsb, hex, rgb) {
+                                        $('#colorselector').css('backgroundColor', '#' + hex);
+                                        $('#icon').css('color', '#' + hex);
+                                        $('#color').val('#' + hex);
+                                    }
+                                }).on('click', function () {
+                                    $(this).ColorPickerSetColor($('#colorselector').css('backgroundColor'));
                                 });
                             });
-                        </script>
-                    </div>
+                        });
+                    </script>
+
                 </div>
             </div>
             <div class="detail-group">
-                <div class="detail-group">
-                    <strong></strong>
-                    <div>
-                        <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
-                            <input type="hidden" name="ID" value="@Model.ID" />
-                            <input type="hidden" name="UserID" value="@Model.UserID" />
-                            <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.IsColorIcon)" />
-                            <label class="no-bold">
-                                <input name="@Model.PropertyName(m=>m.IsColorIcon)" class="submit" type="checkbox" value="true" checked="@(Model.IsColorIcon)" />
-                                Apply color to icon
-                            </label>
-                        </form>
-                    </div>
+                <strong></strong>
+                <div>
+                    <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                        <input type="hidden" name="ID" value="@Model.ID" />
+                        <input type="hidden" name="UserID" value="@Model.UserID" />
+                        <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.IsColorIcon)" />
+                        <label class="no-bold">
+                            <input name="@Model.PropertyName(m=>m.IsColorIcon)" class="submit" type="checkbox" value="true" checked="@(Model.IsColorIcon)" />
+                            Apply color to icon
+                        </label>
+                    </form>
+                </div>
+
+            </div>
+            <div class="detail-group">
+                <strong></strong>
+                <div>
+                    <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                        <input type="hidden" name="ID" value="@Model.ID" />
+                        <input type="hidden" name="UserID" value="@Model.UserID" />
+                        <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.IsPlaceInFrontOfTitle)" />
+                        <label class="no-bold">
+                            <input name="@Model.PropertyName(m => m.IsPlaceInFrontOfTitle)" class="submit" type="checkbox" value="true" checked="@(Model.IsPlaceInFrontOfTitle)" />
+                            Place icon in front of title in home, release, series page
+                        </label>
+                    </form>
                 </div>
             </div>
             <div class="detail-group">
-                <div class="detail-group">
-                    <strong></strong>
-                    <div>
-                        <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
-                            <input type="hidden" name="ID" value="@Model.ID" />
-                            <input type="hidden" name="UserID" value="@Model.UserID" />
-                            <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.IsPlaceInFrontOfTitle)" />
-                            <label class="no-bold">
-                                <input name="@Model.PropertyName(m => m.IsPlaceInFrontOfTitle)" class="submit" type="checkbox" value="true" checked="@(Model.IsPlaceInFrontOfTitle)" />
-                                Place icon in front of title in home, release, series page
-                            </label>
-                        </form>
-                    </div>
+                <strong></strong>
+                <div>
+                    <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                        <input type="hidden" name="ID" value="@Model.ID" />
+                        <input type="hidden" name="UserID" value="@Model.UserID" />
+                        <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m => m.IsHiddenInFrontpage)" />
+                        <label class="no-bold">
+                            <input name="@Model.PropertyName(m => m.IsHiddenInFrontpage)" class="submit" type="checkbox" value="true" checked="@(Model.IsHiddenInFrontpage)" />
+                            Hide this series from home, release, series page
+                        </label>
+                    </form>
                 </div>
+            </div>
+            <div class="detail-group">
+                <strong></strong>
+                <div>
+                    <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                        <input type="hidden" name="ID" value="@Model.ID" />
+                        <input type="hidden" name="UserID" value="@Model.UserID" />
+                        <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m => m.IsAutoAddWhenRead)" />
+                        <label class="no-bold">
+                            <input name="@Model.PropertyName(m => m.IsAutoAddWhenRead)" class="submit" type="checkbox" value="true" checked="@(Model.IsAutoAddWhenRead)" />
+                            Automatically add series that I read to this list <small>(Click "Read It" button in release details page will automatically add to this list if this is checked)</small>
+                        </label>
+                    </form>
+                </div>
+            </div>
+            <div class="detail-group">
+                <strong></strong>
+                <div>
+                    <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                        <input type="hidden" name="ID" value="@Model.ID" />
+                        <input type="hidden" name="UserID" value="@Model.UserID" />
+                        <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m => m.IsNotifyOfNewRelease)" />
+                        <label class="no-bold">
+                            <input name="@Model.PropertyName(m => m.IsNotifyOfNewRelease)" class="submit" type="checkbox" value="true" checked="@(Model.IsNotifyOfNewRelease)" />
+                            Notify me when there is a new releases (coming soon)
+                        </label>
+                    </form>
+                </div>
+            </div>
+            <div class="btn-row clearfix">
+                <button type="button" class="btn btn-primary btn-sm pull-right" onclick="window.location.reload();"><i class="fa fa-refresh"></i>Apply Settings</button>
             </div>
         </div>
     </div>
     <div class="content">
         <p class="alert alert-info">
             Series or Releases that in @Model.Name @(Model.IsPlaceInFrontOfTitle ? "will" : "will NOT") have an icon <span style="@(Model.IsColorIcon ? string.Format("color:{0};", Model.Color.ToColorHex()) : "")">@Html.Raw(Model.Type.Translate(R.ListType.Translate))</span> in front of the title.
-            <a class="alert-link action toggle" role="button" data-toggle='{ "target":"#settings" }'>Click here to change list settings.</a>
+            <a class="alert-link action toggle" role="button" data-toggle='{ "target":"#settings" }'>Click <i class="fa fa-gear"></i> to change list settings.</a>
         </p>
     </div>
     <div class="content">
@@ -215,11 +276,19 @@
             <tr>
                 <th>Series Title</th>
                 <th>New Release</th>
-                <th>Your Rating</th>
-                <th>Average Rating</th>
+                <th>Updated Date</th>
+                <th>Rating</th>
             </tr>
             @foreach (var item in Model.Series.AsQueryable().Sort(new BaseCriteria { Sorted = sortedModel.Sorted }))
             {
+                var summarize = new Summarize
+                {
+                    ID = item.ID,
+                    SourceID = item.ID,
+                    SourceTable = R.SourceTable.SERIES,
+                    QualityCount = item.QualityCount.GetValueOrDefault(),
+                    QualityScore = item.QualityScore.GetValueOrDefault()
+                };
                 var read = Model.Releases.Where(w => w.SeriesID == item.SeriesID).Where(w => Model.Reads.Any(a => a.SourceID == w.ReleaseID)).OrderByDescending(o => o.Date).FirstOrDefault() ?? new Release();
                 var unreads = Model.Releases.Where(w => w.SeriesID == item.SeriesID).Where(w => w.Date > read.Date).ToList();
 
@@ -233,15 +302,15 @@
                         <td>
                             @if (unreads.Any())
                             {
-                                <a role="button" class="action toggle btn-block" data-toggle='{"target":".detail@(item.ID)"}'>@unreads.Count()<i class="fa fa-caret-down"></i></a>
+                            <a role="button" class="action toggle btn-block" data-toggle='{"target":".detail@(item.ID)"}'>@unreads.Count()<i class="fa fa-caret-down"></i></a>
                             }
                             else
                             {
-                                <a role="button" class="action toggle btn-block" data-toggle='{"target":".detail@(item.ID)"}'>0<i class="fa fa-caret-down"></i></a>
+                            <a role="button" class="action toggle btn-block" data-toggle='{"target":".detail@(item.ID)"}'>0<i class="fa fa-caret-down"></i></a>
                             }
                         </td>
-                        <td>4.5</td>
-                        <td>4.5</td>
+                        <td>@item.UpdatedDate.FormatDate()</td>
+                        <td>@RatingHelper.DisplayRating(summarize)</td>
                     </tr>
                     <tr class="animated detail@(item.ID)" style="display: none;">
                         <td class="no-border text-left">
@@ -252,11 +321,11 @@
 
                             @if (read.ReleaseID > 0)
                             {
-                                <a href="@Url.Action("Detail", "Release" , new { id=read.ReleaseID, seo=read.Title.ToSeo() })">@read.Title</a>
+                            <a href="@Url.Action("Detail", "Release" , new { id=read.ReleaseID, seo=read.Title.ToSeo() })">@read.Title</a>
                             }
                             else
                             {
-                                <text>You haven't read any release yet!</text>
+                            <text>You haven't read any release yet!</text>
                             }
                         </td>
                     </tr>
@@ -267,19 +336,23 @@
                         <td class="no-border" colspan="3">
                             @foreach (var unread in unreads)
                             {
-                                <div class="clearfix">
-                                    <a class="" href="@Url.Action("Detail", "Release", new { unread.ID, Seo = unread.Title.ToSeo() })">@unread.Title</a>
-                                    <a class="pull-right" href="@Url.Action("Read", "Release", new { unread.ID, unread.Url, Seo = unread.Title.ToSeo() })" target="_blank">Read It<i class="fa fa-external-link right"></i></a>
-                                </div>
+                            <div class="clearfix">
+                                <a class="" href="@Url.Action("Detail", "Release", new { unread.ID, Seo = unread.Title.ToSeo() })">@unread.Title</a>
+                                <a class="pull-right" href="@Url.Action("Read", "Release", new { unread.ID, unread.Url, Seo = unread.Title.ToSeo() })" target="_blank">Read It<i class="fa fa-external-link right"></i></a>
+                            </div>
                             }
                             @if (!unreads.Any())
                             {
-                                <div>There are no new release! <a class="" href="@Url.Action("Index","Release", new{ Do = "add", SeriesID = item.SeriesID })">Click to submit new release.</a></div>
+                            <div>There are no new release! <a class="" href="@Url.Action("Index","Release", new{ Do = "add", SeriesID = item.SeriesID })">Click to submit new release.</a></div>
                             }
                         </td>
                     </tr>
                 </tbody>
             }
         </table>
+        @if (!Model.Series.Any())
+        {
+            <div class="alert alert-info">@Model.Name is empty. <a href="#addtolist" class="alert-link action toggle" data-toggle='{ "target":"#addtolist" }'>Click <i class="fa fa-plus-circle"></i> to add series to your list.</a></div>
+        }
     </div>
 </section>

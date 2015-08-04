@@ -13,7 +13,7 @@
 	exclude: [
 	],
 
-	include: ['requireLib', 'angular', 'marked', 'selectize'],
+	include: ['requireLib', 'angular', 'marked', 'selectize', 'colorpicker'],
 	optimizeCss: "standard",
 	
     removeCombined: true,

@@ -71,6 +71,7 @@ namespace Paranovels.Services
                 {
                     GroupID = sm.Group.GroupID,
                     UpdatedDate = sm.Group.UpdatedDate,
+                    Status = sm.Group.Status,
                     Name = sm.Group.Name,
                     Url = sm.Group.Url,
                     About = sm.Group.About,

@@ -14,16 +14,41 @@ namespace Paranovels.Facade
 {
     public class UserActionFacade : IFacade
     {
-        public int Viewing(int userID, int sourceID, int sourceTable)
+        public UserActionDetail Get(ViewForm form)
         {
             using (var uow = UnitOfWorkFactory.Create<NovelContext>())
             {
-                return new UserActionService(uow).Viewing(userID, sourceID, sourceTable);
+                var service = new UserActionService(uow);
+
+
+                var userAction = new UserActionDetail();
+                userAction.Voted =
+                    service.View<UserVote>().Where(w => w.SourceTable == form.SourceTable && w.SourceID == form.SourceID && w.UserID == form.UserID).Select(s => s.Vote).SingleOrDefault();
+
+                userAction.QualityRated =
+                    service.View<UserRate>().Where(w => w.SourceTable == form.SourceTable && w.SourceID == form.SourceID && w.UserID == form.UserID).Select(s => s.Rate).SingleOrDefault();
+
+                userAction.IsRead = service.View<UserRead>().Where(w => w.SourceTable == form.SourceTable && w.SourceID == form.SourceID && w.UserID == form.UserID).Any();
+
+                return userAction;
+            }
+        }
+        public int Viewing(ViewForm form)
+        {
+            form.ByUserID = form.UserID; // byUserID has to be the UserID
+            using (var uow = UnitOfWorkFactory.Create<NovelContext>())
+            {
+                var service = new UserActionService(uow);
+                var id = service.Viewing(form);
+
+                var view = service.SummarizeView(form);
+                return view;
             }
         }
 
         public int Voting(VoteForm form)
         {
+            form.ByUserID = form.UserID; // byUserID has to be the UserID
             using (var uow = UnitOfWorkFactory.Create<NovelContext>())
             {
                 var service = new UserActionService(uow);
@@ -36,6 +61,7 @@ namespace Paranovels.Facade
 
         public double Rating(RateForm form)
         {
+            form.ByUserID = form.UserID; // byUserID has to be the UserID
             using (var uow = UnitOfWorkFactory.Create<NovelContext>())
             {
                 var service = new UserActionService(uow);
@@ -48,13 +74,14 @@ namespace Paranovels.Facade
 
         public int Reading(ReadForm form)
         {
+            form.ByUserID = form.UserID; // byUserID has to be the UserID
             using (var uow = UnitOfWorkFactory.Create<NovelContext>())
             {
                 var service = new UserActionService(uow);
                 var id = service.Reading(form);
 
-                //var vote = service.SummarizeRate(form);
-                return id;
+                var read = service.SummarizeRead(form);
+                return read;
             }
         }
     }

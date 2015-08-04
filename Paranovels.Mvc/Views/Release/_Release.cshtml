@@ -4,6 +4,8 @@
 @using Thi.Core
 @model Thi.Core.PagedList<Paranovels.ViewModels.ReleaseGrid>
 @{
+    var session = User.GetSession();
+    
     var sortedModel = new SortedModel
     {
         Sorted = Request.QueryString["sorted"] ?? "new",
@@ -27,7 +29,7 @@
             {
                 <div class="vote @(item.Voted.GetValueOrDefault() == 1 ? "likes" : item.Voted.GetValueOrDefault() == -1 ? "dislikes" : "")">
                     <div class="action vote-up" data-vote='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Vote": 1}'><i class="fa fa-chevron-up"></i></div>
-                    <div class="score @((item.VoteUp + item.VoteDown) < 0 ? "dislikes" : "likes")">@(item.VoteUp.GetValueOrDefault() - item.VoteDown.GetValueOrDefault())</div>
+                    <div class="score @((item.VoteUp - item.VoteDown) < 0 ? "dislikes" : "likes")">@(item.VoteUp.GetValueOrDefault() - item.VoteDown.GetValueOrDefault())</div>
                     <div class="action vote-down" data-vote='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.RELEASE, "Vote": -1}'><i class="fa fa-chevron-down"></i></div>
                 </div>
             }
@@ -44,7 +46,7 @@
                 {
                     if (list.IsPlaceInFrontOfTitle)
                     {
-                        var connector = item.Connectors.SingleOrDefault(w => w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.TargetID == list.UserListID);
+                        var connector = item.Connectors.SingleOrDefault(w => w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.SourceID == item.SeriesID && w.TargetID == list.UserListID);
                         if (connector != null && connector.IsDeleted == false)
                         {
                             <span style="@(list.IsColorIcon ? string.Format("color:{0};", list.Color.ToColorHex()) : "")" title="this indicated that it in your @list.Name">@Html.Raw(list.Type.Translate(R.ListType.Translate))</span>
@@ -112,20 +114,20 @@
                 <h2 class="title">@date.ToLongDateString()</h2>
             </div>
             <ul class="grid">
-                @foreach (var item in dateItems.Where(w => w.IsRead != true))
+                @foreach (var item in dateItems.Where(w => w.IsRead != true && !session.HiddenSeriesIDs.Contains(w.SeriesID)))
                 {
                     @DisplayGrid(item);
                 }
 
-                @if (dateItems.Any(w => w.IsRead == true))
+                @if (dateItems.Any(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)))
                 {
                     <li id="view-mores@(date.ToString("ddMMyyyy"))" class="row-mores">
                         <a role="button" class="" onclick="$('.already-read@(date.ToString("ddMMyyyy"))').removeClass('hidden'); $('#view-mores@(date.ToString("ddMMyyyy"))').addClass('hidden');" href="javascript:;">
-                            <i class="fa fa-history"></i>@Model.Data.Where(w => w.Date.Date == date).Count(w => w.IsRead == true) already read release(s) hidden. <strong>Click to View</strong>
+                            <i class="fa fa-history"></i>@Model.Data.Where(w => w.Date.Date == date).Count(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)) release(s) hidden. <strong>Click to View</strong>
                         </a>
                     </li>
                 }
-                @foreach (var item in dateItems.Where(w => w.IsRead == true))
+                @foreach (var item in dateItems.Where(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)))
                 {
                     @DisplayGrid(item, "row-list hidden opacity-05 already-read" + date.ToString("ddMMyyyy"));
                 }
@@ -135,19 +137,19 @@
     else
     {
         <ul class="grid">
-            @foreach (var item in Model.Data.Where(w => w.IsRead == false))
+            @foreach (var item in Model.Data.Where(w => w.IsRead == false && !session.HiddenSeriesIDs.Contains(w.SeriesID)))
             {
                 @DisplayGrid(item);
             }
-            @if (Model.Data.Any(w => w.IsRead == true))
+            @if (Model.Data.Any(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)))
             {
                 <li id="view-mores" class="row-mores">
                     <a role="button" class="" onclick="$('.already-read').removeClass('hidden'); $('#view-mores').addClass('hidden');" href="javascript:;">
-                        <i class="fa fa-history"></i>@Model.Data.Count(w => w.IsRead == true) already read release(s) hidden. <strong>Click to View</strong>
+                        <i class="fa fa-history"></i>@Model.Data.Count(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)) release(s) hidden. <strong>Click to View</strong>
                     </a>
                 </li>
             }
-            @foreach (var item in Model.Data.Where(w => w.IsRead == true))
+            @foreach (var item in Model.Data.Where(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)))
             {
                 @DisplayGrid(item, "row-list hidden opacity-05 already-read");
             }

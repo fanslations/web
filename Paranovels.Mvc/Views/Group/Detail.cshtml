@@ -1,9 +1,8 @@
-﻿@using System.Activities.Statements
-@using Paranovels.Common
+﻿@using Paranovels.Common
 @using Paranovels.DataModels
 @using Paranovels.ViewModels
 @using Thi.Core
-@model Paranovels.ViewModels.GroupDetail
+@model GroupDetail
 @{
     ViewBag.Title = Model.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -18,6 +17,13 @@
         </h1>
     </div>
     <div class="content">
+        <div class="detail-group">
+            <strong>Group Name</strong>
+            <div>
+                @Model.Name
+                @Html.ImproveThis(m => m.Name)
+            </div>
+        </div>
         <div class="detail-group">
             <strong>Updated Date</strong>
             <div>@Model.UpdatedDate.FormatDate()</div>
@@ -122,6 +128,59 @@
 </section>
 <section class="section">
     <div class="content">
+        <div class="toolbar clearfix">
+            <div class="vote-score">
+                <div class="vote @(Model.UserAction.Voted.GetValueOrDefault() == 1 ? "likes" : Model.UserAction.Voted.GetValueOrDefault() == -1 ? "dislikes" : "")">
+                    <span role="button" class="action vote-up" data-vote='{"SourceID": @Model.ID, "SourceTable": @R.SourceTable.SERIES, "Vote": 1}' title="i like this"><i class="fa fa-thumbs-up"></i></span>
+                    <span class="score @((Model.Summarize.VoteUp - Model.Summarize.VoteDown) < 0 ? "dislikes" : "likes")">
+                        @(Model.Summarize.VoteUp - Model.Summarize.VoteDown)
+                    </span>
+                    <span role="button" class="action vote-down" data-vote='{"SourceID": @Model.ID, "SourceTable": @R.SourceTable.SERIES, "Vote": -1}' title="i dislike this"><i class="fa fa-thumbs-down"></i></span>
+                </div>
+            </div>
+            <div class="info">
+                <div>
+                    <i class="fa fa-thumbs-up"></i>@Model.Summarize.VoteUp likes
+                </div>
+                <div>
+                    <i class="fa fa-thumbs-down"></i>@Model.Summarize.VoteDown dislikes
+                </div>
+            </div>
+            <div class="info">
+                <div>
+                    <i class="fa fa-eye"></i>@Model.Summarize.ViewCount views
+                </div>
+                <div>
+                    <i class="fa fa-check-square-o"></i>@Model.Summarize.ReadCount reads
+                </div>
+            </div>
+            <div class="info">
+                <div>
+                    <i class="fa fa-diamond"></i>@RatingHelper.DisplayRating(Model.Summarize)
+                </div>
+                <div>
+                    <i class="fa @(Model.UserAction.QualityRated > 0 ? "fa-star" : "fa-star-o")"></i>@Model.Summarize.QualityCount users rated
+                </div>
+            </div>
+            <div class="info">
+                <div>
+                    <i class="fa fa-comments"></i>@Model.Summarize.CommentCount comments
+                </div>
+ 
+            </div>
+            <div class="info">
+                <div>
+                    <i class="fa fa-book"></i>@Model.Series.Count() series
+                </div>
+                <div>
+                    <i class="fa fa-rss"></i>@Model.Releases.Count() releases
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="content">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="@(tab.Equals("Comments",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
@@ -179,7 +238,7 @@
                         Title = s.Title,
                         Date = s.Date,
                         Url = s.Url,
-                        //Series = Model.
+                        Series = Model.Series.SingleOrDefault(w=> w.SeriesID == s.SeriesID),
                         Group = Model,
                         UserLists = new List<UserList>(),
                         Connectors = new List<Connector>(),

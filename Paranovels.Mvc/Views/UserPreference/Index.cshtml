@@ -61,6 +61,9 @@
                         </div>
                     </div>
                 }
+                <div class="btn-row clearfix">
+                    <button type="button" class="btn btn-primary btn-sm pull-right" onclick="window.location.reload();"><i class="fa fa-refresh"></i>Apply Settings</button>
+                </div>
             </div>
             <div role="tabpanel" class="tab-pane" id="genres">
                 @foreach (var tag in genres.OrderBy(o => o.Name))
@@ -91,6 +94,9 @@
                         </div>
                     </div>
                 }
+                <div class="btn-row clearfix">
+                    <button type="button" class="btn btn-primary btn-sm pull-right" onclick="window.location.reload();"><i class="fa fa-refresh"></i>Apply Settings</button>
+                </div>
             </div>
         </div>
     </div>

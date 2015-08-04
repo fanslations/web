@@ -22,7 +22,7 @@
                 {
                     <div class="vote @(item.Voted.GetValueOrDefault() == 1 ? "likes" : item.Voted.GetValueOrDefault() == -1 ? "dislikes" : "")">
                         <div class="action vote-up" data-vote='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.SERIES, "Vote": 1}'><i class="fa fa-chevron-up"></i></div>
-                        <div class="score @((item.VoteUp + item.VoteDown) < 0 ? "dislikes" : "likes")">@(item.VoteUp.GetValueOrDefault() - item.VoteDown.GetValueOrDefault())</div>
+                        <div class="score @((item.VoteUp - item.VoteDown) < 0 ? "dislikes" : "likes")">@(item.VoteUp.GetValueOrDefault() - item.VoteDown.GetValueOrDefault())</div>
                         <div class="action vote-down" data-vote='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.SERIES, "Vote": -1}'><i class="fa fa-chevron-down"></i></div>
                     </div>
                 }

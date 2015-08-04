@@ -17,16 +17,30 @@ namespace Paranovels.Services
         {
         }
 
-        public int Viewing(int userID, int sourceID, int sourceTable)
+        public int Reading(ReadForm form)
+        {
+            var tUserRead = Table<UserRead>();
+
+            var userRead = tUserRead.GetOrAdd(w => w.UserID == form.UserID && w.SourceID == form.SourceID && w.SourceTable == form.SourceTable);
+            MapProperty(form, userRead);
+            UpdateAuditFields(userRead, form.ByUserID);
+
+            // save
+            SaveChanges();
+
+            return userRead.UserReadID;
+        }
+
+        public int Viewing(ViewForm form)
         {
             var tUserView = Table<UserView>();
 
             const int VIEW_COUNT_MINUTES = 5;
             var lastView = DateTime.Now.AddMinutes(5 * -1);
 
-            var userView = tUserView.GetOrAdd(w => w.UserID == userID && w.SourceID == sourceID && w.SourceTable == sourceTable && w.UpdatedDate > lastView);
-            MapProperty(new UserView { UserID = userID, SourceID = sourceID, SourceTable = sourceTable }, userView);
-            UpdateAuditFields(userView, userID);
+            var userView = tUserView.GetOrAdd(w => w.UserID == form.UserID && w.SourceID == form.SourceID && w.SourceTable == form.SourceTable && w.UpdatedDate > lastView);
+            MapProperty(form, userView);
+            UpdateAuditFields(userView, form.ByUserID);
             // save
             SaveChanges();
 
@@ -95,20 +109,6 @@ namespace Paranovels.Services
             return ((double)summarize.QualityScore / summarize.QualityCount);
         }
 
-        public int Reading(ReadForm form)
-        {
-            var tUserRead = Table<UserRead>();
-
-            var userRead = tUserRead.GetOrAdd(w => w.UserID == form.UserID && w.SourceID == form.SourceID && w.SourceTable == form.SourceTable);
-            MapProperty(form, userRead);
-            UpdateAuditFields(userRead, form.ByUserID);
-
-            // save
-            SaveChanges();
-
-            return userRead.UserReadID;
-        }
-
         public int SummarizeComment(CommentForm form)
         {
             var tComment = View<UserComment>();
@@ -135,6 +135,36 @@ namespace Paranovels.Services
             }
 
             return summarize.CommentCount;
+        }
+
+        public int SummarizeRead(ReadForm form)
+        {
+            var tUserRead = View<UserRead>();
+            var tSummarize = Table<Summarize>();
+
+            var summarize = tSummarize.GetOrAdd(w => w.SourceID == form.SourceID && w.SourceTable == form.SourceTable);
+            MapProperty(form, summarize);
+            UpdateAuditFields(summarize, form.ByUserID);
+            summarize.ReadCount = tUserRead.Where(w => w.SourceID == form.SourceID && w.SourceTable == form.SourceTable).Count();
+            // save
+            SaveChanges();
+
+            return summarize.ReadCount;
+        }
+
+        public int SummarizeView(ViewForm form)
+        {
+            var tUserView = View<UserRead>();
+            var tSummarize = Table<Summarize>();
+
+            var summarize = tSummarize.GetOrAdd(w => w.SourceID == form.SourceID && w.SourceTable == form.SourceTable);
+            MapProperty(form, summarize);
+            UpdateAuditFields(summarize, form.ByUserID);
+            summarize.ViewCount = tUserView.Where(w => w.SourceID == form.SourceID && w.SourceTable == form.SourceTable).Count();
+            // save
+            SaveChanges();
+
+            return summarize.ViewCount;
         }
     }
 }

@@ -10,11 +10,13 @@ namespace Thi.Core
     {
         public static string ToColorHex(this int colorInt)
         {
-            return "#" + Convert.ToString(colorInt, 16);
+            var hexColor = "#" + Convert.ToString(colorInt, 16).PadLeft(6,'0');
+            return hexColor;
         }
         public static int ToColorInt(this string colorHex)
         {
-            return Convert.ToInt32(colorHex.Replace("#",""), 16);
+            var intColor = Convert.ToInt32(colorHex.Replace("#",""), 16);
+            return intColor;
         }
     }
 }

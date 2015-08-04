@@ -1,4 +1,4 @@
-// This class was automatically generated with love by ST4bby 7/31/2015 9:48:13 AM.
+// This class was automatically generated with love by ST4bby 8/3/2015 12:14:25 AM.
 // Read more at http://jbubriski.github.com/ST4bby/
 
 namespace Paranovels.DataModels
@@ -46,6 +46,9 @@ namespace Paranovels.DataModels
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Type", TypeName = "int"), Display(Name="Type")]
 		public int Type { get; set; }
 		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Icon", TypeName = "int"), Display(Name="Icon")]
+		public int Icon { get; set; }
+		
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Color", TypeName = "int"), Display(Name="Color")]
 		public int Color { get; set; }
 		
@@ -54,5 +57,14 @@ namespace Paranovels.DataModels
 		
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("IsPlaceInFrontOfTitle", TypeName = "bit"), Display(Name="Is Place In Front Of Title")]
 		public bool IsPlaceInFrontOfTitle { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("IsHiddenInFrontpage", TypeName = "bit"), Display(Name="Is Hidden In Frontpage")]
+		public bool IsHiddenInFrontpage { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("IsNotifyOfNewRelease", TypeName = "bit"), Display(Name="Is Notify Of New Release")]
+		public bool IsNotifyOfNewRelease { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("IsAutoAddWhenRead", TypeName = "bit"), Display(Name="Is Auto Add When Read")]
+		public bool IsAutoAddWhenRead { get; set; }
 	}
 }

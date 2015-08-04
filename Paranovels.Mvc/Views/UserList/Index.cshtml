@@ -11,15 +11,6 @@
     var listTemplates = (IList<UserList>)ViewBag.ListTemplates ?? new List<UserList>();
 }
 
-@section CurrentMenu
-{
-    <section class="menu-section">
-        <h2 class="menu-section-title">Current</h2>
-        <ul class="menu-section-list">
-            <li><a href="#custom-list" class="action toggle" data-toggle='{ "target": "#custom-list"}' role="button"><i class=" fa fa-plus"></i>Add new list</a></li>
-        </ul>
-    </section>
-}
 
 <section class="section">
     <div class="header">
@@ -27,7 +18,6 @@
         <h1 class="title">
             @ViewBag.Title
         </h1>
-        <a class="action right toggle" data-toggle='{ "target": "#add-container"}'><i class="fa fa-plus"></i></a>
     </div>
     <div class="content">
         <section class="section">
@@ -77,12 +67,17 @@
                     <div class="col-image">
                         <form action="@Url.Action("Form", "UserList")" method="POST" data-form-ajax='{}'>
                             <div class="hidden">
+                                <input type="hidden" name="ReturnUrl" value="@Request.RawUrl" />
+                                <input type="hidden" name="@formModel.PropertyName(m=>m.Name)" value="@item.Name" />
+                                <input type="hidden" name="@formModel.PropertyName(m=>m.Description)" value="@item.Description" />
                                 <input type="hidden" name="@formModel.PropertyName(m=>m.ShareLevel)" value="@item.ShareLevel" />
                                 <input type="hidden" name="@formModel.PropertyName(m=>m.Type)" value="@item.Type" />
                                 <input type="hidden" name="@formModel.PropertyName(m=>m.Color)" value="@item.Color" />
-                                <input type="hidden" name="@formModel.PropertyName(m=>m.Name)" value="@item.Name" />
-                                <input type="hidden" name="@formModel.PropertyName(m=>m.Description)" value="@item.Description" />
-                                <input type="hidden" name="ReturnUrl" value="@Request.RawUrl" />
+                                <input type="hidden" name="@formModel.PropertyName(m=>m.IsColorIcon)" value="@item.IsColorIcon" />
+                                <input type="hidden" name="@formModel.PropertyName(m=>m.IsAutoAddWhenRead)" value="@item.IsAutoAddWhenRead" />
+                                <input type="hidden" name="@formModel.PropertyName(m=>m.IsHiddenInFrontpage)" value="@item.IsHiddenInFrontpage" />
+                                <input type="hidden" name="@formModel.PropertyName(m=>m.IsNotifyOfNewRelease)" value="@item.IsNotifyOfNewRelease" />
+                                <input type="hidden" name="@formModel.PropertyName(m=>m.IsPlaceInFrontOfTitle)" value="@item.IsPlaceInFrontOfTitle" />
                             </div>
                             <button type="submit" class="btn btn-primary">@Html.Raw(item.Type.Translate(R.ListType.Translate))Activate List</button>
                         </form>
@@ -97,17 +92,16 @@
 
                     </div>
                     <div class="col-image">
-                        <button type="button" class="btn btn-primary action toggle" data-toggle='{ "target":"#custom-list"}'">@Html.Raw(R.ListType.CUSTOM.Translate(R.ListType.Translate))Custom List</button>
+                        <button type="button" class="btn btn-primary action toggle" data-toggle='{ "target":"#custom-list"}'>@Html.Raw(R.ListType.CUSTOM.Translate(R.ListType.Translate))Custom List</button>
                     </div>
                 </li>
                 <li id="custom-list" class="row-list" style="display: none;">
                     <p class="alert alert-info">Enter name and description below and click 'Create List' to create your new custom list.</p>
                     <form action="@Url.Action("Form", "UserList")" method="POST" data-form-ajax='{}'>
                         <div class="hidden">
-                            <input type="hidden" name="@formModel.PropertyName(m=>m.ShareLevel)" value="@R.ShareLevel.PUBLIC" />
-                            <input type="hidden" name="@formModel.PropertyName(m=>m.Type)" value="@R.ListType.CUSTOM" />
-                            <input type="hidden" name="@formModel.PropertyName(m=>m.Color)" value="@R.Color.DARK_BLUE" />
                             <input type="hidden" name="ReturnUrl" value="@Request.RawUrl" />
+                            <input type="hidden" name="@formModel.PropertyName(m=>m.Type)" value="@R.ListType.CUSTOM" />
+                            <input type="hidden" name="@formModel.PropertyName(m=>m.ShareLevel)" value="@R.ShareLevel.PRIVATE" />
                         </div>
                         <div class="form-group">
                             <label id="label-name" for="name">List Name</label>

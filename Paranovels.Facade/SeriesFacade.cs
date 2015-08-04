@@ -129,6 +129,9 @@ namespace Paranovels.Facade
                 detail.Glossaries = service.View<Connector>()
                     .Where(w => w.ConnectorType == R.ConnectorType.SERIES_GLOSSARY && w.SourceID == detail.SeriesID)
                     .Join(service.View<Glossary>().All(), c => c.TargetID, f => f.GlossaryID, (c, f) => f).ToList();
+
+                detail.UserAction = new UserActionFacade().Get(new ViewForm { UserID = criteria.ByUserID, SourceID = detail.SeriesID, SourceTable = R.SourceTable.SERIES });
+
                 return detail;
             }
         }
@@ -151,7 +154,9 @@ namespace Paranovels.Facade
                 detail.UserLists = service.View<UserList>().Where(w => w.IsDeleted == false && w.UserID == criteria.ByUserID).ToList();
 
                 detail.Connectors = service.View<Connector>().Where(w => w.IsDeleted == false && w.SourceID == detail.SeriesID).ToList();
-
+                
+                detail.UserAction = new UserActionFacade().Get(new ViewForm { UserID = criteria.ByUserID, SourceID = detail.SeriesID, SourceTable = R.SourceTable.RELEASE });
+                
                 return detail;
             }
         }

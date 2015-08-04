@@ -22,5 +22,7 @@ namespace Paranovels.ViewModels
 
         [NotMapped]
         public Summarize Summarize { get; set; }
+        [NotMapped]
+        public UserActionDetail UserAction { get; set; }
     }
 }

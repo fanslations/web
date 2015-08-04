@@ -89,7 +89,7 @@
                             <i class="fa fa-calendar"></i>@item.UpdatedDate.FormatDate()
                         </li>
                         <li title="Status">
-                            <i class="fa fa-certificate"></i>@item.Status.Translate(R.GroupStatus.Translate)
+                            <i class="fa fa-certificate"></i>@Html.Raw(item.Status.Translate(R.GroupStatus.Translate).FormatString())
                         </li>
                         <li title="Comments">
                             <i class="fa fa-comments-o"></i><a href="@Url.Action("Detail", "Group", new {ID = item.GroupID, Seo = item.Name.ToSeo()})#comments">@item.CommentCount.GetValueOrDefault() comments</a>

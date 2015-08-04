@@ -99,6 +99,7 @@ namespace Paranovels.Facade
                     .Join(service.View<Glossary>().All(), c => c.TargetID, f => f.GlossaryID, (c, f) => f).ToList();
 
                 detail.Summarize = service.View<Summarize>().Where(w => w.SourceTable == R.SourceTable.GROUP && w.SourceID == detail.GroupID).SingleOrDefault() ?? new Summarize();
+                detail.UserAction = new UserActionFacade().Get(new ViewForm { UserID = criteria.ByUserID, SourceID = detail.GroupID, SourceTable = R.SourceTable.GROUP });
                 return detail;
             }
         }

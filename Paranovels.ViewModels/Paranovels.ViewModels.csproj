@@ -59,6 +59,7 @@
     <Compile Include="Detail Models\ReleaseDetail.cs" />
     <Compile Include="Detail Models\CommentDetail.cs" />
     <Compile Include="Detail Models\ListDetail.cs" />
+    <Compile Include="Detail Models\UserActionDetail.cs" />
     <Compile Include="Detail Models\UserDetail.cs" />
     <Compile Include="Detail Models\TagDetail.cs" />
     <Compile Include="Detail Models\SeriesDetail.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Form Models\ReadForm.cs" />
     <Compile Include="Form Models\ListForm.cs" />
     <Compile Include="Form Models\PreferenceForm.cs" />
+    <Compile Include="Form Models\ViewForm.cs" />
     <Compile Include="Form Models\VoteForm.cs" />
     <Compile Include="Form Models\TagForm.cs" />
     <Compile Include="Form Models\ConnectorForm.cs" />
