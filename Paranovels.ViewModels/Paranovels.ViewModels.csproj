@@ -60,6 +60,7 @@
     <Compile Include="Detail Models\CommentDetail.cs" />
     <Compile Include="Detail Models\ListDetail.cs" />
     <Compile Include="Detail Models\UserActionDetail.cs" />
+    <Compile Include="Detail Models\AkaDetail.cs" />
     <Compile Include="Detail Models\UserDetail.cs" />
     <Compile Include="Detail Models\TagDetail.cs" />
     <Compile Include="Detail Models\SeriesDetail.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Form Models\ListForm.cs" />
     <Compile Include="Form Models\PreferenceForm.cs" />
     <Compile Include="Form Models\ViewForm.cs" />
+    <Compile Include="Form Models\AkaForm.cs" />
     <Compile Include="Form Models\VoteForm.cs" />
     <Compile Include="Form Models\TagForm.cs" />
     <Compile Include="Form Models\ConnectorForm.cs" />
@@ -87,6 +89,7 @@
     <Compile Include="Form Models\UserForm.cs" />
     <Compile Include="Grid Models\CommentGrid.cs" />
     <Compile Include="Grid Models\GroupGrid.cs" />
+    <Compile Include="Grid Models\ListGrid.cs" />
     <Compile Include="Grid Models\ReleaseGrid.cs" />
     <Compile Include="Grid Models\SeriesGrid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -95,6 +98,7 @@
     <Compile Include="Sort Extensions\ReleaseGrid.SortExtension.cs" />
     <Compile Include="Sort Extensions\GroupGrid.SortExtension.cs" />
     <Compile Include="Sort Extensions\SeriesGrid.SortExtension.cs" />
+    <Compile Include="Form Models\StickyForm.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Paranovels.DataModels\Paranovels.DataModels.csproj">

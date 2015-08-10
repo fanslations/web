@@ -11,7 +11,7 @@ namespace Paranovels.Mvc
         {
             if (!ReferenceEquals(key, null) && translateData.ContainsKey(key))
                 return translateData[key];
-            return key as string;
+            return "";
         }
 
         public static string ToGoogleDriveImageUrl(this string fileID)

@@ -1,4 +1,4 @@
-// This class was automatically generated with love by ST4bby 8/3/2015 12:14:25 AM.
+// This class was automatically generated with love by ST4bby 8/9/2015 3:28:52 PM.
 // Read more at http://jbubriski.github.com/ST4bby/
 
 namespace Paranovels.DataModels
@@ -33,6 +33,9 @@ namespace Paranovels.DataModels
 		
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Date", TypeName = "datetime"), Display(Name="Date")]
 		public DateTime Date { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Type", TypeName = "int"), Display(Name="Type")]
+		public int Type { get; set; }
 		
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Title", TypeName = "nvarchar"), Display(Name="Title"), StringLength(400)]
 		public string Title { get; set; }

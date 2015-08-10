@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations.Model;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using Paranovels.Common;
@@ -69,6 +71,65 @@ namespace Paranovels.Facade
             using (var uow = UnitOfWorkFactory.Create<NovelContext>())
             {
                 return uow.Repository<UserList>().Where(w => w.IsDeleted == false && w.UserID == 0).ToList();
+            }
+        }
+
+        public IList<UserList> GetListHasReleases(ListCriteria criteria)
+        {
+            using (var uow = UnitOfWorkFactory.Create<NovelContext>())
+            {
+                var qList = uow.Repository<UserList>().Where(w => w.IsDeleted == false && w.UserID == criteria.ByUserID && w.IsNotifyOfNewRelease);
+                var qConnector = uow.Repository<Connector>().Where(w => w.IsDeleted == false && w.ConnectorType == R.ConnectorType.SERIES_USERLIST);
+                var qRelease = uow.Repository<Release>().Where(w => w.IsDeleted == false && w.SeriesID > 0);
+                var qRead = uow.Repository<UserRead>().Where(w => w.UserID == criteria.ByUserID && w.SourceTable == R.SourceTable.RELEASE);
+
+
+                var seriesList = qList.Join(qConnector, l => l.UserListID, c => c.TargetID, (l, c) => new { l.UserListID, l.Name, SeriesID = c.SourceID });
+
+                var allReleases = qRelease.Join(seriesList, r => r.SeriesID, l => l.SeriesID,
+                        (r, l) => new { l.UserListID, l.Name, r.SeriesID, r.Date, r.ReleaseID });
+
+                var readReleases = qRead.Join(allReleases, r => r.SourceID, rl => rl.ReleaseID,
+                        (r, rl) => rl).GroupBy(g => new { g.SeriesID }).Select(s => new { s.Key.SeriesID, Date = s.Max(m => m.Date) });
+
+                var untouchReleases = allReleases.Where(w => !readReleases.Any(w2=> w2.SeriesID == w.SeriesID))
+                        .GroupBy(g => new { g.SeriesID })
+                        .Select(s => new { s.Key.SeriesID, Date = DateTime.MinValue });
+
+                // only return releases that has been read once
+                var unreadReleases = readReleases.Union(untouchReleases).SelectMany(s => allReleases.Where(w => (w.SeriesID == s.SeriesID && w.Date > s.Date))).ToList();
+
+                return unreadReleases.GroupBy(g => new { g.UserListID, g.Name }).Select(s => new UserList { UserListID = s.Key.UserListID, Name = s.Key.Name, Type = s.Count(), UpdatedDate = s.Max(m => m.Date) }).ToList();
+            }
+        }
+
+        public void EmailNotifySubscriber(ReleaseForm release)
+        {
+            using (var uow = UnitOfWorkFactory.Create<NovelContext>())
+            {
+                var qList = uow.Repository<UserList>().Where(w => w.IsDeleted == false && w.IsEmailNotifyOfNewRelease);
+                var qConnector = uow.Repository<Connector>().Where(w => w.IsDeleted == false && w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.SourceID == release.SeriesID);
+                var qUser = uow.Repository<User>().Where(w => w.Email.Contains("@"));
+
+                var lists = qList.Join(qConnector, l => l.UserListID, c => c.TargetID, (l, c) => l);
+
+                var users = qUser.Join(lists, u => u.UserID, l => l.UserID, (u, l) => u).ToList();
+                
+                if (!users.Any()) return;
+
+                var email = new MailMessage()
+                {
+                    Subject = string.Format("New Release - {0}", release.Title),
+                    Body = string.Format("http://www.fanslations.com/release/detail/{0}/{1}", release.Title.ToSeo(), release.ReleaseID)
+                };
+                // add subscriber to bcc
+                foreach (var user in users)
+                {
+                    email.Bcc.Add(user.Email);
+                }
+
+                email.To.Add("fanslations+subscribers@gmail.com");
+                EmailService.Instance.Send(email);
             }
         }
     }

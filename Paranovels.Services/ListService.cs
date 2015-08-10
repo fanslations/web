@@ -40,12 +40,11 @@ namespace Paranovels.Services
 
         public PagedList<UserList> Search(SearchModel<ListCriteria> searchModel)
         {
-                       
-                var c = searchModel.Criteria;
+            var c = searchModel.Criteria;
 
-                var tUserList = Table<UserList>().Where(w => w.UserID == c.ByUserID);
+            var tUserList = Table<UserList>().Where(w => w.UserID == c.ByUserID).OrderBy(o => o.Priority == 0 ? int.MaxValue : o.Priority).ThenBy(o => o.Name);
 
-                return tUserList.ToPagedList(searchModel.PagedListConfig);
+            return tUserList.ToPagedList(searchModel.PagedListConfig);
         }
 
         public ListDetail Get(ListCriteria criteria)

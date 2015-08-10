@@ -20,7 +20,8 @@
         'selectize': '../bower_components/selectize/dist/js/standalone/selectize',
         'toastr': '../bower_components/toastr/toastr',
         'slideout': '../bower_components/slideout.js/dist/slideout',
-        'colorpicker': '../bower_components/jQuery-ColorPicker/colorpicker'
+        'colorpicker': '../bower_components/jQuery-ColorPicker/colorpicker',
+        'sortable': '../bower_components/html.sortable/dist/html.sortable'
     },
     shim: {
         'jquery': {
@@ -58,6 +59,10 @@
             deps: ['jquery']
         },
         'colorpicker': {
+            exports: '$',
+            deps: ['jquery']
+        },
+        'sortable': {
             exports: '$',
             deps: ['jquery']
         }

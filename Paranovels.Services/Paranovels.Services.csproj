@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="StickyService.cs" />
     <Compile Include="ConnectorService.cs" />
     <Compile Include="GlossaryService.cs" />
     <Compile Include="FeedService.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="CommentService.cs" />
     <Compile Include="ListService.cs" />
     <Compile Include="SpamReportService.cs" />
+    <Compile Include="AkaService.cs" />
     <Compile Include="TagService.cs" />
     <Compile Include="GroupService.cs" />
     <Compile Include="UserActionService.cs" />

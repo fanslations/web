@@ -31,7 +31,8 @@ namespace Paranovels.ViewModels
         public List<Feed> Feeds { get; set; }
         [NotMapped]
         public List<Glossary> Glossaries { get; set; }
-
+        [NotMapped]
+        public List<Aka> Akas { get; set; } // also known as (alternative title)
         [NotMapped]
         public UserActionDetail UserAction { get; set; }
     }

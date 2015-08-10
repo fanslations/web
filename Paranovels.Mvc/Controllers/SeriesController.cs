@@ -13,7 +13,6 @@ namespace Paranovels.Mvc.Controllers
 {
     public class SeriesController : SiteController
     {
-        // GET: TranslationScene
         public ActionResult Index(SeriesCriteria criteria)
         {
             var searchModel = CreateSearchModel(criteria);

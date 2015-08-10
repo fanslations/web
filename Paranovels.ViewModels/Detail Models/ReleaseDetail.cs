@@ -21,7 +21,8 @@ namespace Paranovels.ViewModels
         public Group Group { get; set; }
         [NotMapped]
         public Summarize Summarize { get; set; }
-
+        [NotMapped]
+        public Sticky Sticky { get; set; }
         // by current user
         [NotMapped]
         public UserActionDetail UserAction { get; set; }

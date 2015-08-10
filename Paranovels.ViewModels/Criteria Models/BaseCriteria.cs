@@ -27,6 +27,8 @@ namespace Paranovels.ViewModels
 
         public List<int> IDs { get; set; }
 
+        public List<int> NotIDs { get; set; }
+
         public string Query { get; set; }
 
         public string Sorted { get; set; }

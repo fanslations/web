@@ -28,6 +28,9 @@ namespace Paranovels.ViewModels
         public int? QualityCount { get; set; }
         public int? QualityScore { get; set; }
 
+        // administrator controls
+        public bool IsSticky { get; set; }
+
         // by current user
         public int? Voted { get; set; }
         public int? QualityRated { get; set; }

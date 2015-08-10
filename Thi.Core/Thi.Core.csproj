@@ -43,6 +43,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
@@ -52,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base Interface\IGrid.cs" />
     <Compile Include="Base Interface\IDetailModel.cs" />
     <Compile Include="Base Interface\IFacade.cs" />
     <Compile Include="Base Interface\IFormModel.cs" />
@@ -60,9 +62,18 @@
     <Compile Include="Base Interface\IModel.cs" />
     <Compile Include="Base Object\BaseService.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="Email Related\DefaultSmtpServer.cs" />
+    <Compile Include="Email Related\DirectorySmtpServer.cs" />
+    <Compile Include="Email Related\EmailService.cs" />
+    <Compile Include="Email Related\GmailSmtpServer.cs" />
+    <Compile Include="Email Related\IEmailService.cs" />
+    <Compile Include="Email Related\ISmtpServer.cs" />
+    <Compile Include="Email Related\LocalSmtpServer.cs" />
+    <Compile Include="Email Related\SmtpServer.cs" />
     <Compile Include="Extensions\ColorExtension.cs" />
     <Compile Include="Extensions\FormatExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
+    <Compile Include="Search Related\Paging\PagedListLabel.cs" />
     <Compile Include="Search Related\SearchExtension.cs" />
     <Compile Include="Extensions\ReflectionExtension.cs" />
     <Compile Include="Extensions\UrlExtensions.cs" />
@@ -91,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Email Related\Gmail.README" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

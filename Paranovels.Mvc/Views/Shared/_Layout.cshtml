@@ -1,96 +1,130 @@
-﻿@using Microsoft.AspNet.Identity
+﻿@using Elmah.ContentSyndication
+@using Microsoft.AspNet.Identity
+@using Paranovels.Facade
+@using Paranovels.ViewModels
 @using Thi.Core
 
 @{
     var device = WebHelper.GetClientDevice();
+
 }
 <!DOCTYPE html>
 <html lang="en-US" class="device @device">
 <head>
     <title>@(ViewBag.Title ?? "Home") - Fanslations</title>
     <meta name="description" content="@(ViewBag.Description ?? "Translating light novels, web novels from other languages to English. Fanslations also aggregated new releases from other translations group for easier access.")">
-    @Html.Partial("_LayoutHeader", new { Portal = "public" })
+    <meta name="keywords" content="@(ViewBag.Keywords ?? "web light novels translated, fan translation of web light novels, aggregattor of web light novels releases, fantasy web novels, virtual reality web novels, web novels with overpowered main character, original web novels, fanfiction")">
+    <meta name="author" content="Fanslations" />
+    <meta name="copyright" content="Fanslations" />
+     @Html.Partial("_LayoutHeader", new { Portal = "public" })
     @RenderSection("css", required: false)
 </head>
-<body class="">
-    <header class="fs-12em" role="banner">
-        <div class="global">
-            <ul class="global-left">
-                <li class="">
-                    <a class="fs-16em slideout"><i class="fa fa-bars"></i></a>
-                </li>
-                <li><a class="logo" href="/">Fanslations</a></li>
-            </ul>
-            <ul class="global-right">
-                @if (Request.IsAuthenticated)
-                {
-                    <li>
-                        <a href="@Url.Action("Manage", "Account")"><i class="fa fa-user"></i>@User.Identity.GetUserName()</a>
+    <body class="">
+        <div class="header-mask"></div>
+        <header class="fs-12em">
+            <div class="global clearfix" role="banner">
+                <ul class="global-left">
+                    <li class="">
+                        <a class="fs-16em slideout menu"><i class="fa fa-bars"></i></a>
                     </li>
-                }
-                else
-                {
-                    <li><a href="/account/login/" id="loginLink"><i class="fa fa-user"></i>LOG IN | SIGN UP</a></li>
-                }
-            </ul>
-        </div>
-
-    </header>
-    <main role="main">
-        <div id="panel">
-            @RenderBody()
-        </div>
-        <nav id="menu" class="side-menu">
-            @RenderSection("CurrentMenu", false)
-            <section class="menu-section">
-                <h2 class="menu-section-title">Main</h2>
-                <ul class="menu-section-list">
-                    <li><a href="/"><i class="fa fa-home"></i>Home</a></li>
-                    <li><a href="@Url.Action("Index", "Project")"><i class="fa fa-lightbulb-o"></i>Projects</a></li>
-                    <li><a href="@Url.Action("Index", "Release", new { ps = 50 })"><i class="fa fa-rss-square"></i>Releases</a></li>
-                    <li><a href="@Url.Action("Index", "Series")"><i class="fa fa-book"></i>Series</a></li>
-                    <li><a href="@Url.Action("Index", "Group")"><i class="fa fa-group"></i>Groups</a></li>
-                    <li><a href="@Url.Action("List", "Tag", new { id = 3, Seo = "categories" })">Categories</a></li>
-                    <li><a href="@Url.Action("List", "Tag", new { id = 2, Seo = "geners" })">Genres</a></li>
+                    <li><a class="logo menu" href="/">Fanslations</a></li>
                 </ul>
-            </section>
-            <section class="menu-section">
-                <h2 class="menu-section-title">Members</h2>
-                <ul class="menu-section-list">
+                <ul class="global-right">
                     @if (Request.IsAuthenticated)
                     {
-                        <li>
-                            <a href="@Url.Action("Manage", "Account")"><i class="fa fa-user"></i>Settings</a>
-                            <a href="@Url.Action("Index", "UserList")"><i class="fa fa-list-alt"></i>My Lists</a>
-                            <a href="@Url.Action("Index", "UserPreference")"><i class="fa fa-cog"></i>Preferences</a>
-                            <a href="@Url.Action("LogOff", "Account")"><i class="fa fa-sign-out"></i>Log Off</a>
+                        <li class="dropdown-hover">
+                            <a class="menu" href="@Url.Action("Manage", "Account")"><i class="fa fa-user"></i>@User.Identity.GetUserName()</a>
+                            <ul class="sub-container list-unstyled">
+                                <li>
+                                    <a href="@Url.Action("LogOff", "Account")"><i class="fa fa-sign-out"></i>Log Off</a>
+                                </li>
+                            </ul>
+
                         </li>
+                        if (User.Identity.IsAuthenticated)
+                        {
+                            var lists = new ListFacade().GetListHasReleases(new ListCriteria { ByUserID = User.GetSession().UserID });
+                            <li class="dropdown-hover">
+                                <a class="menu @(lists.Any() ? "color-gold" : "")"><i class="fa fa-bell-o"></i></a>
+                                <ul class="sub-container list-unstyled">
+                                    @foreach (var item in lists)
+                                    {
+                                        <li><a href="@Url.Action("Detail","UserList", new { item.ID, Seo = item.Name.ToSeo() })">There is @item.Type new release(s) in your <b>@item.Name</b> list.</a></li>
+                                    }
+                                    @if (!lists.Any())
+                                    {
+                                        <li>There is no notification.</li>
+                                    }
+                                </ul>
+                            </li>
+                        }
                     }
                     else
                     {
-                        <li><a href="/account/login/" id="loginLink"><i class="fa fa-sign-in"></i>LOG IN</a></li>
+                        <li>
+                            <a class="menu" href="/account/login/"><i class="fa fa-user"></i>LOG IN | SIGN UP</a>
+                        </li>
                     }
                 </ul>
-            </section>
-        </nav>
-    </main>
+            </div>
+        </header>
+        <main>
+            <div id="panel" role="main">
+                @RenderBody()
+            </div>
+            <nav id="menu" class="side-menu">
+                <div role="navigation">
+                    @RenderSection("CurrentMenu", false)
+                    <section class="menu-section">
+                        <h2 class="menu-section-title">Main</h2>
+                        <ul class="menu-section-list">
+                            <li><a href="/"><i class="fa fa-home"></i>Home</a></li>
+                            <li><a href="@Url.Action("Index", "Project")"><i class="fa fa-lightbulb-o"></i>Projects</a></li>
+                            <li><a href="@Url.Action("Index", "Release", new { ps = 50 })"><i class="fa fa-rss-square"></i>Releases</a></li>
+                            <li><a href="@Url.Action("Index", "Series")"><i class="fa fa-book"></i>Series</a></li>
+                            <li><a href="@Url.Action("Index", "Group")"><i class="fa fa-group"></i>Groups</a></li>
+                            <li><a href="@Url.Action("List", "Tag", new { id = 3, Seo = "categories" })">Categories</a></li>
+                            <li><a href="@Url.Action("List", "Tag", new { id = 2, Seo = "geners" })">Genres</a></li>
+                        </ul>
+                    </section>
+                    <section class="menu-section">
+                        <h2 class="menu-section-title">Members</h2>
+                        <ul class="menu-section-list">
+                            @if (Request.IsAuthenticated)
+                            {
+                                <li>
+                                    <a href="@Url.Action("Manage", "Account")"><i class="fa fa-user"></i>Settings</a>
+                                    <a href="@Url.Action("Index", "UserList")"><i class="fa fa-list-alt"></i>My Lists</a>
+                                    <a href="@Url.Action("Index", "UserPreference")"><i class="fa fa-cog"></i>Preferences</a>
+                                    <a href="@Url.Action("LogOff", "Account")"><i class="fa fa-sign-out"></i>Log Off</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li><a href="/account/login/"><i class="fa fa-sign-in"></i>LOG IN</a></li>
+                            }
+                        </ul>
+                    </section>
+                </div>
+            </nav>
+        </main>
+        <footer class="">
+            <div class="global clearfix" role="contentinfo">
+                <ul class="list-unstyled list-inline no-margin">
+                    <li class="no-padding">&copy; @DateTime.Now.Year Fanslations</li>
 
-    <footer class="" role="contentinfo">
-        <ul class="list-unstyled list-inline no-margin">
-            <li>&copy; @DateTime.Now.Year Fanslations</li>
-            <li class="divider divider-black divider-pipe"></li>
-            <li>About</li>
-            <li class="divider divider-black divider-pipe"></li>
-            <li>Contact</li>
-            <li class="divider divider-black divider-pipe"></li>
-            <li>Help</li>
+                    @*<li>About</li>
 
-        </ul>
-        <div class="small">Please support the authors and publishers by purchasing the books from official avenues when they are available in your locale.</div>
-        <div class="small">This page take <span id="server-execute-time">...</span> seconds to execute and <span id="client-load-time">...</span> seconds to load.</div>
-    </footer>
-    <div id="ajaxstatus" style="display: none; position: fixed; bottom: 0px; padding: 0px 5px; background-color: #cb490c; color: #FFFFFF; font-size: smaller; width: 100% !important;">Please wait...</div>
-    @Html.Partial("_LayoutFooter", new { Portal = "public" })
-    @RenderSection("js", required: false)
-</body>
+                <li>Contact</li>
+
+                <li>Help</li>*@
+
+                </ul>
+                <div class="small">Please support the authors and publishers by purchasing the books from official avenues when they are available in your locale.</div>
+                <div class="small">This page take <span id="server-execute-time">...</span> seconds to execute and <span id="client-load-time">...</span> seconds to load.</div>
+            </div>
+        </footer>
+        @Html.Partial("_LayoutFooter", new { Portal = "public" })
+        @RenderSection("js", required: false)
+    </body>
 </html>

@@ -25,5 +25,13 @@ namespace Thi.Core
         /// </value>
         public PagedListConfig Config { get; set; }
 
+        /// <summary>
+        /// Gets or sets the config.
+        /// </summary>
+        /// <value>
+        /// The config.
+        /// </value>
+        public PagedListLabel Label { get; set; }
+
     }
 }

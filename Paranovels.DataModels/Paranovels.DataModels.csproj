@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Generated\Aka.generated.cs" />
     <Compile Include="Generated\Author.generated.cs" />
     <Compile Include="Generated\Chapter.generated.cs" />
     <Compile Include="Generated\Connector.generated.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="Generated\Series.generated.cs" />
     <Compile Include="Generated\SpamReport.generated.cs" />
     <Compile Include="Generated\StaticResource.generated.cs" />
+    <Compile Include="Generated\Sticky.generated.cs" />
     <Compile Include="Generated\Summarize.generated.cs" />
     <Compile Include="Generated\Tag.generated.cs" />
     <Compile Include="Generated\User.generated.cs" />

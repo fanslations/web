@@ -3,7 +3,7 @@
 
 @helper DisplayRating(Summarize item)
 {
-    var id = DateTime.Now.Millisecond;
+    var id = item.ID;
     Func<Summarize, int, string> checkRating = (r, rating) =>
     {
         if (r.QualityCount == 0) return "";

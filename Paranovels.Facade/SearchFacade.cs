@@ -46,7 +46,7 @@ namespace Paranovels.Facade
                 // convert to PagedList<TranslationSceneGrid>
                 var data = results.Data.Select(s =>
                 {
-                    s.Releases = releases.Where(w=> w.SeriesID == s.SeriesID).ToList();
+                    s.Releases = releases.Where(w => w.SeriesID == s.SeriesID).ToList();
                     s.Group = groups.SingleOrDefault(g => g.GroupID == s.GroupID);
 
                     s.UserLists = userLists;
@@ -102,7 +102,7 @@ namespace Paranovels.Facade
 
                 var data = pagedList.Data.Select(s =>
                 {
-                    s.Releases = releases.Where(w=> w.GroupID == s.GroupID).ToList();
+                    s.Releases = releases.Where(w => w.GroupID == s.GroupID).ToList();
 
                     s.Voted = userVotedReleaseIDs.Where(w => w.GroupID == s.GroupID).Select(s2 => s2.Vote).SingleOrDefault();
                     s.QualityRated = userQualityRatedReleaseIDs.Where(w => w.GroupID == s.GroupID).Select(s2 => s2.Rate).SingleOrDefault();
@@ -148,6 +148,17 @@ namespace Paranovels.Facade
                 var userReadReleaseIDs = service.View<UserRead>().Where(w => w.SourceTable == R.SourceTable.RELEASE && releaseIDs.Contains(w.SourceID) && w.UserID == searchModel.Criteria.ByUserID)
                         .Select(s => new { ReleaseID = s.SourceID }).ToList();
 
+                var stickies = service.View<Sticky>().Where(w => w.IsDeleted == false && w.SourceTable == R.SourceTable.RELEASE).ToList();
+                if (stickies.Any())
+                {
+                    var stickyPageList = service.Search(new SearchModel<ReleaseCriteria>
+                    {
+                        Criteria = new ReleaseCriteria { IDs = stickies.Select(s => s.SourceID).ToList() },
+                        PagedListConfig = new PagedListConfig { PageSize = int.MaxValue }
+                    });
+                    pagedList.Data = pagedList.Data.Union(stickyPageList.Data).ToList();
+                }
+
                 var data = pagedList.Data.Select(s =>
                 {
                     s.Group = groups.SingleOrDefault(w => w.GroupID == s.GroupID);
@@ -155,14 +166,16 @@ namespace Paranovels.Facade
                     s.UserLists = userLists;
                     s.Connectors = connectors.Where(w => w.SourceID == s.SeriesID).ToList();
 
+                    s.IsSticky = stickies.Any(w => w.IsDeleted == false && w.SourceID == s.ReleaseID);
+
                     s.Voted = userVotedReleaseIDs.Where(w => w.ReleaseID == s.ReleaseID).Select(s2 => s2.Vote).SingleOrDefault();
                     s.QualityRated = userQualityRatedReleaseIDs.Where(w => w.ReleaseID == s.ReleaseID).Select(s2 => s2.Rate).SingleOrDefault();
                     s.IsRead = userReadReleaseIDs.Any(w => w.ReleaseID == s.ReleaseID);
                     return s;
                 }).ToList();
-                
 
-                
+
+
                 return new PagedList<ReleaseGrid> { Config = pagedList.Config, Data = data };
             }
         }

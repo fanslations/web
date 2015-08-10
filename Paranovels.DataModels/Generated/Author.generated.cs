@@ -1,4 +1,4 @@
-// This class was automatically generated with love by ST4bby 8/3/2015 12:14:24 AM.
+// This class was automatically generated with love by ST4bby 8/9/2015 3:28:52 PM.
 // Read more at http://jbubriski.github.com/ST4bby/
 
 namespace Paranovels.DataModels
@@ -31,7 +31,13 @@ namespace Paranovels.DataModels
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("IsDeleted", TypeName = "bit"), Display(Name="Is Deleted")]
 		public bool IsDeleted { get; set; }
 		
-		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Name", TypeName = "nvarchar"), Display(Name="Name"), StringLength(100)]
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Type", TypeName = "int"), Display(Name="Type")]
+		public int Type { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Name", TypeName = "nvarchar"), Display(Name="Name"), StringLength(200)]
 		public string Name { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Url", TypeName = "varchar"), Display(Name="Url"), StringLength(10)]
+		public string Url { get; set; }
 	}
 }

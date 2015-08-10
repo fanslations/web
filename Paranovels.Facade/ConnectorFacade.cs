@@ -24,5 +24,15 @@ namespace Paranovels.Facade
                 return id;
             }
         }
+
+        public int SaveSticky(StickyForm form)
+        {
+            using (var uow = UnitOfWorkFactory.Create<NovelContext>())
+            {
+                var service = new StickyService(uow);
+                var id = service.SaveChanges(form);
+                return id;
+            }
+        }
     }
 }

@@ -154,7 +154,7 @@ namespace Paranovels.Services
 
         public int SummarizeView(ViewForm form)
         {
-            var tUserView = View<UserRead>();
+            var tUserView = View<UserView>();
             var tSummarize = Table<Summarize>();
 
             var summarize = tSummarize.GetOrAdd(w => w.SourceID == form.SourceID && w.SourceTable == form.SourceTable);

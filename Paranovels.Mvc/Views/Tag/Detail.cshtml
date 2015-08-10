@@ -1,5 +1,6 @@
 ﻿@using Paranovels.Common
 @using Paranovels.DataModels
+@using Paranovels.ViewModels
 @using Thi.Core
 @model Paranovels.ViewModels.TagDetail
 @{
@@ -54,29 +55,22 @@
             }
         </ul>
     </div>
-    <ul class="grid">
-        @foreach (var item in Model.Series.Where(filterStatus))
+    @{
+        Html.RenderPartial("~/Views/Series/_SeriesGridPartial.cshtml", new PagedList<SeriesGrid>
         {
-            <li class="row-list">
-                <div class="col-image">
-                    <a href="#" class="">
-                        <img src="@item.ImageUrl.ToGoogleDriveImageUrl()" class="img-rounded" alt="@item.Title's cover" />
-                    </a>
-                </div>
-                <div class="col-content">
-                    <div>
-                        <a href="@Url.Action("Detail", "Series", new{ ID = item.SeriesID, Seo = item.Title.ToSeo() })">@item.Title</a>
-                    </div>
-                    <div>@Html.Raw(item.Synopsis.FormatString(100))</div>
-                    <ul class="list-unstyled list-inline">
-                        <li title="Status">
-                            <i class="fa fa-certificate"></i><a href="@Url.Action("Detail", "Tag", new { ID = ViewContext.RouteData.Values["ID"], Seo = (Model.TagType.Translate(R.TagType.Translate) + "-" + Model.Name + "-" + item.Status.Translate(R.TranslationStatus.Translate)).ToSeo() })">@Html.Raw(item.Status.Translate(R.TranslationStatus.Translate).FormatString())</a>
-                        </li>
-                        <li class="divider divider-pipe divider-black"></li>
-                        <li title="Updated Date"><i class="fa fa-calendar"></i>@item.UpdatedDate.FormatDate()</li>
-                    </ul>
-                </div>
-            </li>
-        }
-    </ul>
+            Data = Model.Series.Where(filterStatus).Select(s => new SeriesGrid
+            {
+                SeriesID = s.SeriesID,
+                Title = s.Title,
+                UpdatedDate = s.UpdatedDate,
+                Status = s.Status,
+                Synopsis = s.Synopsis,
+                ImageUrl = s.ImageUrl,
+                Group = null,
+                UserLists = new List<UserList>(),
+                Connectors = new List<Connector>(),
+                Releases = new List<Release>()
+            }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
+        });
+    }
 </section>

@@ -4,7 +4,7 @@
 }
 
 main {
-    min-height: 100%;
+    min-height: 800px;
     background: white;
 }
 
@@ -23,38 +23,6 @@ main {
 a {
     text-decoration: none !important;
 }
-
-
-/*.arrow_box {
-    position: relative;
-    background: #EFEFEF;
-    border: 1px solid #ccc;
-}
-
-    .arrow_box:after, .arrow_box:before {
-        top: 100%;
-        left: 50%;
-        border: solid transparent;
-        content: " ";
-        height: 0;
-        width: 0;
-        position: absolute;
-        pointer-events: none;
-    }
-
-    .arrow_box:after {
-        border-color: rgba(136, 183, 213, 0);
-        border-top-color: #EFEFEF;
-        border-width: 10px;
-        margin-left: -10px;
-    }
-
-    .arrow_box:before {
-        border-color: rgba(194, 225, 245, 0);
-        border-top-color: #ccc;
-        border-width: 11px;
-        margin-left: -11px;
-    }*/
 
 [data-marked] {
     display: none;

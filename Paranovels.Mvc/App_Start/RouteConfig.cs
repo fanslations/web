@@ -15,20 +15,7 @@ namespace Paranovels.Mvc
             routes.AppendTrailingSlash = true;
 
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
-            // for /m
-            routes.MapRoute(
-                name: "M",
-                url: "m",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
-                );
-            // for /mobile
-            routes.MapRoute(
-                name: "Mobile",
-                url: "mobile",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
-                );
-
+            
             // for seo 
             routes.MapRoute(
                 name: "SEO",
@@ -42,6 +29,18 @@ namespace Paranovels.Mvc
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
 
+            // for /m
+            routes.MapRoute(
+                name: "M",
+                url: "m",
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                );
+            // for /mobile
+            routes.MapRoute(
+                name: "Mobile",
+                url: "mobile",
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                );
         }
     }
 }

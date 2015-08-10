@@ -1,4 +1,5 @@
-﻿@using Paranovels.Common
+﻿@using System.Web.UI.WebControls
+@using Paranovels.Common
 @using Paranovels.DataModels
 @using Paranovels.ViewModels
 @using Thi.Core
@@ -32,7 +33,7 @@
         <div class="detail-group">
             <strong class="sr-only">Synopsis</strong>
             <div>
-                @Html.Raw(Model.Synopsis.FormatString(0,20, "No synopsis available. Click on 'Edit' to help us update it."))
+                @Html.Raw(Model.Synopsis.FormatString(0, 20, "No synopsis available. Click on 'Edit' to help us update it."))
                 @Html.ImproveThis(m => m.Synopsis)
             </div>
         </div>
@@ -41,6 +42,24 @@
             <div>
                 @Html.Raw(Model.Title)
                 @Html.ImproveThis(m => m.Title)
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Associated Titles</strong>
+            <div>
+                <ul class="list-unstyled no-margin">
+                    @Html.Raw(Model.Akas.Count > 0 ? "" : "This series has no associated title.")
+                    @foreach (var item in Model.Akas)
+                    {
+                        <li>
+                            <a href="@Url.Action("Detail", "Series", new { Model.ID, Seo = item.Text.ToSeo() })">@item.Text</a>
+                        </li>
+                    }
+                    <li>
+                        @Html.ImproveThis(m => m.Akas, customHtmlIcon: @"<i class=""fa fa-plus-circle""></i>Add associated title")
+                    </li>
+                </ul>
+
             </div>
         </div>
         <div class="detail-group">
@@ -83,14 +102,14 @@
                     var total = Model.Releases.Count(w => w.Date > DateTime.Now.AddDays(DAYS * -1));
                     var releaseFrequency = (double)DAYS / total;
                 }
-                @(releaseFrequency > 1 ? string.Format("About every {0:0.0} day(s) based on last {1} days", releaseFrequency, DAYS) : string.Format("About every {0:0.0} hours(s) based on last {1} days", releaseFrequency*24, DAYS))
+                @(releaseFrequency > 1 ? string.Format("About every {0:0.0} day(s) based on last {1} days", releaseFrequency, DAYS) : string.Format("About every {0:0.0} hours(s) based on last {1} days", releaseFrequency * 24, DAYS))
             </div>
         </div>
         <div class="detail-group">
             <strong>Day(s) of Release</strong>
             <div>
                 @{
-                    var daysOfRelease = Model.Releases.Where(w => w.Date > DateTime.Now.AddDays(DAYS * -1)).GroupBy(o=> o.Date.DayOfWeek).OrderByDescending(o=> o.Count()).Select(s=>s.Key).ToList();
+                    var daysOfRelease = Model.Releases.Where(w => w.Date > DateTime.Now.AddDays(DAYS * -1)).GroupBy(o => o.Date.DayOfWeek).OrderByDescending(o => o.Count()).Select(s => s.Key).ToList();
 
                 }
                 @string.Join(", ", daysOfRelease)
@@ -115,19 +134,19 @@
             </div>
         </div>
         @*<div class="detail-group">
-            <strong>Website</strong>
-            <div>
-                @if (string.IsNullOrWhiteSpace(Model.Url))
-                {
-                    Html.Raw(Model.Url.FormatString());
-                }
-                else
-                {
-                    <a href="@Model.Url" target="_blank">@Model.Url<i class="fa fa-external-link right"></i></a>
-                }
-                @Html.ImproveThis(m => m.Url)
-            </div>
-        </div>*@
+                <strong>Website</strong>
+                <div>
+                    @if (string.IsNullOrWhiteSpace(Model.Url))
+                    {
+                        Html.Raw(Model.Url.FormatString());
+                    }
+                    else
+                    {
+                        <a href="@Model.Url" target="_blank">@Model.Url<i class="fa fa-external-link right"></i></a>
+                    }
+                    @Html.ImproveThis(m => m.Url)
+                </div>
+            </div>*@
         <div class="detail-group">
             <strong>Rss Feed</strong>
             <div>
@@ -158,7 +177,7 @@
                 }
                 else
                 {
-                    @Html.Raw("".FormatString());
+                    @Html.Raw("Do you know who translated this series? Click on 'Edit' to help us update it.")
                 }
                 @Html.ImproveThis(m => m.GroupID)
             </div>
@@ -206,7 +225,7 @@
                     <i class="fa fa-comments"></i>@Model.Summarize.CommentCount comments
                 </div>
                 <div>
-                    <i class="fa fa-list-alt"></i>On @Model.UserLists.Count() lists
+                    <i class="fa fa-list-alt"></i>On @Model.Connectors.Count(w => w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.SourceID == Model.SeriesID) lists
                 </div>
             </div>
             <div class="info">
@@ -214,7 +233,7 @@
                     <i class="fa fa-rss"></i>@Model.Releases.Count() releases
                 </div>
                 <div>
-          
+
                 </div>
             </div>
         </div>
@@ -237,7 +256,7 @@
             {
                 <div role="tabpanel" class="tab-pane active" id="comments">
                     @{
-                        Html.RenderAction("Index", "Comment", new CommentCriteria {SourceID = Model.SeriesID, SourceTable = R.SourceTable.SERIES, Sorted = Request.QueryString["sorted"]});
+                Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.SeriesID, SourceTable = R.SourceTable.SERIES, Sorted = Request.QueryString["sorted"] });
                     }
                 </div>
             }
@@ -245,21 +264,21 @@
             {
                 <div role="tabpanel" class="tab-pane active section" id="releases">
                     @{
-                        Html.RenderPartial("~/Views/Release/_Release.cshtml", new PagedList<ReleaseGrid>
-                        {
-                            Data = Model.Releases.Select(s => new ReleaseGrid
-                            {
-                                ReleaseID = s.ReleaseID,
-                                Title = s.Title,
-                                Date = s.Date,
-                                Url = s.Url,
-                                Series = Model,
-                                Group = Model.Group,
-                                UserLists = new List<UserList>(),
-                                Connectors = new List<Connector>(),
-                                
-                            }).AsQueryable().Sort(new BaseCriteria {Sorted = Request.QueryString["sorted"]}).ToList()
-                        });
+                Html.RenderPartial("~/Views/Release/_Release.cshtml", new PagedList<ReleaseGrid>
+                {
+                    Data = Model.Releases.Select(s => new ReleaseGrid
+                    {
+                        ReleaseID = s.ReleaseID,
+                        Title = s.Title,
+                        Date = s.Date,
+                        Url = s.Url,
+                        Series = Model,
+                        Group = Model.Group,
+                        UserLists = new List<UserList>(),
+                        Connectors = new List<Connector>(),
+
+                    }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
+                });
                     }
                 </div>
             }

@@ -17,6 +17,7 @@
                 });
             });
         }
+
         var actionToggle = function () {
             $('.action.toggle').each(function () {
                 var $control = $(this);
@@ -147,6 +148,27 @@
             });
         };
 
+        var actionRead = function () {
+            $('.action.sticky').each(function () {
+                var $this = $(this);
+                var json = $this.data('sticky');
+                $this.on('click', function () {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/form/sticky',
+                        data: JSON.stringify(json), //$form.serialize(),
+                        dataType: 'json',
+                        contentType: 'application/json;charset=UTF-8',
+                        processData: false,
+                        //async: false,
+                        cache: false,
+                    }).done(function (responseData) {
+                        toastr["success"]("Successful!");
+                    });
+                });
+            });
+        };
+
         var actionConnect = function () {
             $('.action.connect').each(function () {
                 var $this = $(this);
@@ -163,7 +185,6 @@
                         cache: false,
                     }).done(function (responseData) {
                         toastr["success"]("Successful!");
-                        window.location.reload(true);
                     });
                 });
             });

@@ -107,7 +107,7 @@ namespace Paranovels.Facade
                         if (pendingUpdate.Connector.ConnectorType == R.ConnectorType.SERIES_FEED)
                         {
                             release.SeriesID = pendingUpdate.Connector.SourceID;
-                           var series = qSeries.FirstOrDefault(w => w.SeriesID == release.SeriesID);
+                            var series = qSeries.FirstOrDefault(w => w.SeriesID == release.SeriesID);
                             if (series != null)
                             {
                                 release.GroupID = series.GroupID;
@@ -130,10 +130,26 @@ namespace Paranovels.Facade
                             {
                                 release.SeriesID = series.SeriesID;
                             }
+                            else
+                            {
+                                var seriesIDs = qSeries.Where(w => w.GroupID == release.GroupID).Select(s => s.SeriesID).ToList();
+                                var akas = service.View<Aka>().Where(w => w.IsDeleted == false && w.SourceTable == R.SourceTable.SERIES && seriesIDs.Contains(w.SourceID)).ToList();
+                                var aka = akas.FirstOrDefault(w => release.Title.Contains(w.Text));
+                                if (aka != null)
+                                {
+                                    release.SeriesID = aka.SourceID;
+                                }
+                            }
                         }
 
                         release.Summary = "";
-                        releaseService.SaveChanges(release);
+                        release.Type = R.ReleaseType.CHAPTER;
+                        release.ReleaseID = releaseService.SaveChanges(release);
+
+                        if (release.SeriesID > 0)
+                        {
+                            new ListFacade().EmailNotifySubscriber(release);
+                        }
 
                         pendingUpdate.Feed.Total += 1;
                         newReleaseCount += 1;

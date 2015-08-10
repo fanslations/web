@@ -50,6 +50,13 @@
             </div>
         </div>
         <div class="detail-group">
+            <strong>Release Type</strong>
+            <div>
+                @Html.Raw(Model.Type.Translate(R.ReleaseType.Translate))
+                @Html.ImproveThis(m => m.Type)
+            </div>
+        </div>
+        <div class="detail-group">
             <strong>Series Title</strong>
             <div>
                 @if (Model.SeriesID > 0)
@@ -83,13 +90,13 @@
 <section class="section">
     <div class="content">
         <div class="toolbar clearfix">
-            <div class="read-it">
+            <div class="read-it animated bounceIn">
                 @{
-                    var autoAddListIDs = Model.UserLists.Where(w => w.IsDeleted == false && w.IsAutoAddWhenRead).Select(s=> s.UserListID).ToList();
+                    var autoAddListIDs = Model.UserLists.Where(w => w.IsDeleted == false && w.IsAutoAddWhenRead).Select(s => s.UserListID).ToList();
                     var inListIDs = Model.Connectors.Where(w => w.IsDeleted == false && w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.SourceID == Model.SeriesID).Select(s => s.TargetID).ToList();
                     // get list IDs that has 'IsAutoAddWhenRead' enabled but not already in list
                     var notInListIDs = autoAddListIDs.Except(inListIDs);
-                    
+
                 }
                 <a href="@Url.Action("Read", "Release", new { Model.ID, Model.Url, Seo = Model.Title.ToSeo(), SeriesID = Model.SeriesID, ListIDs = string.Join(",", notInListIDs) })" target="_blank"><i class="fa @(Model.UserAction.IsRead == true ? "fa-check-square-o" : "fa-arrow-right")"></i>Read It</a>
             </div>
@@ -131,12 +138,46 @@
                     <i class="fa fa-comments"></i>@Model.Summarize.CommentCount comments
                 </div>
                 <div>
-                    <i class="fa fa-list-alt"></i>On @Model.UserLists.Count() lists
+                    <i class="fa fa-list-alt"></i>On @Model.Connectors.Count(w => w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.SourceID == Model.SeriesID) lists
                 </div>
             </div>
         </div>
     </div>
 </section>
+@if (User.IsAdministrator())
+{
+    <section class="section">
+        <div class="content">
+            <div class="toolbar clearfix">
+                <div class="info">
+                    <div>
+                        @if (Model.Sticky.StickyID > 0 && Model.Sticky.IsDeleted == false)
+                        {
+                            <a role="button" class="action sticky" data-sticky='{ "StickyID": @Model.Sticky.StickyID, "SourceID": @Model.ID, "SourceTable": @R.SourceTable.RELEASE, "IsDeleted": true }' title="click to unpin"><i class="fa fa-thumb-tack color-red"></i>Pinned</a>
+                        }
+                        else
+                        {
+                            <a role="button" class="action sticky" data-sticky='{ "StickyID": @Model.Sticky.StickyID, "SourceID": @Model.ID, "SourceTable": @R.SourceTable.RELEASE }' title="click to pin"><i class="fa fa-thumb-tack"></i>Not pinned</a>
+                        }
+                    </div>
+                    <div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+@if (Model.Series.SeriesID > 0)
+{
+    <section class="section">
+        <div class="content text-center clearfix">
+            <a class="pull-left btn btn-success" href="@Url.Action("PreviousChapter", "Release", new {ID = Model.Series.SeriesID, Seo = Model.Series.Title.ToSeo(), Model.Date})"><i class="fa fa-arrow-circle-left"></i>Previous Chapter</a>
+            <a class="btn btn-success" href="@Url.Action("Detail", "Series", new {ID = Model.Series.SeriesID, Seo = Model.Series.Title.ToSeo(), Tab = "Releases"})">Table of Contents (All Releases)</a>
+            <a class="pull-right btn btn-success" href="@Url.Action("NextChapter", "Release", new {ID = Model.Series.SeriesID, Seo = Model.Series.Title.ToSeo(), Model.Date})">Next Chapter<i class="fa fa-arrow-circle-right right"></i></a>
+        </div>
+    </section>
+}
 <section class="section">
     <div class="content">
         <!-- Nav tabs -->

@@ -36,7 +36,7 @@ namespace Paranovels.Facade
                     var form = new UserForm
                     {
                         Username =  criteria.Username,
-                        Location = criteria.Username,
+                        //Location = criteria.Username,
                     };
                     var id = service.SaveChanges(form);
                     return GetAuthSession(criteria);
@@ -66,6 +66,8 @@ namespace Paranovels.Facade
                 detail.Preferences = service.View<UserPreference>().Where(w => w.UserID == detail.UserID).ToList();
 
                 detail.HideSeriesIDs = GetHiddenSeriesIDs(criteria);
+
+
 
                 return detail;
             }

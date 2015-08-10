@@ -83,6 +83,21 @@ namespace Paranovels.Facade
                         }
                     }
                 }
+                if (form.Akas != null || form.InlineEditProperty == form.PropertyName(m => m.Akas))
+                {
+                    var akaService = new AkaService(uow);
+                    foreach (var aka in form.Akas)
+                    {
+                        var akaForm = new AkaForm
+                        {
+                            ByUserID = form.ByUserID,
+                            SourceID = form.ID,
+                            SourceTable = R.SourceTable.SERIES
+                        };
+                        new PropertyMapper<Aka, AkaForm>(aka, akaForm).Map();
+                        var feedID = akaService.SaveChanges(akaForm);
+                    }
+                }
 
                 return id;
             }
@@ -116,9 +131,10 @@ namespace Paranovels.Facade
                 detail.Summarize = service.View<Summarize>().Where(w => w.SourceTable == R.SourceTable.SERIES && w.SourceID == detail.SeriesID).SingleOrDefault() ?? new Summarize();
 
                 // get data for user lists
-                detail.UserLists = service.View<UserList>().Where(w => w.IsDeleted == false && w.UserID == criteria.ByUserID).ToList();
-
                 detail.Connectors = service.View<Connector>().Where(w => w.IsDeleted == false && w.SourceID == detail.ID).ToList();
+
+                detail.UserLists = service.View<UserList>().Where(w => w.IsDeleted == false && w.UserID == criteria.ByUserID)
+                    .OrderBy(o => o.Priority == 0 ? int.MaxValue : o.Priority).ThenBy(o => o.Name).ToList();
 
                 detail.Releases = service.View<Release>().Where(w => w.SeriesID == detail.SeriesID).ToList();
 
@@ -132,6 +148,7 @@ namespace Paranovels.Facade
 
                 detail.UserAction = new UserActionFacade().Get(new ViewForm { UserID = criteria.ByUserID, SourceID = detail.SeriesID, SourceTable = R.SourceTable.SERIES });
 
+                detail.Akas = service.View<Aka>().Where(w=> w.IsDeleted == false && w.SourceID == detail.SeriesID && w.SourceTable == R.SourceTable.SERIES).ToList();
                 return detail;
             }
         }
@@ -151,12 +168,15 @@ namespace Paranovels.Facade
 
                 // get data for user lists
 
-                detail.UserLists = service.View<UserList>().Where(w => w.IsDeleted == false && w.UserID == criteria.ByUserID).ToList();
-
                 detail.Connectors = service.View<Connector>().Where(w => w.IsDeleted == false && w.SourceID == detail.SeriesID).ToList();
-                
+
+                detail.UserLists = service.View<UserList>().Where(w => w.IsDeleted == false && w.UserID == criteria.ByUserID)
+                    .OrderBy(o => o.Priority == 0 ? int.MaxValue : o.Priority).ThenBy(o => o.Name).ToList();
+
                 detail.UserAction = new UserActionFacade().Get(new ViewForm { UserID = criteria.ByUserID, SourceID = detail.SeriesID, SourceTable = R.SourceTable.RELEASE });
                 
+                detail.Sticky = service.View<Sticky>().Where(w=> w.SourceID == detail.ReleaseID && w.SourceTable == R.SourceTable.RELEASE).SingleOrDefault() ?? new Sticky();
+
                 return detail;
             }
         }

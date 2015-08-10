@@ -37,6 +37,9 @@
     <div id="add-container" class="form" style="@(Request.QueryString["do"] == "add" ? "display:block;" : "display:none;")">
         @{ var formModel = new SeriesForm(); }
         <form class="" method="POST" action="@Url.Action("Form")" data-form-ajax='{}'>
+            <div class="hidden">
+                <input type="hidden" name="@formModel.PropertyName(m=>m.Status)" value="@R.TranslationStatus.ACTIVE"/>
+            </div>
             <div class="form-group">
                 <label id="label-title" for="title">Title</label>
                 <input id="title" name="@formModel.PropertyName(m => m.Title)" type="text" class="form-control" placeholder="Enter title" aria-labelledby="label-title" required />
@@ -57,5 +60,5 @@
         }
     </div>
     @{ Html.RenderPartial("_SeriesGridPartial", Model); }
-    @Html.Raw(Model.ToPagination(Request.RawUrl, 0))
+    @Html.Raw(Model.ToPagination(Request.RawUrl, 5))
 </section>

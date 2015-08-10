@@ -73,6 +73,11 @@ namespace Paranovels.Services
                 };
                 qRelease = qRelease.Search(columns, c.Query.ToSearchKeywords()) as IQueryable<Release>;
             }
+            if (c.IDs != null)
+            {
+                qRelease = qRelease.Where(w => c.IDs.Contains(w.ReleaseID));
+            }
+
             //if (c.ByUserID > 0)
             //{
             //    var connectorTypes = new[] {R.ConnectorType.SERIES_TAGCATEGORY, R.ConnectorType.SERIES_TAGGENRE};

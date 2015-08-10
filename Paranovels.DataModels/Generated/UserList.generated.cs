@@ -1,4 +1,4 @@
-// This class was automatically generated with love by ST4bby 8/3/2015 12:14:25 AM.
+// This class was automatically generated with love by ST4bby 8/9/2015 3:28:52 PM.
 // Read more at http://jbubriski.github.com/ST4bby/
 
 namespace Paranovels.DataModels
@@ -43,6 +43,9 @@ namespace Paranovels.DataModels
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("ShareLevel", TypeName = "int"), Display(Name="Share Level")]
 		public int ShareLevel { get; set; }
 		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Priority", TypeName = "int"), Display(Name="Priority")]
+		public int Priority { get; set; }
+		
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Type", TypeName = "int"), Display(Name="Type")]
 		public int Type { get; set; }
 		
@@ -66,5 +69,8 @@ namespace Paranovels.DataModels
 		
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("IsAutoAddWhenRead", TypeName = "bit"), Display(Name="Is Auto Add When Read")]
 		public bool IsAutoAddWhenRead { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("IsEmailNotifyOfNewRelease", TypeName = "bit"), Display(Name="Is Email Notify Of New Release")]
+		public bool IsEmailNotifyOfNewRelease { get; set; }
 	}
 }

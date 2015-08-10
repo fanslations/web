@@ -12,12 +12,16 @@
         border-color: #2e6ca2 !important;
     }
 
-    .pagination > li > a {
+    .pagination > li > a, .pagination > li.dot span {
         color: #003478;
+        padding: 10px 5px !important;
+        text-align: center;
+        min-width: 30px;
     }
 
-        .pagination > li > a.active {
-            color: #ffffff;
+        .pagination > li.active a {
+            cursor: pointer !important;
+            color: #FFFFFF;
         }
 
 
@@ -27,23 +31,27 @@
         color: #ccc;
     }
 
-    .pagination li.previous {
+    .mobile .pagination li.previous {
         float: left;
+        
     }
 
-        .pagination li.previous a {
+        .mobile .pagination li.previous a {
             border-radius: 0 5px 5px 0;
             cursor: pointer !important;
         }
 
-    .pagination li.next {
+    .mobile .pagination li.next {
         float: right;
     }
 
-        .pagination li.next a {
+        .mobile .pagination li.next a {
             border-radius: 5px 0 0 5px;
             cursor: pointer !important;
         }
+    .mobile .pagination li.current, .mobile .pagination li.page, .mobile .pagination li.first, .mobile .pagination li.last, .mobile .pagination li.dot {
+        display: none !important;
+    }
 
     .pagination > li {
         display: inline-block !important;

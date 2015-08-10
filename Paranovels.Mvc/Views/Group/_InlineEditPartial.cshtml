@@ -15,10 +15,10 @@
                     <legend class="sr-only">Status</legend>
                     @foreach (var status in R.GroupStatus.Translate)
                     {
-                        <label class="radio-inline">
-                            <input id="status-@status.Key" type="radio" name="@Model.InlineEditProperty" value="@status.Key" required>
-                            @status.Value
-                        </label>
+                    <label class="radio-inline">
+                        <input id="status-@status.Key" type="radio" name="@Model.InlineEditProperty" value="@status.Key" required>
+                        @status.Value
+                    </label>
                     }
                 </fieldset>
             }
@@ -31,10 +31,8 @@
             }
             else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Name))
             {
-                <div class="form-group">
-                    <label for="@Model.InlineEditProperty" class="sr-only">@Model.InlineEditProperty</label>
-                    <input id="@Model.InlineEditProperty" type="text" class="form-control" name="@Model.InlineEditProperty" value="@Model.Model.Name" required />
-                </div>
+                <label for="@Model.InlineEditProperty" class="sr-only">@Model.InlineEditProperty</label>
+                <input id="@Model.InlineEditProperty" type="text" class="form-control" name="@Model.InlineEditProperty" value="@Model.Model.Name" required />
             }
             else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.About))
             {

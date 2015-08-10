@@ -74,17 +74,17 @@ namespace Thi.Core
             var lastPage = (int)Math.Ceiling(pageInfo.Config.TotalCount / (decimal)pageInfo.Config.PageSize);
             int adjacents = showPage / 2;
 
-            var paginationLabel = new
-            {
-                PageMOfN = "Page {0} of {1}",
-                First = "«First",
-                Previous = "‹Prev",
-                Next = "Next›",
-                Last = "Last»",
-                PerPage = "Shows {0}"
-            };
-            const string strCurrentPage = @"<li class=""active""><a>{0}</a></li>";
-            string strOtherPage = string.Format(@"<li><a href=""{0}"">{{0}}</a></li>", reqUrl.Replace("&", "&amp;"));
+            var paginationLabel = pageInfo.Label ?? new PagedListLabel();
+            // set default
+            paginationLabel.PageMOfN = paginationLabel.PageMOfN ?? "Page {0} of {1}";
+            paginationLabel.First = paginationLabel.First ?? "«First";
+            paginationLabel.Previous = paginationLabel.Previous ?? "‹Prev";
+            paginationLabel.Next = paginationLabel.Next ?? "Next›";
+            paginationLabel.Last = paginationLabel.Last ?? "Last»";
+            paginationLabel.PerPage = paginationLabel.PerPage ?? "{0} per page";
+        
+            const string strCurrentPage = @"<li class=""active current""><a>{0}</a></li>";
+            string strOtherPage = string.Format(@"<li class=""page""><a href=""{0}"">{{0}}</a></li>", reqUrl.Replace("&", "&amp;"));
             string strFirstPage = string.Format(@"<li class=""{{1}}""><a href=""{0}"">{1}</a></li>", reqUrl.Replace("&", "&amp;"), paginationLabel.First);
             string strPrevPage = string.Format(@"<li class=""{{1}}""><a href=""{0}"">{1}</a></li>", reqUrl.Replace("&", "&amp;"), paginationLabel.Previous);
             string strNextPage = string.Format(@"<li class=""{{1}}""><a href=""{0}"">{1}</a></li>", reqUrl.Replace("&", "&amp;"), paginationLabel.Next);
@@ -107,21 +107,40 @@ namespace Thi.Core
 </div>", jumpUrl.Replace("&", "&amp;"), pageInfo.Config.PageIndexKey);
                 //jumpHtml = "";
                 pagination += string.Format(@"<li class=""active""><a href=""#jumptopage""  class=""dropdown-switcher"" onclick=""$(this).parent().toggleClass('dropdown-open')"" title=""Jump to another page"">{0}<i class=""fa fa-sort-desc""></i></a>{1}</li>", string.Format(paginationLabel.PageMOfN, currentPage, lastPage), jumpHtml);
-                if (adjacents != 0)
-                {
-                    // first button
-                    pagination += string.Format(strFirstPage, 1, currentPage > 1 ? "active first" : "disabled first");
-                }
+
+                // first button
+                pagination += string.Format(strFirstPage, 1, currentPage > 1 ? "active first" : "disabled first");
+
                 // previous button
                 pagination += string.Format(strPrevPage, prevPage, currentPage > 1 ? "active previous" : "disabled previous");
 
                 // pages	
                 if (lastPage < 7 + (adjacents * 2))
                 {
-                    if (adjacents != 0)
+
+                    // not enough pages to bother breaking it up
+                    for (counter = 1; counter <= lastPage; counter++)
                     {
-                        // not enough pages to bother breaking it up
-                        for (counter = 1; counter <= lastPage; counter++)
+                        if (counter == currentPage)
+                        {
+                            pagination += string.Format(strCurrentPage, counter);
+                        }
+                        else
+                        {
+                            pagination += string.Format(strOtherPage, counter);
+                        }
+                    }
+
+                }
+                else if (lastPage > 5 + (adjacents * 2))
+                {
+
+                    // enough pages to hide some
+                    // close to beginning; only hide later pages
+                    if (currentPage < 1 + (adjacents * 2))
+                    {
+
+                        for (counter = 1; counter < 4 + (adjacents * 2); counter++)
                         {
                             if (counter == currentPage)
                             {
@@ -132,90 +151,64 @@ namespace Thi.Core
                                 pagination += string.Format(strOtherPage, counter);
                             }
                         }
+                        pagination += @"<li class=""dot""><span>...</span></li>";
+                        pagination += string.Format(strOtherPage, lastPage - 1);
+                        pagination += string.Format(strOtherPage, lastPage);
+
                     }
-                }
-                else if (lastPage > 5 + (adjacents * 2))
-                {
-                    if (adjacents != 0)
-                    {
-                        // enough pages to hide some
-                        // close to beginning; only hide later pages
-                        if (currentPage < 1 + (adjacents * 2))
-                        {
-                            if (adjacents != 0)
-                            {
-                                for (counter = 1; counter < 4 + (adjacents * 2); counter++)
-                                {
-                                    if (counter == currentPage)
-                                    {
-                                        pagination += string.Format(strCurrentPage, counter);
-                                    }
-                                    else
-                                    {
-                                        pagination += string.Format(strOtherPage, counter);
-                                    }
-                                }
-                                pagination += @"<li><span class=""no-style"">...</span></li>";
-                                pagination += string.Format(strOtherPage, lastPage - 1);
-                                pagination += string.Format(strOtherPage, lastPage);
-                            }
-                        }
-                    }
+
                     else if (lastPage - (adjacents * 2) > currentPage && currentPage > (adjacents * 2))
                     {
-                        if (adjacents != 0)
+
+                        // in middle; hide some front and some back
+                        pagination += string.Format(strOtherPage, 1);
+                        pagination += string.Format(strOtherPage, 2);
+                        pagination += @"<li class=""dot""><span>...</span></li>";
+                        for (counter = currentPage - adjacents; counter <= currentPage + adjacents; counter++)
                         {
-                            // in middle; hide some front and some back
-                            pagination += string.Format(strOtherPage, 1);
-                            pagination += string.Format(strOtherPage, 2);
-                            pagination += @"<li><span class=""no-style"">...</span></li>";
-                            for (counter = currentPage - adjacents; counter <= currentPage + adjacents; counter++)
+                            if (counter == currentPage)
                             {
-                                if (counter == currentPage)
-                                {
-                                    pagination += string.Format(strCurrentPage, counter);
-                                }
-                                else
-                                {
-                                    pagination += string.Format(strOtherPage, counter);
-                                }
+                                pagination += string.Format(strCurrentPage, counter);
                             }
-                            pagination += @"<li><span class=""no-style"">...</span></li>";
-                            pagination += string.Format(strOtherPage, lastPage - 1);
-                            pagination += string.Format(strOtherPage, lastPage);
+                            else
+                            {
+                                pagination += string.Format(strOtherPage, counter);
+                            }
                         }
+                        pagination += @"<li class=""dot""><span>...</span></li>";
+                        pagination += string.Format(strOtherPage, lastPage - 1);
+                        pagination += string.Format(strOtherPage, lastPage);
+
                     }
                     else
                     {
-                        if (adjacents != 0)
+
+                        // close to end; only hide early pages
+                        pagination += string.Format(strOtherPage, 1);
+                        pagination += string.Format(strOtherPage, 2);
+                        pagination += @"<li class=""dot""><span>...</span></li>";
+                        for (counter = lastPage - (2 + (adjacents * 2)); counter <= lastPage; counter++)
                         {
-                            // close to end; only hide early pages
-                            pagination += string.Format(strOtherPage, 1);
-                            pagination += string.Format(strOtherPage, 2);
-                            pagination += @"<li><span class=""no-style"">...</span></li>";
-                            for (counter = lastPage - (2 + (adjacents * 2)); counter <= lastPage; counter++)
+                            if (counter == currentPage)
                             {
-                                if (counter == currentPage)
-                                {
-                                    pagination += string.Format(strCurrentPage, counter);
-                                }
-                                else
-                                {
-                                    pagination += string.Format(strOtherPage, counter);
-                                }
+                                pagination += string.Format(strCurrentPage, counter);
+                            }
+                            else
+                            {
+                                pagination += string.Format(strOtherPage, counter);
                             }
                         }
+
                     }
                 }
 
                 // next button
                 pagination += string.Format(strNextPage, nextPage, currentPage < lastPage ? "active next" : "disabled next");
-                if (adjacents != 0)
-                {
-                    // last button
-                    pagination += string.Format(strLastPage, lastPage, currentPage < lastPage ? "active last" : "disabled last");
 
-                }
+                // last button
+                pagination += string.Format(strLastPage, lastPage, currentPage < lastPage ? "active last" : "disabled last");
+
+
                 // per page
                 var perPageUrl = reqUrl.UrlRemoveQuery(pageInfo.Config.PageIndexKey);
                 perPageUrl = perPageUrl.UrlRemoveQuery(pageInfo.Config.PageSizeKey);

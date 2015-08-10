@@ -1,39 +1,47 @@
-﻿header {
+﻿.header-mask {
+    position: absolute;
+        top: 0px;
+    margin: 0;
+    left: 0px;
+    width: 100% !important;
+        height: 64px;
+        background-image: linear-gradient(145deg, #1D1F20, #404348);
+    z-index: -1;
+}
+header {
     position: relative;
     top: 0px;
     margin: 0;
     left: 0px;
     width: 100% !important;
-    min-width: 943px;
     background-color: #1D1F20;
     background-image: linear-gradient(145deg, #1D1F20, #404348);
-    height: 64px;
     z-index: 9999;
-    /*box-shadow: 0px 2px 1px 0px rgba(0,0,0,0.3);*/
+    box-shadow: 0px 2px 1px 0px rgba(0,0,0,0.3);
 }
 
     header .global {
-        width: 970px;
+        width: 100%;
         margin: 0 auto;
     }
 
-        header .global ul {
+        header .global > ul {
             margin: 0;
             padding: 0;
             list-style: none;
         }
 
-        header .global li {
+        header .global > ul > li {
             display: inline-block;
         }
 
         header .global .global-left {
             float: left;
-            height: 60px;
+            height: 65px;
         }
 
         header .global .logo {
-            font-size: 1.8em !important;
+            font-size: 1.4em !important;
             font-weight: bold;
             color: #ffffff;
             padding: 0 !important;
@@ -46,29 +54,73 @@
             cursor: pointer;
         }
 
-        header .global li a {
+        header .global ul > li > a.menu {
             font-style: normal;
             font-weight: 600;
             font-size: 1em;
             padding: 0 10px;
             line-height: 64px;
             display: block;
-            color: white;
+            color: #ccc;
             text-decoration: none;
             position: relative;
         }
 
         header .global .global-right {
             float: right;
-            height: 60px;
+            height: 65px;
         }
 
+        .dropdown-hover {
+            position: relative;
+        }
+.dropdown-hover:hover > a:after {
+    content: "";
+    display: block;
+    border: 6px solid transparent;
+    border-bottom-color: #fff;
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    margin-left: -6px;
+    z-index: 999999;
+}
+   
+.dropdown-hover:hover .sub-container {
+    display: block;
+}
+
+.dropdown-hover .sub-container {
+    padding: 10px 20px;
+    border-radius: 0px 0px 5px 5px;
+    box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.15);
+    position: absolute;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-top: none;
+    display: none;
+    white-space: nowrap;
+}
+.dropdown-hover .sub-container a {
+
+}
+
 footer {
-    position: relative;
-    border-top: 2px solid darkblue;
-    padding: 10px;
-    color: #ffffff;
+   
+    position: absolute;
+    width: 100% !important;
+    margin: 0;
+    left: 0px;
+    border-top: 2px solid #1D1F20;
+    box-shadow: 0px -1px 1px 0px rgba(0,0,0,0.3);
+    color: #ccc;
     background-color: #1D1F20;
     background-image: linear-gradient(145deg, #1D1F20, #404348);
-    z-index: 9999;
+    z-index: 1;
+}
+footer .global {
+    width: 100%;
+    margin: 0 auto;
+    padding: 5px 10px;
 }

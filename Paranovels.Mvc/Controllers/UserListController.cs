@@ -45,7 +45,6 @@ namespace Paranovels.Mvc.Controllers
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
 
-            form.UserID = userID;
             if (!string.IsNullOrWhiteSpace(colorHex))
             {
                 form.Color = colorHex.ToColorInt();

@@ -7,7 +7,6 @@
 }
 <div id="@(Model.InlineEditProperty)Container" class="inline-editor">
     <form id="@(Model.InlineEditProperty)Form" method="post" action="@Url.Action("Form")" enctype="multipart/form-data">
-
         <div class="form-group">
             @if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Description))
             {
@@ -17,7 +16,31 @@
             else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Name))
             {
                 <label for="@Model.InlineEditProperty" class="sr-only">@Model.InlineEditProperty</label>
-                <input id="@Model.InlineEditProperty" class="form-control" name="@Model.InlineEditProperty" type="text" value="@Model.Model.Name" />
+                <input id="@Model.InlineEditProperty" class="form-control" name="@Model.InlineEditProperty" type="text" value="@Model.Model.Name" required />
+            }
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Icon))
+            {
+                <style type="text/css">
+                    input.hidden ~ span {
+                        cursor: pointer;
+                        opacity: 0.6;
+                    }
+                    input.hidden ~ span:hover {
+                        color: @Model.Model.Color.ToColorHex();
+                        opacity: 1 !important;
+                    }
+                    input.hidden:checked ~ span {
+                        color: @Model.Model.Color.ToColorHex();
+                        opacity: 1 !important;
+                    }
+                </style>
+                for (int i = Convert.ToInt32("000", 16); i < Convert.ToInt32("281", 16); i++)
+                {
+                    <label>
+                        <input class="hidden" name="@Model.InlineEditProperty" type="radio" value="@i" />
+                        <span class="fa">&#xf@(Convert.ToString(i, 16).PadLeft(3, '0'));</span>
+                    </label>
+                }
             }
         </div>
         <div class="hidden">

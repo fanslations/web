@@ -71,6 +71,7 @@
     <Compile Include="FacadeFactory.cs" />
     <Compile Include="GlossaryFacade.cs" />
     <Compile Include="ListFacade.cs" />
+    <Compile Include="GenericFacade.cs" />
     <Compile Include="SearchFacade.cs" />
     <Compile Include="FeedFacade.cs" />
     <Compile Include="GroupFacade.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="CommentFacade.cs" />
     <Compile Include="ConnectorFacade.cs" />
     <Compile Include="SpamReportFacade.cs" />
+    <Compile Include="AkaFacade.cs" />
     <Compile Include="UserFacade.cs" />
     <Compile Include="NovelFacade.cs" />
     <Compile Include="TranslatorFacade.cs" />

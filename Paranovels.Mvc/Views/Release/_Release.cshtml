@@ -11,6 +11,9 @@
         Sorted = Request.QueryString["sorted"] ?? "new",
         SortOptions = Model.Data.AsQueryable().SortOptions()
     };
+
+    var stickyDatas = Model.Data.Where(w => w.IsSticky).ToList();
+    var datas = Model.Data.Where(w => w.IsSticky == false).ToList();
 }
 
 @helper DisplayGrid(ReleaseGrid item, string cssClass = "row-list")
@@ -41,6 +44,10 @@
                 }*@
         </div>
         <div class="col-content">
+            @if (item.IsSticky)
+            {
+                <i class="fa fa-thumb-tack color-red pull-right" title="pinned"></i>
+            }
             <div>
                 @foreach (var list in item.UserLists ?? new List<UserList>())
                 {
@@ -49,25 +56,18 @@
                         var connector = item.Connectors.SingleOrDefault(w => w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.SourceID == item.SeriesID && w.TargetID == list.UserListID);
                         if (connector != null && connector.IsDeleted == false)
                         {
-                            <span style="@(list.IsColorIcon ? string.Format("color:{0};", list.Color.ToColorHex()) : "")" title="this indicated that it in your @list.Name">@Html.Raw(list.Type.Translate(R.ListType.Translate))</span>
+                            <span class="fa animated bounce no-margin" style="@(list.IsColorIcon ? string.Format("color:{0};", list.Color.ToColorHex()) : "")" title="this indicated that it in your @list.Name">&#xf@(Convert.ToString(list.Icon, 16).PadLeft(3, '0'));</span>
                         }
                     }
                 }
-                @if (item.CommentCount.HasValue)
-                {
-                    <a href="@Url.Action("Read", "Release", new {ID = item.ReleaseID, Url = item.Url, Seo = item.Title.ToSeo()})" class="fs-12em">@item.Title</a>
-                }
-                else
-                {
-                    <a href="@Url.Action("Detail", "Release", new {ID = item.ReleaseID, Seo = item.Title.ToSeo()})" class="fs-12em">@item.Title</a>
-                }
+                <a href="@Url.Action("Detail", "Release", new {ID = item.ReleaseID, Seo = item.Title.ToSeo()})" class="fs-12em">@item.Title</a>
                 @if (item.Series == null)
                 {
                     @item.ImproveThis(m => m.Title, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Release") } })
                 }
             </div>
             <ul class="list-unstyled list-inline fs-09em">
-                <li title="Release Date"><i class="fa fa-clock-o"></i><time class="timeago" datetime="@item.Date">@item.Date</time></li>
+                <li title="Release Date"><i class="fa fa-clock-o"></i><time class="timeago" datetime="@item.Date.ToString("u")">@item.Date.ToString("u")</time></li>
                 @if (item.QualityRated.HasValue)
                 {
                     <li title="Comments">
@@ -106,42 +106,50 @@
 
     if (shouldGroupByDate)
     {
-        foreach (var date in Model.Data.GroupBy(g => g.Date.Date).Select(s => s.Key))
-        {
-            var dateItems = Model.Data.Where(w => w.Date.Date == date).ToList();
+        <ul class="grid">
+            @foreach (var item in stickyDatas)
+            {
+                @DisplayGrid(item)
+            }
+            @foreach (var date in datas.GroupBy(g => g.Date.Date).Select(s => s.Key))
+            {
+                var dateItems = datas.Where(w => w.Date.Date == date).ToList();
 
-            <div class="subheader @(date == DateTime.Now.Date ? "hidden" : "")">
-                <h2 class="title">@date.ToLongDateString()</h2>
-            </div>
-            <ul class="grid">
-                @foreach (var item in dateItems.Where(w => w.IsRead != true && !session.HiddenSeriesIDs.Contains(w.SeriesID)))
-                {
-                    @DisplayGrid(item);
-                }
+                <li class="row-list @(date == DateTime.Now.Date ? "hidden" : "")">
+                    <strong class="color-green">@date.ToLongDateString()</strong>
+                </li>
 
-                @if (dateItems.Any(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)))
+                foreach (var item in dateItems.Where(w => w.IsRead != true && !session.HiddenSeriesIDs.Contains(w.SeriesID)))
                 {
-                    <li id="view-mores@(date.ToString("ddMMyyyy"))" class="row-mores">
-                        <a role="button" class="" onclick="$('.already-read@(date.ToString("ddMMyyyy"))').removeClass('hidden'); $('#view-mores@(date.ToString("ddMMyyyy"))').addClass('hidden');" href="javascript:;">
-                            <i class="fa fa-history"></i>@Model.Data.Where(w => w.Date.Date == date).Count(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)) release(s) hidden. <strong>Click to View</strong>
-                        </a>
-                    </li>
-                }
-                @foreach (var item in dateItems.Where(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)))
-                {
-                    @DisplayGrid(item, "row-list hidden opacity-05 already-read" + date.ToString("ddMMyyyy"));
-                }
-            </ul>
-        }
+                     @DisplayGrid(item)
+                 }
+                if (dateItems.Any(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)))
+                 {
+                     <li id="view-mores@(date.ToString("ddMMyyyy"))" class="row-mores">
+                         <a role="button" class="" onclick="$('.already-read@(date.ToString("ddMMyyyy"))').removeClass('hidden'); $('#view-mores@(date.ToString("ddMMyyyy"))').addClass('hidden');" href="javascript:;">
+                             <i class="fa fa-history"></i>@Model.Data.Where(w => w.Date.Date == date).Count(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)) release(s) hidden. <strong>Click to View</strong>
+                         </a>
+                     </li>
+                 }
+                foreach (var item in dateItems.Where(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)))
+                 {
+                     @DisplayGrid(item, "row-list hidden opacity-05 already-read" + date.ToString("ddMMyyyy"))
+                 }
+            }
+        </ul>
     }
     else
     {
         <ul class="grid">
-            @foreach (var item in Model.Data.Where(w => w.IsRead == false && !session.HiddenSeriesIDs.Contains(w.SeriesID)))
+            @foreach (var item in stickyDatas)
             {
-                @DisplayGrid(item);
+                @DisplayGrid(item)
             }
-            @if (Model.Data.Any(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)))
+            @foreach (var item in datas.Where(w => w.IsRead == false && !session.HiddenSeriesIDs.Contains(w.SeriesID)))
+            {
+                @DisplayGrid(item)
+            }
+            @if (datas.Any(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)))
             {
                 <li id="view-mores" class="row-mores">
                     <a role="button" class="" onclick="$('.already-read').removeClass('hidden'); $('#view-mores').addClass('hidden');" href="javascript:;">
@@ -149,9 +157,9 @@
                     </a>
                 </li>
             }
-            @foreach (var item in Model.Data.Where(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)))
+            @foreach (var item in datas.Where(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)))
             {
-                @DisplayGrid(item, "row-list hidden opacity-05 already-read");
+                @DisplayGrid(item, "row-list hidden opacity-05 already-read")
             }
         </ul>
     }

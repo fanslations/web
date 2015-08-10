@@ -12,7 +12,7 @@
 
     // Required settings:
     string NameSpaceName                = @"Paranovels.DataModels";
-    string ServerName                   = @"database.fanslations.com";
+    string ServerName                   = @"mssql.fanslations.com";
     string DatabaseName                 = @"Thi";
 
     // If you want to use sql authentication fill out these two variables...

@@ -131,11 +131,11 @@
         <div class="toolbar clearfix">
             <div class="vote-score">
                 <div class="vote @(Model.UserAction.Voted.GetValueOrDefault() == 1 ? "likes" : Model.UserAction.Voted.GetValueOrDefault() == -1 ? "dislikes" : "")">
-                    <span role="button" class="action vote-up" data-vote='{"SourceID": @Model.ID, "SourceTable": @R.SourceTable.SERIES, "Vote": 1}' title="i like this"><i class="fa fa-thumbs-up"></i></span>
+                    <span role="button" class="action vote-up" data-vote='{"SourceID": @Model.ID, "SourceTable": @R.SourceTable.GROUP, "Vote": 1}' title="i like this"><i class="fa fa-thumbs-up"></i></span>
                     <span class="score @((Model.Summarize.VoteUp - Model.Summarize.VoteDown) < 0 ? "dislikes" : "likes")">
                         @(Model.Summarize.VoteUp - Model.Summarize.VoteDown)
                     </span>
-                    <span role="button" class="action vote-down" data-vote='{"SourceID": @Model.ID, "SourceTable": @R.SourceTable.SERIES, "Vote": -1}' title="i dislike this"><i class="fa fa-thumbs-down"></i></span>
+                    <span role="button" class="action vote-down" data-vote='{"SourceID": @Model.ID, "SourceTable": @R.SourceTable.GROUP, "Vote": -1}' title="i dislike this"><i class="fa fa-thumbs-down"></i></span>
                 </div>
             </div>
             <div class="info">

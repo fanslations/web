@@ -138,7 +138,8 @@
             <div class="detail-group">
                 <strong>Icon</strong>
                 <div>
-                    <span id="icon" style="@(Model.IsColorIcon ? string.Format("color:{0};", Model.Color.ToColorHex()) : "")">@Html.Raw(Model.Type.Translate(R.ListType.Translate))</span> (custom icon coming soon)
+                    <span id="icon" class="fa" style="@(Model.IsColorIcon ? string.Format("color:{0};", Model.Color.ToColorHex()) : "")">&#xf@(Convert.ToString(Model.Icon, 16).PadLeft(3, '0'));</span>
+                    @Html.ImproveThis(m=> m.Icon)
                 </div>
             </div>
             <div class="detail-group">
@@ -193,7 +194,7 @@
                         <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.IsColorIcon)" />
                         <label class="no-bold">
                             <input name="@Model.PropertyName(m=>m.IsColorIcon)" class="submit" type="checkbox" value="true" checked="@(Model.IsColorIcon)" />
-                            Apply color to icon
+                            Use color icon
                         </label>
                     </form>
                 </div>
@@ -250,7 +251,21 @@
                         <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m => m.IsNotifyOfNewRelease)" />
                         <label class="no-bold">
                             <input name="@Model.PropertyName(m => m.IsNotifyOfNewRelease)" class="submit" type="checkbox" value="true" checked="@(Model.IsNotifyOfNewRelease)" />
-                            Notify me when there is a new releases (coming soon)
+                            Show notification of new releases for series in this list
+                        </label>
+                    </form>
+                </div>
+            </div>
+            <div class="detail-group">
+                <strong></strong>
+                <div>
+                    <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                        <input type="hidden" name="ID" value="@Model.ID" />
+                        <input type="hidden" name="UserID" value="@Model.UserID" />
+                        <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m => m.IsNotifyOfNewRelease)" />
+                        <label class="no-bold">
+                            <input name="@Model.PropertyName(m => m.IsNotifyOfNewRelease)" class="submit" type="checkbox" value="true" checked="@(Model.IsNotifyOfNewRelease)" />
+                            Email new releases for series in this list <small>(Will email to @session.Email<a class="fa fa-edit right" href="@Url.Action("Profile","User", new { ID = session.UserID, Seo = session.Username.ToSeo() })"></a>)</small>
                         </label>
                     </form>
                 </div>
@@ -262,7 +277,7 @@
     </div>
     <div class="content">
         <p class="alert alert-info">
-            Series or Releases that in @Model.Name @(Model.IsPlaceInFrontOfTitle ? "will" : "will NOT") have an icon <span style="@(Model.IsColorIcon ? string.Format("color:{0};", Model.Color.ToColorHex()) : "")">@Html.Raw(Model.Type.Translate(R.ListType.Translate))</span> in front of the title.
+            Series or Releases that in @Model.Name @(Model.IsPlaceInFrontOfTitle ? "will" : "will NOT") have an icon <span class="fa" style="@(Model.IsColorIcon ? string.Format("color:{0};", Model.Color.ToColorHex()) : "")">&#xf@(Convert.ToString(Model.Icon, 16).PadLeft(3, '0'));</span> in front of the title.
             <a class="alert-link action toggle" role="button" data-toggle='{ "target":"#settings" }'>Click <i class="fa fa-gear"></i> to change list settings.</a>
         </p>
     </div>

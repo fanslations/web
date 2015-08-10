@@ -4,7 +4,7 @@
 @model Paranovels.ViewModels.BaseCriteria
 
 <div id="search-container" class="form" style="@((!string.IsNullOrWhiteSpace(Model.Query) || Request.QueryString["do"] == "search") ? "display:block;" : "display:none;")">
-    <form class="form-horizontal no-margin" role="search" method="GET">
+    <form class="form-horizontal no-margin" method="GET">
         @foreach (var hiddenField in Model.HiddenFields ?? new Dictionary<string, string>())
         {
             <input type="hidden" name="@hiddenField.Key" value="@hiddenField.Value" />

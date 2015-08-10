@@ -31,12 +31,40 @@ namespace Paranovels.Mvc.Controllers
             return View(detail);
         }
 
+        public ActionResult NextChapter(SeriesCriteria criteria, DateTime? date)
+        {
+            if (date.HasValue)
+            {
+                var detail = Facade<SeriesFacade>().GetSeries(criteria);
+                var release = detail.Releases.OrderBy(o => o.Date).FirstOrDefault(w => w.Date > date.Value);
+                if (release == null)
+                    return View(detail);
+
+                return RedirectPermanent(Url.Action("Detail", "Release", new { ID = release.ReleaseID, Seo = release.Title.ToSeo() }));
+            }
+            return null;
+        }
+
+        public ActionResult PreviousChapter(SeriesCriteria criteria, DateTime? date)
+        {
+            if (date.HasValue)
+            {
+                var detail = Facade<SeriesFacade>().GetSeries(criteria);
+                var release = detail.Releases.OrderByDescending(o => o.Date).FirstOrDefault(w => w.Date < date.Value);
+                if (release == null)
+                    return View(detail);
+
+                return RedirectPermanent(Url.Action("Detail", "Release", new { ID = release.ReleaseID, Seo = release.Title.ToSeo() }));
+            }
+            return null;
+        }
+
         public RedirectResult Out(int id, string url)
         {
             return RedirectPermanent(url);
         }
 
-        public RedirectResult Read(int id, string url, int seriesID, IList<int> listIDs)
+        public RedirectResult Read(int id, string url, int seriesID = 0, IList<int> listIDs = null)
         {
             var session = UserSession;
             // mark as read
@@ -58,7 +86,7 @@ namespace Paranovels.Mvc.Controllers
                     Facade<ConnectorFacade>().AddConnector(form);
                 }
             }
-            
+
             return RedirectPermanent(url);
         }
 

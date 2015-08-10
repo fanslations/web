@@ -50,6 +50,6 @@
         </form>
     </div>
     @{ Html.RenderPartial("_Release", Model); }
-    @Html.Raw(Model.ToPagination(Request.RawUrl, 0))
+    @Html.Raw(Model.ToPagination(Request.RawUrl, 5))
 </section>
 

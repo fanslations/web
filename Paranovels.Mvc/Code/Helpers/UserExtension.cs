@@ -18,5 +18,13 @@ namespace Paranovels.Mvc
             criteria.Username = user.Identity.IsAuthenticated ? user.Identity.GetUserName() : WebHelper.GetClientIpAddress();
             return new UserFacade().GetAuthSession(criteria);
         }
+
+        public static bool IsAdministrator(this IPrincipal user)
+        {
+            if (!user.Identity.IsAuthenticated) return false;
+
+            var admins = new[] {"Fanslations","Google", "Twiter", "Facebook", "Microsoft"};
+            return admins.Contains(user.Identity.Name);
+        }
     }
 }

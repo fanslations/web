@@ -19,33 +19,33 @@ namespace Paranovels.Services
 
         public int SaveChanges(SeriesForm form)
         {
-            var tTranslationScene = Table<Series>();
+            var tSeries = Table<Series>();
 
-            var translationScene = tTranslationScene.GetOrAdd(w => w.SeriesID == form.SeriesID);
-            UpdateAuditFields(translationScene, form.ByUserID);
-            MapProperty(form, translationScene, form.InlineEditProperty);
+            var series = tSeries.GetOrAdd(w => w.SeriesID == form.SeriesID);
+            UpdateAuditFields(series, form.ByUserID);
+            MapProperty(form, series, form.InlineEditProperty);
             // save
             SaveChanges();
 
-            return translationScene.SeriesID;
+            return series.SeriesID;
         }
 
         public SeriesDetail Get(SeriesCriteria criteria)
         {
-            var qTranslationScene = View<Series>().All();
+            var qSeries = View<Series>().All();
 
             if (criteria.IDToInt > 0)
             {
-                qTranslationScene = qTranslationScene.Where(w => w.SeriesID == criteria.IDToInt);
+                qSeries = qSeries.Where(w => w.SeriesID == criteria.IDToInt);
             }
 
-            var translationScene = qTranslationScene.SingleOrDefault();
-            if (translationScene == null) return null;
+            var series = qSeries.SingleOrDefault();
+            if (series == null) return null;
 
-            var translationSceneDetail = new SeriesDetail();
-            MapProperty(translationScene, translationSceneDetail);
+            var detail = new SeriesDetail();
+            MapProperty(series, detail);
 
-            return translationSceneDetail;
+            return detail;
         }
 
         public PagedList<SeriesGrid> Search(SearchModel<SeriesCriteria> searchModel)

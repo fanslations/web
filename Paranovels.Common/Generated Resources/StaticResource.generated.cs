@@ -71,24 +71,6 @@ namespace Paranovels.Common //.Generated Resources
 			public const int DARK_BLUE = 2;
 				
 			/// <summary>
-			/// color: darkgreen;
-			/// </summary>
-			[Description("color: darkgreen;")]
-			public const int DARK_GREEN = 3;
-				
-			/// <summary>
-			/// color: darkorange;
-			/// </summary>
-			[Description("color: darkorange;")]
-			public const int DARK_ORANGE = 5;
-				
-			/// <summary>
-			/// color: darkpink;
-			/// </summary>
-			[Description("color: darkpink;")]
-			public const int DARK_PINK = 4;
-				
-			/// <summary>
 			/// color: darkred;
 			/// </summary>
 			[Description("color: darkred;")]
@@ -98,12 +80,6 @@ namespace Paranovels.Common //.Generated Resources
 			public const string ClassName = "ColorX";
 			public static readonly Dictionary<int,string> Translate = new Dictionary<int,string> {
 												{2,"color: darkblue;"},
-							
-												{3,"color: darkgreen;"},
-							
-												{5,"color: darkorange;"},
-							
-												{4,"color: darkpink;"},
 							
 												{1,"color: darkred;"},
 							
@@ -574,6 +550,40 @@ namespace Paranovels.Common //.Generated Resources
 												{2,"Category Preferences"},
 							
 												{1,"Genre Preferences"},
+							
+						}; // end translate dictionary
+        }	
+        /// <summary>
+        /// ReleaseType auto generated class.
+        /// </summary>
+        public partial class ReleaseType 
+        {		
+			/// <summary>
+			/// Chapter
+			/// </summary>
+			[Description("Chapter")]
+			public const int CHAPTER = 100;
+				
+			/// <summary>
+			/// News
+			/// </summary>
+			[Description("News")]
+			public const int NEWS = 200;
+				
+			/// <summary>
+			/// Other
+			/// </summary>
+			[Description("Other")]
+			public const int OTHER = 900;
+				
+			
+			public const string ClassName = "ReleaseType";
+			public static readonly Dictionary<int,string> Translate = new Dictionary<int,string> {
+												{100,"Chapter"},
+							
+												{200,"News"},
+							
+												{900,"Other"},
 							
 						}; // end translate dictionary
         }	

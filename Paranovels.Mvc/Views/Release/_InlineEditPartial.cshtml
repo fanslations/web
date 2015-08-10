@@ -7,9 +7,10 @@
 }
 <div id="@(Model.InlineEditProperty)Container" class="inline-editor">
     <form id="@(Model.InlineEditProperty)Form" method="post" action="@Url.Action("Form")" enctype="multipart/form-data">
-        @if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.GroupID))
-        {
-            <script>
+        <div class="form-group">
+            @if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.GroupID))
+            {
+                <script>
 
                 //window.pnHooks.push(function () {
                 require(['jquery', 'selectize'], function ($, selectize) {
@@ -45,14 +46,13 @@
                     });
                 });
                 //});
-            </script>
-            <label for="groupid" class="sr-only">Select Translations Group</label>
-            <select id="groupid" name="@Model.InlineEditProperty" placeholder="Select Group" required></select>
-
-        }
-        else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.SeriesID))
-        {
-            <script>
+                </script>
+                <label for="groupid" class="sr-only">Select Translations Group</label>
+                <select id="groupid" name="@Model.InlineEditProperty" placeholder="Select Group" required></select>
+            }
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.SeriesID))
+            {
+                <script>
 
                 //window.pnHooks.push(function () {
                 require(['jquery', 'selectize'], function ($, selectize) {
@@ -87,40 +87,51 @@
                     });
                 });
                 //});
-            </script>
-            <label for="seriesid" class="sr-only">Select Series</label>
-            <select id="seriesid" name="@Model.InlineEditProperty" placeholder="Select Series" required></select>
-
-        }
-        else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Title))
-        {
-            <div class="form-group">
+                </script>
+                <label for="seriesid" class="sr-only">Select Series</label>
+                <select id="seriesid" name="@Model.InlineEditProperty" placeholder="Select Series" required></select>
+            }
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Title))
+            {
                 <label for="@Model.InlineEditProperty" class="sr-only">@Model.InlineEditProperty</label>
                 <input id="@Model.InlineEditProperty" type="text" class="form-control" name="@Model.InlineEditProperty" value="@Model.Model.Title" required />
-            </div>
-        }
-        else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Url))
-        {
-            <div class="form-group">
+            }
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Url))
+            {
+
                 <label for="@Model.InlineEditProperty" class="sr-only">@Model.InlineEditProperty</label>
                 <input id="@Model.InlineEditProperty" type="url" class="form-control" name="@Model.InlineEditProperty" value="@Model.Model.Url" required />
-            </div>
-        }
-        else
-        {
-            <div class="form-group">
+
+            }
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Type))
+            {
+                <fieldset class="form-control">
+                    <legend class="sr-only">Release Type</legend>
+                    @foreach (var item in R.ReleaseType.Translate)
+                    {
+                        <div class="radio">
+                            <label>
+                                <input id="type-@item.Key" type="radio" name="@Model.InlineEditProperty" value="@item.Key" checked="@(Model.Model.Type == item.Key)" required />
+                                @item.Value
+                            </label>
+                        </div>
+                    }
+                </fieldset>
+            }
+            else
+            {
                 <label for="@Model.InlineEditProperty" class="sr-only">@Model.InlineEditProperty</label>
                 <input id="@Model.InlineEditProperty" type="text" class="form-control" name="@Model.InlineEditProperty" required />
-            </div>
-        }
+            }
+        </div>
         <div class="hidden">
             <input type="hidden" name="ID" value="@Model.ID" />
             <input type="hidden" name="InlineEditProperty" value="@Model.InlineEditProperty" />
         </div>
         <div class="form-group clearfix">
-            <button id="@(Model.InlineEditProperty)Submit" type="submit" class="btn btn-primary col-xs-7"><i class="fa fa-save"></i>Save</button>
+            <button id="@(Model.InlineEditProperty)Submit" type="submit" class="btn btn-primary"><i class="fa fa-save"></i>Save</button>
 
-            <button id="@(Model.InlineEditProperty)Cancel" type="button" class="btn btn-default col-xs-4 col-xs-offset-1"><i class="fa fa-times-circle"></i>Cancel</button>
+            <button id="@(Model.InlineEditProperty)Cancel" type="button" class="btn btn-default"><i class="fa fa-times-circle"></i>Cancel</button>
         </div>
     </form>
 </div>

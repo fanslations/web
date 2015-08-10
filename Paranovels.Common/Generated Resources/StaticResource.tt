@@ -16,7 +16,7 @@
     string tableName = "StaticResource"; 
     string orderBy= "ClassName, PropertyName";
     string path = Path.GetDirectoryName(Host.TemplateFile);
-    string connectionString = "Data Source=database.fanslations.com;Initial Catalog=Thi;Persist Security Info=True;User ID=thi;Password=a31081804;MultipleActiveResultSets=True"; 
+    string connectionString = "Data Source=mssql.fanslations.com;Initial Catalog=Thi;Persist Security Info=True;User ID=thi;Password=a31081804;MultipleActiveResultSets=True"; 
 	
 	var translateDatas = new List<TranslateData>();
     

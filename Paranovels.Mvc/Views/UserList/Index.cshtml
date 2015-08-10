@@ -26,15 +26,45 @@
                     Your Lists
                 </h2>
             </div>
+            <script>
+                window.pnHooks = window.pnHooks || [];
+                window.pnHooks.push(function () {
+                    require(['jquery', 'sortable'], function ($, sortable) {
+                        $('.sortable').sortable({
+                            sortableClass: 'row-list fade'
+                        }).bind('sortupdate', function (e, ui) {
+                            var form = ui.item.data('form');
+                            form.Priority = ui.index + 1;
+                            $.ajax({
+                                type: 'post',
+                                url: '@Url.Action("Form", "UserList")',
+                                data: JSON.stringify(form), //$form.serialize(),
+                                dataType: 'json',
+                                contentType: 'application/json;charset=UTF-8',
+                                processData: false,
+                                async: true,
+                                cache: false,
+                                success: function (data) {}
+                            });
+                        });
 
-            <ul class="grid">
+                    });
+                });
+            </script>
+            <style type="text/css">
+                .sortable-placeholder, .sortable-dragging {
+                    height: 61px;
+                    border: 1px orange dotted;
+                }
+            </style>
+            <ul class="grid sortable">
                 @foreach (var item in Model.Data)
                 {
-                    <li class="row-list">
+                    <li data-form='{ "ID":@item.ID, "UserID":@item.UserID, "InlineEditProperty":"Priority", "Priority": @item.Priority}' class="row-list">
                         <div class="col-content">
                             <strong>
                                 <a href="@Url.Action("Detail", new{ ID = item.UserListID, Seo = item.Name.ToSeo() })">
-                                    <span style="color: @(item.Color.ToColorHex());">@Html.Raw(item.Type.Translate(R.ListType.Translate))</span>@item.Name
+                                    <span class="fa" style="color: @(item.Color.ToColorHex());">&#xf@(Convert.ToString(item.Icon, 16).PadLeft(3, '0'));</span>@item.Name
                                 </a>
                             </strong>
                             <p>@Html.Raw(item.Description.FormatString())</p>
@@ -43,7 +73,7 @@
 
                 }
             </ul>
-            @Html.Raw(Model.ToPagination(Request.RawUrl, 0))
+            <div class="alert alert-info no-margin">You can sort your lists by dragging to the desired location. <small>(Move the list up/down will fixed the issue when two lists has the same order.)</small></div>
         </section>
     </div>
     <div id="list-templates" class="content">
@@ -72,6 +102,7 @@
                                 <input type="hidden" name="@formModel.PropertyName(m=>m.Description)" value="@item.Description" />
                                 <input type="hidden" name="@formModel.PropertyName(m=>m.ShareLevel)" value="@item.ShareLevel" />
                                 <input type="hidden" name="@formModel.PropertyName(m=>m.Type)" value="@item.Type" />
+                                <input type="hidden" name="@formModel.PropertyName(m=>m.Icon)" value="@item.Icon" />
                                 <input type="hidden" name="@formModel.PropertyName(m=>m.Color)" value="@item.Color" />
                                 <input type="hidden" name="@formModel.PropertyName(m=>m.IsColorIcon)" value="@item.IsColorIcon" />
                                 <input type="hidden" name="@formModel.PropertyName(m=>m.IsAutoAddWhenRead)" value="@item.IsAutoAddWhenRead" />
@@ -79,7 +110,7 @@
                                 <input type="hidden" name="@formModel.PropertyName(m=>m.IsNotifyOfNewRelease)" value="@item.IsNotifyOfNewRelease" />
                                 <input type="hidden" name="@formModel.PropertyName(m=>m.IsPlaceInFrontOfTitle)" value="@item.IsPlaceInFrontOfTitle" />
                             </div>
-                            <button type="submit" class="btn btn-primary">@Html.Raw(item.Type.Translate(R.ListType.Translate))Activate List</button>
+                            <button type="submit" class="btn btn-primary"><i class="fa">&#xf@(Convert.ToString(item.Icon, 16).PadLeft(3, '0'));</i>Activate List</button>
                         </form>
                     </div>
                 </li>
@@ -92,7 +123,7 @@
 
                     </div>
                     <div class="col-image">
-                        <button type="button" class="btn btn-primary action toggle" data-toggle='{ "target":"#custom-list"}'>@Html.Raw(R.ListType.CUSTOM.Translate(R.ListType.Translate))Custom List</button>
+                        <button type="button" class="btn btn-primary action toggle" data-toggle='{ "target":"#custom-list"}'><i class="fa fa-list"></i>Custom List</button>
                     </div>
                 </li>
                 <li id="custom-list" class="row-list" style="display: none;">

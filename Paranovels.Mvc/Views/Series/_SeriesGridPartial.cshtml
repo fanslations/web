@@ -41,7 +41,7 @@
                             var connector = item.Connectors.SingleOrDefault(w => w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.TargetID == list.UserListID);
                             if (connector != null && connector.IsDeleted == false)
                             {
-                                <span style="@(list.IsColorIcon ? string.Format("color:{0};", list.Color.ToColorHex()) : "")" title="this indicated that it in your @list.Name">@Html.Raw(list.Type.Translate(R.ListType.Translate))</span>
+                                <span class="fa animated bounce no-margin" style="@(list.IsColorIcon ? string.Format("color:{0};", list.Color.ToColorHex()) : "")" title="this indicated that it in your @list.Name">&#xf@(Convert.ToString(list.Icon, 16).PadLeft(3, '0'));</span>
                             }
                         }
                     }
@@ -56,9 +56,12 @@
                     <li title="Comments">
                         <i class="fa fa-comments-o"></i><a href="@Url.Action("Detail", "Series", new {ID = item.SeriesID, Seo = item.Title.ToSeo()})#comments">@item.CommentCount.GetValueOrDefault() comments</a>
                     </li>
-                    <li title="Rating">
-                        <i class="fa fa-diamond" title="@(item.QualityRated == 0 ? "You haven't  rated this" : string.Format("You rated {0:0.0} star(s)", item.QualityRated/2))"></i>@RatingHelper.DisplayRating(summarize)
-                    </li>
+                    @if (true)
+                    {
+                        <li title="Rating">
+                            <i class="fa fa-diamond" title="@(item.QualityRated == 0 ? "You haven't  rated this" : string.Format("You rated {0:0.0} star(s)", item.QualityRated/2))"></i>@RatingHelper.DisplayRating(summarize)
+                        </li>
+                    }
                     @if (latestRelease.ID > 0)
                     {
                         <li title="Latest Release">

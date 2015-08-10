@@ -6,7 +6,7 @@
     var queryStrings = Request.QueryString.AllKeys.Where(w => w != "sorted");
 }
 <div>
-    <form class="form-inline" role="search" method="GET" action="@Request.RawUrl">
+    <form class="form-inline" method="GET" action="@Request.RawUrl">
         <div class="hidden">
             @foreach (var item in queryStrings)
             {
