@@ -1,0 +1,56 @@
+﻿.toolbar {
+    display: block;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #eee;
+    background: #f5f5f5;
+    padding: 10px 5px;
+}
+
+    .toolbar > div {
+        float: left;
+        display: block;
+        border-radius: 5px;
+        height: 50px;
+        margin: 0 5px;
+    }
+
+    .toolbar .info {
+    }
+
+        .toolbar .info div {
+            margin-top: 2.5px;
+            display: block;
+        }
+
+    .toolbar .read-it {
+        float: right;
+        background: green;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+        .toolbar .read-it a {
+            color: white;
+            padding: 10px 20px;
+            display: block;
+        }
+
+    .toolbar .vote-score {
+        background: gainsboro;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 0 10px;
+    }
+
+        .toolbar .vote-score .vote {
+            height: auto;
+            width: auto;
+            margin: 0;
+            text-align: center;
+        }
+
+        .toolbar .vote-score span {
+            display: inline-block;
+            padding: 9px 2px;
+        }

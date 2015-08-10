@@ -1,0 +1,47 @@
+﻿@using Paranovels.Common
+@using Paranovels.DataModels
+@using Thi.Core
+@model Paranovels.ViewModels.UserDetail 
+@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="section">
+    <div class="header">
+        <a href="javascript:history.go(-1)" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
+        <h1 class="title">
+            @Model.FirstName @Model.LastName's Profile
+        </h1>
+    </div>
+    <div class="content">
+        <div class="detail-group">
+            <strong>Username</strong>
+            <div>
+                @Html.Raw(Model.Username)
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>First Name</strong>
+            <div>
+                @Html.Raw(Model.FirstName)
+                @Html.ImproveThis(m => m.FirstName)
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Last Name</strong>
+            <div>
+                @Html.Raw(Model.LastName)
+                @Html.ImproveThis(m => m.LastName)
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Emaikl</strong>
+            <div>
+                @Html.Raw(Model.Email)
+                @Html.ImproveThis(m => m.Email)
+            </div>
+        </div>
+    </div>
+</section>
+

@@ -1,0 +1,44 @@
+﻿@using Paranovels.Common
+@using Paranovels.DataModels
+@using Paranovels.ViewModels
+@using Thi.Core
+@model InlineEditForm<UserDetail>
+@{
+    Layout = null;
+}
+<div id="@(Model.InlineEditProperty)Container" class="inline-editor">
+    <form id="@(Model.InlineEditProperty)Form" method="post" action="@Url.Action("Form")" enctype="multipart/form-data">
+        <div class="form-group">
+            @if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.FirstName))
+            {
+                <label for="@Model.InlineEditProperty">First Name</label>
+                <input id="@Model.InlineEditProperty" type="text" class="form-control" name="@Model.InlineEditProperty" value="@Model.Model.FirstName" required />
+            }
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.LastName))
+            {
+                <label for="@Model.InlineEditProperty">Last Name</label>
+                <input id="@Model.InlineEditProperty" type="text" class="form-control" name="@Model.InlineEditProperty" value="@Model.Model.LastName" required />
+            }
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Email))
+            {
+                <label for="@Model.InlineEditProperty">Email</label>
+                <input id="@Model.InlineEditProperty" type="email" class="form-control" name="@Model.InlineEditProperty" value="@Model.Model.Email" required />
+            }
+            else
+            {
+                <label>
+                    <input type="text" class="form-control" name="@Model.InlineEditProperty" required />
+                </label>
+            }
+        </div>
+        <div class="hidden">
+            <input type="hidden" name="ID" value="@Model.ID" />
+            <input type="hidden" name="InlineEditProperty" value="@Model.InlineEditProperty" />
+        </div>
+        <div class="form-group clearfix">
+            <button id="@(Model.InlineEditProperty)Submit" type="submit" class="btn btn-primary"><i class="fa fa-save"></i>Save</button>
+
+            <button id="@(Model.InlineEditProperty)Cancel" type="button" class="btn btn-default"><i class="fa fa-times-circle"></i>Cancel</button>
+        </div>
+    </form>
+</div>

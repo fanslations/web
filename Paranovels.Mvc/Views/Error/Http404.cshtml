@@ -1,0 +1,17 @@
+﻿
+@{
+    ViewBag.Title = "Http404";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="section">
+    <div class="header">
+        <a href="javascript:history.go(-1)" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
+        <h1 class="title">
+            Http 404 - Page not Found
+        </h1>
+    </div>
+    <div class="content">
+        <p>Sorry, but the page <b>@Request.QueryString["aspxerrorpath"]</b> you are looking for has not been found. Try checking the URL for errors, then hit the refresh button on your browser.</p>
+    </div>
+</section>

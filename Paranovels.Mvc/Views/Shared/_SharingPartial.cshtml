@@ -1,0 +1,14 @@
+﻿@model string
+<ul class="share-buttons">
+    <li><a href="https://www.facebook.com/sharer/sharer.php?u=@Server.UrlEncode(Model)&t=" title="Share on Facebook" target="_blank"><img src="/assets/img/sharing/Facebook.png"></a></li>
+    <li><a href="https://twitter.com/intent/tweet?source=@(Server.UrlEncode(Model))&text=:%20http%3A%2F%2Fwww.fanslations.com&via=fanslations" target="_blank" title="Tweet"><img src="/assets/img/sharing/Twitter.png"></a></li>
+    <li><a href="https://plus.google.com/share?url=@(Server.UrlEncode(Model))" target="_blank" title="Share on Google+"><img src="/assets/img/sharing/Google+.png"></a></li>
+    <li><a href="http://www.tumblr.com/share?v=3&u=@(Server.UrlEncode(Model))&t=&s=" target="_blank" title="Post to Tumblr"><img src="/assets/img/sharing/Tumblr.png"></a></li>
+    <li><a href="http://pinterest.com/pin/create/button/?url=@(Server.UrlEncode(Model))&description=" target="_blank" title="Pin it"><img src="/assets/img/sharing/Pinterest.png"></a></li>
+    <li><a href="https://getpocket.com/save?url=@(Server.UrlEncode(Model))&title=" target="_blank" title="Add to Pocket"><img src="/assets/img/sharing/Pocket.png"></a></li>
+    <li><a href="http://www.reddit.com/submit?url=@(Server.UrlEncode(Model))&title=" target="_blank" title="Submit to Reddit"><img src="/assets/img/sharing/Reddit.png"></a></li>
+    <li><a href="http://www.linkedin.com/shareArticle?mini=true&url=@(Server.UrlEncode(Model))&title=&summary=&source=@(Server.UrlEncode(Model))" target="_blank" title="Share on LinkedIn"><img src="/assets/img/sharing/LinkedIn.png"></a></li>
+    <li><a href="http://wordpress.com/press-this.php?u=@(Server.UrlEncode(Model))&t=&s=" target="_blank" title="Publish on WordPress"><img src="/assets/img/sharing/Wordpress.png"></a></li>
+    <li><a href="https://pinboard.in/popup_login/?url=@(Server.UrlEncode(Model))&title=&description=" target="_blank" title="Save to Pinboard"><img src="/assets/img/sharing/Pinboard.png"></a></li>
+    <li><a href="mailto:?subject=&body=@(Server.UrlEncode(Model))" target="_blank" title="Email"><img src="/assets/img/sharing/Email.png"></a></li>
+</ul>

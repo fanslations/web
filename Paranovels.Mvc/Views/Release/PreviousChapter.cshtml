@@ -1,0 +1,41 @@
+﻿@using Paranovels.Common
+@using Paranovels.DataModels
+@using Paranovels.ViewModels
+@using Thi.Core
+@model Paranovels.ViewModels.SeriesDetail
+@{
+    ViewBag.Title = "Release not found for " + Model.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<section class="section">
+    <div class="header">
+        <a href="@Url.Action("Index")" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
+        <h1 class="title">
+            @ViewBag.Title
+        </h1>
+    </div>
+    <div class="content section">
+        <p>This chapter is not found in @Model.Title's releases. Maybe this chapter is not linked to the this series yet! Try to search for it on the 'Releases' page.</p>
+        <p>See below for the list of all chapters released we has for @Model.Title. If you have this chapter please help us <a href="@Url.Action("Index", "Release", new { Do = "add", SeriesID = Model.SeriesID, SeriesTitle = Model.Title })#add-container"><i class="fa fa-plus-circle"></i>add it the database</a>.</p>
+        @{
+            Html.RenderPartial("~/Views/Release/_Release.cshtml", new PagedList<ReleaseGrid>
+            {
+                Data = Model.Releases.Select(s => new ReleaseGrid
+                {
+                    ReleaseID = s.ReleaseID,
+                    Title = s.Title,
+                    Date = s.Date,
+                    Url = s.Url,
+                    Series = Model,
+                    Group = Model.Group,
+                    UserLists = new List<UserList>(),
+                    Connectors = new List<Connector>(),
+
+                }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
+            });
+        }
+    </div>
+</section>
+
