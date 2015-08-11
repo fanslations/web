@@ -7,7 +7,7 @@
     ViewBag.Title = "Translating";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    var fromLanguage = new DetectLanguageDetector().Detect(Model.Contents.Select(s => s.Raw).FirstOrDefault(w => w.Length > 20));
+    var fromLanguage = new DetectLanguageDetector().Detect(Model.Content.Substring(0, Model.Content.Peek(100).Length));
     var toLanguage = "en";
 }
 @section js {
@@ -228,6 +228,8 @@
                             $scope.translate = translate;
                             $scope.toggleTranslator = toggleTranslator;
                             $scope.toggleGlobalDictionary = toggleGlobalDictionary;
+                            $scope.copy = copy;
+                            $scope.refresh = refresh;
                             $scope.save = save;
                             $scope.discard = discard;
                             $scope.initialize = initialize;
@@ -241,6 +243,16 @@
                                 $scope.lookup('');
                                 $scope.applyGlossary();
                                 $scope.translate();
+                            };
+
+                            function refresh(translator) {
+                                toggleTranslator(translator);
+                                toggleTranslator(translator);
+                            };
+
+                            function copy(translator) {
+                                $scope.paragraph.Final = translator.text;
+                                $scope.paragraph.isModified = true;
                             };
 
                             function save() {
@@ -264,15 +276,9 @@
                             }
 
                             function toggleTranslator(translator) {
-                                //angular.forEach($scope.translators, function(translator) {
-                                //    if (translatorName == translator.Name) {
-                                //        translator.isSelected = !translator.isSelected;
-                                //        translator.text = 'Translating...';
-                                //    }
-                                //});
-                                //$scope.translate();
                                 translator.isSelected = !translator.isSelected;
                                 if (translator.isTranslated == false) {
+                                    translator.text = 'Translating...';
                                     translationService.translate(translator, @Model.NovelID, $scope.paragraph.Glossary, $scope.language)
                                         .then(function(data) {
                                                 translator.text = data;
@@ -482,13 +488,14 @@
         </h1>
     </div>
     <div class="content">
+        @SecurityHelper.MemberOnly()
         <div id="loading">Loading...</div>
         <div id="transApp" ng-controller="TransController as vm" style="display: none;">
             <div id="translate" data-language='{"from": "@fromLanguage", "to":"@toLanguage"}'>
                 <div id="translator" class="" para-translation paragraph="vm.paragraph" language="vm.language" ng-show="vm.paragraph.isTranslating"></div>
                 <div id="glossary" draggable="true" fan-lookup glossary="vm.glossary" language="vm.language" ng-show="vm.glossary.isLookup"></div>
                 <div id="{{'p'+p.Paragraph}}" ng-class="{'translating' : p.isTranslating, 'modified': p.isModified}" ng-repeat="p in vm.contents" class="clearfix">
-                    <p title="paragraph #{{p.Paragraph}}" style="border: none; width: 100%; background-color: transparent;" ng-focus="vm.editing(p, $event)" ng-blur="vm.sync(p, $event)" ng-class="p.isTranslating ? '' : 'cursor-pointer'" contenteditable="true">{{p.Final}}</p>
+                    <p title="paragraph #{{p.Paragraph}}" style="border: none; width: 100%; background-color: transparent;" ng-focus="vm.editing(p, $event)" ng-blur="vm.sync(p, $event)" ng-class="p.isTranslating ? 'well well-sm no-margin' : 'cursor-pointer'" contenteditable="true">{{p.Final}}</p>
                 </div>
             </div>
         </div>

@@ -54,7 +54,7 @@
                         <i class="fa fa-certificate"></i>@Html.Raw(item.Status.Translate(R.TranslationStatus.Translate).FormatString())
                     </li>
                     <li title="Comments">
-                        <i class="fa fa-comments-o"></i><a href="@Url.Action("Detail", "Series", new {ID = item.SeriesID, Seo = item.Title.ToSeo()})#comments">@item.CommentCount.GetValueOrDefault() comments</a>
+                        <i class="fa fa-comments-o"></i><a href="@Url.Action("Detail", "Series", new { ID = item.SeriesID, Seo = item.Title.ToSeo() })#comments">@item.CommentCount.GetValueOrDefault() comments</a>
                     </li>
                     @if (true)
                     {
@@ -65,7 +65,7 @@
                     @if (latestRelease.ID > 0)
                     {
                         <li title="Latest Release">
-                            <i class="fa fa-rss"></i><a href="@Url.Action("Detail", "Release", new {latestRelease.ID, Seo = latestRelease.Title})">@Html.Raw(latestRelease.Title.FormatString())</a>
+                            <i class="fa fa-rss"></i><a href="@Url.Action("Detail", "Release", new { latestRelease.ID, Seo = latestRelease.Title.ToSeo() })">@Html.Raw(latestRelease.Title.FormatString())</a>
                         </li>
                     }
                     @if (item.Group != null)

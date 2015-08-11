@@ -111,9 +111,9 @@
             {
                 @DisplayGrid(item)
             }
-            @foreach (var date in datas.GroupBy(g => g.Date.Date).Select(s => s.Key))
+            @foreach (var date in datas.GroupBy(g => g.Date.ToLocalTime().Date).Select(s => s.Key))
             {
-                var dateItems = datas.Where(w => w.Date.Date == date).ToList();
+                var dateItems = datas.Where(w => w.Date.ToLocalTime().Date == date).ToList();
 
                 <li class="row-list @(date == DateTime.Now.Date ? "hidden" : "")">
                     <strong class="color-green">@date.ToLongDateString()</strong>

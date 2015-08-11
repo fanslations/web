@@ -1,4 +1,4 @@
-// This class was automatically generated with love by ST4bby 8/9/2015 3:28:51 PM.
+// This class was automatically generated with love by ST4bby 8/11/2015 12:24:39 PM.
 // Read more at http://jbubriski.github.com/ST4bby/
 
 namespace Paranovels.DataModels
@@ -31,20 +31,11 @@ namespace Paranovels.DataModels
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("IsDeleted", TypeName = "bit"), Display(Name="Is Deleted")]
 		public bool IsDeleted { get; set; }
 		
-		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("HashCode", TypeName = "int"), Display(Name="Hash Code")]
-		public int HashCode { get; set; }
-		
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("ChapterID", TypeName = "int"), Display(Name="Chapter ID")]
 		public int ChapterID { get; set; }
 		
-		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Paragraph", TypeName = "int"), Display(Name="Paragraph")]
-		public int Paragraph { get; set; }
-		
-		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Language", TypeName = "varchar"), Display(Name="Language"), StringLength(2)]
-		public string Language { get; set; }
-		
-		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Raw", TypeName = "nvarchar"), Display(Name="Raw"), StringLength(2000)]
-		public string Raw { get; set; }
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("RawHash", TypeName = "int"), Display(Name="Raw Hash")]
+		public int RawHash { get; set; }
 		
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Final", TypeName = "nvarchar"), Display(Name="Final"), StringLength(2000)]
 		public string Final { get; set; }

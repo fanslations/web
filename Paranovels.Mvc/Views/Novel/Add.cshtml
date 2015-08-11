@@ -1,6 +1,7 @@
-﻿@model Paranovels.ViewModels.NovelForm
+﻿@using Paranovels.Common
+@model Paranovels.ViewModels.NovelForm
 @{
-    ViewBag.Title = "Form";
+    ViewBag.Title = "Start new project";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @section js {
@@ -12,7 +13,7 @@
                 angular
                     .module('novelApp', [])
                     .controller('NovelEntryController', NovelEntryController);
-   
+
 
                 NovelEntryController.$inject = ['$scope'];
 
@@ -86,25 +87,62 @@
     </script>
 }
 
+<section class="section">
+    <div class="header">
+        <a href="/" class="action left" role="button"><i class="fa fa-chevron-circle-left"></i></a>
+        <h1 class="title">
+            @ViewBag.Title
+        </h1>
+    </div>
 
-<h2>Form</h2>
-
-<div id="novelApp">
-    <form class="" ng-controller="NovelEntryController as vm" ng-init="vm.step = 1" method="POST" action="form">
-        <div id="entry" ng-show="vm.step == 1">
-            <div class="form-group">
-                <label id="labeltitle" for="title" class="arrow_box">Enter title of novel</label>
-                <input id="title" name="title" type="text" class="form-control" ng-model="vm.chapter.title" placeholder="Enter title" aria-labelledby="labeltitle">
+    <div class="content" id="novelApp">
+        <p class="alert alert-info">To start a new project please entered all the information below. Additional information can be update after the project created.</p>
+        <form class="" ng-controller="NovelEntryController as vm" ng-init="vm.step = 1" method="POST" action="form" data-form-ajax='{}'>
+            <div id="entry" ng-show="vm.step == 1">
+                <div class="form-group">
+                    <label id="labeltitle" for="title">Enter title</label>
+                    <input id="title" name="Title" type="text" class="form-control" ng-model="vm.chapter.title" placeholder="Enter title" aria-labelledby="labeltitle" required />
+                </div>
+                <div class="form-group">
+                    <label id="labelsynopsis" for="synopsis">Enter synopsis</label>
+                    <textarea id="synopsis" name="Synopsis" class="form-control" rows="5" ng-model="vm.chapter.content" placeholder="Enter content" aria-labelledby="labelsynopsis" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label id="labeltype" for="type" class="arrow_box">Select project type</label>
+                    <select id="type" name="Type" class="form-control" required pattern="\d+">
+                        <option value="">Project type</option>
+                        @foreach (var item in R.NovelType.Translate)
+                        {
+                            <option value="@item.Key">@item.Value</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label id="labelrawlanguage" for="rawlanguage">Select original language</label>
+                    <select id="rawlanguage" name="Raw" class="form-control" required pattern="\d+">
+                        <option value="">Original language</option>
+                        @foreach (var item in R.Language.Translate)
+                        {
+                            <option value="@item.Key">@item.Value</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label id="labelfinallanguage" for="finallanguage">Select translated language <small>(if this is an original or fan fiction select same lanauge as original language)</small></label>
+                    <select id="finallanguage" name="Final" class="form-control" required pattern="\d+">
+                        <option value="">Translated language</option>
+                        @foreach (var item in R.Language.Translate)
+                        {
+                            <option value="@item.Key">@item.Value</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-plus-circle"></i>Submit</button>
+                </div>
             </div>
-            <div class="form-group">
-                <label id="labelsynopsis" for="synopsis" class="arrow_box">Enter synopsis</label>
-                <textarea id="synopsis" name="synopsis" class="form-control" rows="3" ng-model="vm.chapter.content" placeholder="Enter content" aria-labelledby="labelsynopsis"></textarea>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-plus-circle"></i>Add Novel</button>
-            </div>
-        </div>
 
-    </form>
+        </form>
 
-</div>
+    </div>
+</section>

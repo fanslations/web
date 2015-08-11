@@ -54,7 +54,25 @@ namespace Paranovels.Facade
             using (var uow = UnitOfWorkFactory.Create<NovelContext>())
             {
                 var service = new NovelService(uow);
-                return service.Get(criteria);
+                var detail = service.Get(criteria);
+
+                // author
+                var qTag = service.View<Tag>().All();
+                var qConnector = service.View<Connector>().All();
+
+                var qAuthor = service.View<Author>().All();
+                var authors = qConnector.Where(w => w.ConnectorType == R.ConnectorType.NOVEL_AUTHOR)
+                    .Where(w => w.SourceID == detail.NovelID).Select(s => s.TargetID).ToList();
+                detail.Authors = qAuthor.Where(w => authors.Contains(w.AuthorID)).ToList();
+
+                // chapter
+                var qChapter = service.View<Chapter>().All();
+
+                qChapter = qChapter.Where(w => w.NovelID == detail.NovelID);
+
+                detail.Chapters = qChapter.ToList();
+
+                return detail;
             }
         }
 
@@ -72,7 +90,27 @@ namespace Paranovels.Facade
             using (var uow = UnitOfWorkFactory.Create<NovelContext>())
             {
                 var service = new ChapterService(uow);
-                return service.Get(criteria);
+                var detail = service.Get(criteria);
+
+                // chapter content
+                var qContent = service.View<Content>().Where(w => w.ChapterID == detail.ChapterID).Select(s => new ContentGrid
+                {
+                    ContentID = s.ContentID,
+                    RawHash =  s.RawHash,
+                    Final = s.Final,
+                });
+
+                var segments = detail.Content.SegmentChapterContent();
+
+                int paragraph = 0;
+                detail.Contents = qContent.ToList().Select(s =>
+                {
+                    s.Paragraph = paragraph++;
+                    s.Raw = segments.ContainsKey(s.RawHash) ? segments[s.RawHash] : "Segment not found.";
+                    return s;
+                }).ToList();
+
+                return detail;
             }
         }
 

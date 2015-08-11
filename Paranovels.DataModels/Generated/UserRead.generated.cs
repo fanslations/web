@@ -1,4 +1,4 @@
-// This class was automatically generated with love by ST4bby 8/9/2015 3:28:51 PM.
+// This class was automatically generated with love by ST4bby 8/11/2015 12:24:38 PM.
 // Read more at http://jbubriski.github.com/ST4bby/
 
 namespace Paranovels.DataModels

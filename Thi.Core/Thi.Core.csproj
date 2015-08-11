@@ -70,6 +70,7 @@
     <Compile Include="Email Related\ISmtpServer.cs" />
     <Compile Include="Email Related\LocalSmtpServer.cs" />
     <Compile Include="Email Related\SmtpServer.cs" />
+    <Compile Include="Extensions\SegmentExtension.cs" />
     <Compile Include="Extensions\ColorExtension.cs" />
     <Compile Include="Extensions\FormatExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />

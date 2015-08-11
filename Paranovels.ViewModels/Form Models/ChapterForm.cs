@@ -12,7 +12,5 @@ namespace Paranovels.ViewModels
     {
         public int ByUserID { get; set; }
         public string InlineEditProperty { get; set; }
-
-        public string Content { get; set; }
     }
 }

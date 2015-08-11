@@ -38,6 +38,13 @@ namespace Paranovels.Mvc.Controllers
             return View(model: "login");
         }
 
+        [AllowAnonymous]
+        public ActionResult LoginModal(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View("_LoginPartial", model: "login");
+        }
+
         //
         // POST: /Account/Login
         [HttpPost]

@@ -12,6 +12,7 @@ define([
     'ui/ajax-event',
     'ui/class-action',
     'ui/transform',
+    'ui/modal',
     'util/update-checker'
 
 ], function ($, toastr, Slideout) {

@@ -35,30 +35,20 @@ namespace Paranovels.Services
             {
                 var tContent = Table<Content>();
 
-                var contents = tContent.Where(w => w.ChapterID == chapter.ChapterID);
-                // delete old contents if there any
-                foreach (var content in contents)
+                var segments = chapterForm.Content.SegmentChapterContent();
+                foreach (var segment in segments)
                 {
-                    content.IsDeleted = true;
-                    UpdateAuditFields(content, chapterForm.ByUserID);
-                }
+                    var content = tContent.GetOrAdd(w => w.ChapterID == chapter.ChapterID && w.RawHash == segment.Key);
+                    if (content.ContentID == 0) // only add when the paragraph is new (does not exist)
+                    {
+                        UpdateAuditFields(content, chapterForm.ByUserID);
+                        content.ChapterID = chapter.ChapterID;
+                        content.RawHash = segment.Key;
+                        content.Final = segment.Value;
 
-                var paragraphs = chapterForm.Content.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
- 
-                for (int line = 1; line <= paragraphs.Length; line++)
-                {
-                    var paragraph = paragraphs[line - 1].Trim();
-                    var hashCode = paragraph.GetIntHash();
-                    var content = tContent.GetOrAdd(w => w.ChapterID == chapter.ChapterID && w.HashCode == hashCode);
-                    UpdateAuditFields(content, chapterForm.ByUserID);
-                    content.HashCode = hashCode;
-                    content.ChapterID = chapter.ChapterID;
-                    content.Paragraph = line;
-                    content.Raw = paragraph;
-                    content.Final = paragraph;
-
-                    // save
-                    SaveChanges();
+                        // save
+                        SaveChanges();
+                    }
                 }
             }
             return chapter.ChapterID;
@@ -78,13 +68,6 @@ namespace Paranovels.Services
 
             var chapterDetail = new ChapterDetail();
             MapProperty(chapter, chapterDetail);
-
-            // chapter content
-            var qContent = Table<Content>().All();
-
-            qContent = qContent.Where(w => w.ChapterID == chapter.ChapterID);
-
-            chapterDetail.Contents = qContent.ToList();
 
             return chapterDetail;
         }

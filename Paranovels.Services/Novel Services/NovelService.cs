@@ -51,22 +51,6 @@ namespace Paranovels.Services
             var novelDetail = new NovelDetail();
             MapProperty(novel, novelDetail);
 
-            // author
-            var qTag = Table<Tag>().All();
-            var qConnector = Table<Connector>().All();
-
-            var qAuthor = Table<Author>().All();
-            var authors = qConnector.Where(w => w.ConnectorType == R.ConnectorType.NOVEL_AUTHOR)
-                .Where(w => w.SourceID == novel.NovelID).Select(s => s.TargetID).ToList();
-            novelDetail.Authors = qAuthor.Where(w => authors.Contains(w.AuthorID)).ToList();
-
-            // chapter
-            var qChapter = Table<Chapter>().All();
-
-            qChapter = qChapter.Where(w => w.NovelID == novel.NovelID);
-
-            novelDetail.Chapters = qChapter.ToList();
-
             return novelDetail;
         }
 

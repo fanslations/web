@@ -90,6 +90,7 @@
     <Compile Include="Grid Models\CommentGrid.cs" />
     <Compile Include="Grid Models\GroupGrid.cs" />
     <Compile Include="Grid Models\ListGrid.cs" />
+    <Compile Include="Grid Models\ContentGrid.cs" />
     <Compile Include="Grid Models\ReleaseGrid.cs" />
     <Compile Include="Grid Models\SeriesGrid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

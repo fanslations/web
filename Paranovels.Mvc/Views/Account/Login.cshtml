@@ -1,85 +1,9 @@
 ﻿@using Microsoft.Owin.Security
-@using WebGrease.Css.Extensions
+
 @model string
 
 @{
     ViewBag.Title = "LOG IN | SIGN UP";
 }
 
-<section class="section">
-    <div class="header">
-        <h1 class="title">
-            <i class="fa fa-account"></i>@ViewBag.Title
-        </h1>
-    </div>
-    <div class="content">
- 
-                <!-- Nav tabs -->
-                <ul class="nav nav-tabs" role="tablist" style="width: 100%;">
-                    <li role="presentation" class="@(Model == "login" ? "active" :"")"><a href="#login" aria-controls="login" role="tab" data-toggle="tab">LOG IN</a></li>
-                    <li role="presentation" class="@(Model == "signup" ? "active" :"")"><a href="#signup" aria-controls="signup" role="tab" data-toggle="tab">SIGN UP</a></li>
-                </ul>
-                <!-- Tab panes -->
-                <div class="tab-content">
-                    <div id="login" role="tabpanel" class="tab-pane @(Model == "login" ? "active" :"")">
-                        <div id="externallogin">
-
-                            @{
-                                var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
-
-                                using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }))
-                                {
-                                    @Html.AntiForgeryToken()
-                                    <div id="socialLoginList">
-                                        <p>
-                                            @foreach (AuthenticationDescription p in loginProviders)
-                                            {
-                                                <button type="submit" class="btn btn-default" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account">@p.AuthenticationType</button>
-                                            }
-                                        </p>
-                                    </div>
-                                }
-                            }
-
-
-                        </div>
-                        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                            <label>
-                                <input type="text" name="UserName" placeholder="Username" class="input-sm form-control" required />
-                            </label>
-                            <label>
-                                <input type="password" name="Password" placeholder="Password" class="input-sm form-control" required />
-                            </label>
-                            <div>
-                                <button type="submit" class="btn btn-primary"><i class="fa fa-sign-in"></i>Login</button>
-
-                            </div>
-                        }
-                    </div>
-                    <div id="signup" role="tabpanel" class="tab-pane @(Model == "signup" ? "active" :"")">
-                        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                            <label>
-                                <input class="form-control" id="UserName" name="UserName" type="text" placeholder="Username" required="">
-                            </label>
-                            <label>
-                                <input class="form-control" id="Password" name="Password" type="password" placeholder="Password" required="">
-                            </label>
-                            <label>
-                                <input class="form-control" id="Email" name="Email" type="email" placeholder="Email" required="">
-                            </label>
-                            <div>
-                                <button type="submit" class="btn btn-primary"><i class="fa fa-arrow-circle-right">Register</i></button>
-                            </div>
-                        }
-                    </div>
-                </div>
-
-
-    </div>
-</section>
+@{ Html.RenderPartial("_LoginPartial", Model); }

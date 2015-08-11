@@ -23,11 +23,23 @@ namespace Paranovels.Mvc.Controllers
             return View(detail);
         }
 
+        public ActionResult Detail(ChapterCriteria criteria)
+        {
+            var detail = Facade<NovelFacade>().GetChapter(criteria);
+
+            return View(detail);
+        }
+
         public ActionResult Translating(ChapterCriteria criteria)
         {
             var detail = Facade<NovelFacade>().GetChapter(criteria);
 
             return View(detail);
+        }
+
+        public ActionResult Add(ChapterForm chapter)
+        {
+            return View(chapter);
         }
 
         [HttpPost]

@@ -10,6 +10,6 @@ namespace Paranovels.ViewModels
 {
     public class ChapterDetail: Chapter, IDetailModel
     {
-        public List<Content> Contents { get; set; }
+        public List<ContentGrid> Contents { get; set; }
     }
 }

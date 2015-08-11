@@ -27,8 +27,14 @@
         </li>
     </ul>
     <div>
-        <pre id="raw" class="raw"><i class="label label-info">Raw</i>{{paragraph.Raw}}</pre>
-        <pre ng-repeat="translator in translators" ng-show="translator.isSelected"><i class="label label-info">{{translator.Name}}</i>{{translator.text}}</pre>
+        <div id="raw" class="raw well well-sm margin-bottom-10px"><i class="label label-info">Raw</i>&nbsp;{{paragraph.Raw}}</div>
+        <div class="well well-sm margin-bottom-10px" ng-repeat="translator in translators" ng-show="translator.isSelected">
+            <div class="pull-right">
+                <a role="button" class="fa fa-copy" ng-click="copy(translator)"></a>
+                <a role="button" class="fa fa-refresh" ng-click="refresh(translator)"></a>
+            </div>
+            <i class="label label-info">{{translator.Name}}</i>&nbsp;{{translator.text}}
+        </div>
     </div>
     <a href="" ng-click='close()' class="position-absolute top-0px right-0px cursor-pointer padding-5px" role="button"><i class="fa fa-times-circle"></i><span class="sr-only">Close</span></a>
 </div>
