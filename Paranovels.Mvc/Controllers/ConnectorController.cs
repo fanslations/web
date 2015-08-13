@@ -18,5 +18,11 @@ namespace Paranovels.Mvc.Controllers
             var score = Facade<ConnectorFacade>().AddConnector(form);
             return Json(score, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult InlineEdit(InlineEditForm<ConnectorDetail> form)
+        {
+            form.Model = Facade<ConnectorFacade>().Get(new ConnectorCriteria { ID = form.ID });
+            return View("_InlineEditPartial", form);
+        }
     }
 }

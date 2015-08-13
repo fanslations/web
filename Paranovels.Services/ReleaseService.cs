@@ -26,13 +26,6 @@ namespace Paranovels.Services
             MapProperty(form, release, form.InlineEditProperty);
             UpdateAuditFields(release, form.ByUserID);
 
-            // add translation scene if title matched
-            if (release.SeriesID == 0)
-            {
-                var qTranslationScene = View<Series>();
-                release.SeriesID = qTranslationScene.Where(w => w.GroupID == release.GroupID && release.Title.Contains(w.Title))
-                    .Select(s => s.SeriesID).SingleOrDefault();
-            }
             // save
             SaveChanges();
 

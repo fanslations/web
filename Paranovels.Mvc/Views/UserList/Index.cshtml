@@ -11,7 +11,11 @@
     var listTemplates = (IList<UserList>)ViewBag.ListTemplates ?? new List<UserList>();
 }
 
-
+@if (!User.Identity.IsAuthenticated)
+{
+    @SecurityHelper.Unauthorized("The features is only available to members.", "<i class='fa fa-lock'></i>Members Only", true)
+    return;
+}
 <section class="section">
     <div class="header">
         <a href="/" class="action left" role="button" title="back"><i class="fa fa-chevron-circle-left"></i></a>
@@ -44,7 +48,7 @@
                                 processData: false,
                                 async: true,
                                 cache: false,
-                                success: function (data) {}
+                                success: function (data) { }
                             });
                         });
 
@@ -89,31 +93,31 @@
                 {
                     if (Model.Data.All(w => w.Type != item.Type))
                     {
-                <li class="row-list">
-                    <div class="col-content">
-                        <strong>@item.Name</strong>
-                        <p>@item.Description</p>
-                    </div>
-                    <div class="col-image">
-                        <form action="@Url.Action("Form", "UserList")" method="POST" data-form-ajax='{}'>
-                            <div class="hidden">
-                                <input type="hidden" name="ReturnUrl" value="@Request.RawUrl" />
-                                <input type="hidden" name="@formModel.PropertyName(m=>m.Name)" value="@item.Name" />
-                                <input type="hidden" name="@formModel.PropertyName(m=>m.Description)" value="@item.Description" />
-                                <input type="hidden" name="@formModel.PropertyName(m=>m.ShareLevel)" value="@item.ShareLevel" />
-                                <input type="hidden" name="@formModel.PropertyName(m=>m.Type)" value="@item.Type" />
-                                <input type="hidden" name="@formModel.PropertyName(m=>m.Icon)" value="@item.Icon" />
-                                <input type="hidden" name="@formModel.PropertyName(m=>m.Color)" value="@item.Color" />
-                                <input type="hidden" name="@formModel.PropertyName(m=>m.IsColorIcon)" value="@item.IsColorIcon" />
-                                <input type="hidden" name="@formModel.PropertyName(m=>m.IsAutoAddWhenRead)" value="@item.IsAutoAddWhenRead" />
-                                <input type="hidden" name="@formModel.PropertyName(m=>m.IsHiddenInFrontpage)" value="@item.IsHiddenInFrontpage" />
-                                <input type="hidden" name="@formModel.PropertyName(m=>m.IsNotifyOfNewRelease)" value="@item.IsNotifyOfNewRelease" />
-                                <input type="hidden" name="@formModel.PropertyName(m=>m.IsPlaceInFrontOfTitle)" value="@item.IsPlaceInFrontOfTitle" />
+                        <li class="row-list">
+                            <div class="col-content">
+                                <strong>@item.Name</strong>
+                                <p>@item.Description</p>
                             </div>
-                            <button type="submit" class="btn btn-primary"><i class="fa">&#xf@(Convert.ToString(item.Icon, 16).PadLeft(3, '0'));</i>Activate List</button>
-                        </form>
-                    </div>
-                </li>
+                            <div class="col-image">
+                                <form action="@Url.Action("Form", "UserList")" method="POST" data-form-ajax='{}'>
+                                    <div class="hidden">
+                                        <input type="hidden" name="ReturnUrl" value="@Request.RawUrl" />
+                                        <input type="hidden" name="@formModel.PropertyName(m=>m.Name)" value="@item.Name" />
+                                        <input type="hidden" name="@formModel.PropertyName(m=>m.Description)" value="@item.Description" />
+                                        <input type="hidden" name="@formModel.PropertyName(m=>m.ShareLevel)" value="@item.ShareLevel" />
+                                        <input type="hidden" name="@formModel.PropertyName(m=>m.Type)" value="@item.Type" />
+                                        <input type="hidden" name="@formModel.PropertyName(m=>m.Icon)" value="@item.Icon" />
+                                        <input type="hidden" name="@formModel.PropertyName(m=>m.Color)" value="@item.Color" />
+                                        <input type="hidden" name="@formModel.PropertyName(m=>m.IsColorIcon)" value="@item.IsColorIcon" />
+                                        <input type="hidden" name="@formModel.PropertyName(m=>m.IsAutoAddWhenRead)" value="@item.IsAutoAddWhenRead" />
+                                        <input type="hidden" name="@formModel.PropertyName(m=>m.IsHiddenInFrontpage)" value="@item.IsHiddenInFrontpage" />
+                                        <input type="hidden" name="@formModel.PropertyName(m=>m.IsNotifyOfNewRelease)" value="@item.IsNotifyOfNewRelease" />
+                                        <input type="hidden" name="@formModel.PropertyName(m=>m.IsPlaceInFrontOfTitle)" value="@item.IsPlaceInFrontOfTitle" />
+                                    </div>
+                                    <button type="submit" class="btn btn-primary"><i class="fa">&#xf@(Convert.ToString(item.Icon, 16).PadLeft(3, '0'));</i>Activate List</button>
+                                </form>
+                            </div>
+                        </li>
                     }
                 }
                 <li class="row-list">

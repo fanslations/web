@@ -6,6 +6,12 @@
 @{
     Layout = null;
 }
+@if (!User.Identity.IsAuthenticated)
+{
+    Html.RenderPartial("_InlineEditorUnauthorizedPartial");
+    return;
+}
+
 <div id="@(Model.InlineEditProperty)Container" class="inline-editor">
     <form id="@(Model.InlineEditProperty)Form" method="post" action="@Url.Action("Form")" enctype="multipart/form-data">
         <div class="form-group">
@@ -46,7 +52,7 @@
 
                 <fieldset class="form-control">
                     <legend class="sr-only">Genres</legend>
-                    @foreach (var tag in tags.OrderBy(o=>o.Name))
+                    @foreach (var tag in tags.OrderBy(o => o.Name))
                     {
                         <div class="checkbox">
                             <label>
@@ -81,22 +87,24 @@
                         <a href="@Url.Action("List", "Tag", new { ID = R.TagType.NOVEL_CATEGORY, Seo = Model.InlineEditProperty.ToSeo(), ReturnUrl = Request.UrlReferrer })"><i class="fa fa-plus"></i> Add new category</a>
                     </div>
                 </fieldset>
-             
+
             }
-            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.GroupID))
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Groups))
             {
                 <script>
-
-                    //window.pnHooks.push(function () {
                     require(['jquery', 'selectize'], function ($, selectize) {
                         'use strict';
 
                         console.log($, selectize);
-                        $('#groupid').selectize({
+                        $('#@Model.InlineEditProperty').selectize({
                             valueField: 'GroupID',
                             labelField: 'Name',
                             searchField: 'Name',
-                            create: false,
+                            sortField: 'Name',
+                            preload: true,
+                            create: function (input, callback) {
+                                window.location = '@Url.Action("Index","Group",new { Do = "add" })' + '&Name=' + input + '&ReturnUrl=@Request.UrlReferrer.PathAndQuery';
+                            },
                             render: {
                                 option: function (item, escape) {
                                     return '<div>' +
@@ -106,7 +114,7 @@
                                 }
                             },
                             load: function (query, callback) {
-                                if (!query.length) return callback();
+
                                 $.ajax({
                                     url: '/query/groups?query=' + encodeURIComponent(query),
                                     type: 'GET',
@@ -120,10 +128,9 @@
                             }
                         });
                     });
-                    //});
                 </script>
-                <label for="groupid" class="sr-only">Select Translations Group</label>
-                <select id="groupid" name="@Model.InlineEditProperty" placeholder="Select Group" required></select>
+                <label for="@Model.InlineEditProperty" class="sr-only">Select Translations Group</label>
+                <select id="@Model.InlineEditProperty" name="@(Model.InlineEditProperty)[0].GroupID" placeholder="Select Group" required></select>
 
             }
             else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.ImageUrl))
@@ -153,9 +160,20 @@
             }
             else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Feeds))
             {
-                var feed = new Feed();
+                var feed = Model.Model.Feeds.SingleOrDefault(w => w.FeedID == int.Parse(Request.QueryString["FeedID"] ?? "0")) ?? new Feed { Status = R.FeedStatus.ACTIVE };
                 <label for="@Model.InlineEditProperty" class="sr-only">Rss Feed Url</label>
-                <input id="@Model.InlineEditProperty" type="url" class="form-control" name="@(Model.InlineEditProperty)[0].@feed.PropertyName(m=>m.Url)" required />
+                <input id="@Model.InlineEditProperty" type="url" class="form-control" name="@(Model.InlineEditProperty)[0].@feed.PropertyName(m=>m.Url)" value="@feed.Url" required />
+                <div class="@(feed.FeedID > 0 ? "margin-top-10px" : "hidden")">
+                    @foreach (var status in R.FeedStatus.Translate)
+                    {
+                        <label class="checkbox-inline">
+                            <input type="radio" name="@(Model.InlineEditProperty)[0].@feed.PropertyName(m=>m.Status)" value="@status.Key" checked="@(status.Key == feed.Status)" />
+                            <strong>@status.Value</strong>
+                        </label>
+
+                    }
+                    <input type="hidden" class="form-control" name="@(Model.InlineEditProperty)[0].@feed.PropertyName(m=>m.FeedID)" value="@feed.FeedID" required />
+                </div>
             }
             else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Akas))
             {
@@ -163,11 +181,15 @@
                 <label for="@Model.InlineEditProperty" class="sr-only">Associated Title</label>
                 <input id="@Model.InlineEditProperty" type="text" class="form-control" name="@(Model.InlineEditProperty)[0].@aka.PropertyName(m => m.Text)" required />
             }
+            else if (Model.InlineEditProperty.Contains("Date"))
+            {
+                <label for="@Model.InlineEditProperty" class="sr-only">@Model.InlineEditProperty</label>
+                <input id="@Model.InlineEditProperty" type="date" class="form-control" name="@Model.InlineEditProperty" required />
+            }
             else
             {
-                <label>
-                    <input type="text" class="form-control" name="@Model.InlineEditProperty" required />
-                </label>
+                <label for="@Model.InlineEditProperty" class="sr-only">@Model.InlineEditProperty</label>
+                <input id="@Model.InlineEditProperty" type="text" class="form-control" name="@Model.InlineEditProperty" required />
             }
         </div>
         <div class="hidden">

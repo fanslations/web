@@ -5,91 +5,100 @@
 @{
     Layout = null;
 }
+
+@if (!User.Identity.IsAuthenticated)
+{
+    Html.RenderPartial("_InlineEditorUnauthorizedPartial");
+    return;
+}
 <div id="@(Model.InlineEditProperty)Container" class="inline-editor">
     <form id="@(Model.InlineEditProperty)Form" method="post" action="@Url.Action("Form")" enctype="multipart/form-data">
         <div class="form-group">
             @if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.GroupID))
             {
                 <script>
+                    require(['jquery', 'selectize'], function ($, selectize) {
+                        'use strict';
 
-                //window.pnHooks.push(function () {
-                require(['jquery', 'selectize'], function ($, selectize) {
-                    'use strict';
-
-                    console.log($, selectize);
-                    $('#groupid').selectize({
-                        valueField: 'GroupID',
-                        labelField: 'Name',
-                        searchField: 'Name',
-                        create: false,
-                        render: {
-                            option: function (item, escape) {
-                                return '<div>' +
-                                    '<strong class="title">' + item.Name + '</strong>' +
-                                    '<p class="description">' + escape(item.Url) + '</p>' +
-                                    '</div>';
-                            }
-                        },
-                        load: function (query, callback) {
-                            if (!query.length) return callback();
-                            $.ajax({
-                                url: '/query/groups?query=' + encodeURIComponent(query),
-                                type: 'GET',
-                                error: function () {
-                                    callback();
-                                },
-                                success: function (res) {
-                                    callback(res);
+                        $('#@Model.InlineEditProperty').selectize({
+                            valueField: 'GroupID',
+                            labelField: 'Name',
+                            searchField: 'Name',
+                            sortField: 'Name',
+                            preload: true,
+                            create: function (input, callback) {
+                                window.location = '@Url.Action("Index","Group",new { Do = "add" })' + '&Name=' + input + '&ReturnUrl=@Request.UrlReferrer.PathAndQuery';
+                            },
+                            render: {
+                                option: function (item, escape) {
+                                    if (item == null) {
+                                        return '<div>Item ' + escape + ' does not exist</div>';
+                                    }
+                                    return '<div>' +
+                                        '<strong class="title">' + item.Name + '</strong>' +
+                                        '<p class="description">' + escape(item.Url) + '</p>' +
+                                        '</div>';
                                 }
-                            });
-                        }
+                            },
+                            load: function (query, callback) {
+
+                                $.ajax({
+                                    url: '/query/groups?query=' + encodeURIComponent(query),
+                                    type: 'GET',
+                                    error: function () {
+                                        callback();
+                                    },
+                                    success: function (res) {
+                                        callback(res);
+                                    }
+                                });
+                            }
+                        });
                     });
-                });
-                //});
-                </script>
-                <label for="groupid" class="sr-only">Select Translations Group</label>
-                <select id="groupid" name="@Model.InlineEditProperty" placeholder="Select Group" required></select>
+</script>
+                <label for="@Model.InlineEditProperty" class="sr-only">Select Translations Group</label>
+                <select id="@Model.InlineEditProperty" name="@Model.InlineEditProperty" placeholder="Select Group" required></select>
             }
             else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.SeriesID))
             {
                 <script>
+                    require(['jquery', 'selectize'], function ($, selectize) {
+                        'use strict';
 
-                //window.pnHooks.push(function () {
-                require(['jquery', 'selectize'], function ($, selectize) {
-                    'use strict';
-
-                    $('#seriesid').selectize({
-                        valueField: 'SeriesID',
-                        labelField: 'Title',
-                        searchField: 'Title',
-                        create: false,
-                        render: {
-                            option: function (item, escape) {
-                                return '<div>' +
-                                    '<strong class="title">' + item.Title + '</strong>' +
-                                    '<p class="description">' + escape(item.Synopsis) + '</p>' +
-                                    '</div>';
-                            }
-                        },
-                        load: function (query, callback) {
-                            if (!query.length) return callback();
-                            $.ajax({
-                                url: '/query/series?query=' + encodeURIComponent(query),
-                                type: 'GET',
-                                error: function () {
-                                    callback();
-                                },
-                                success: function (res) {
-                                    callback(res);
+                        $('#seriesid').selectize({
+                            valueField: 'SeriesID',
+                            labelField: 'Title',
+                            searchField: 'Title',
+                            sortField: 'Title',
+                            preload: true,
+                            create: function (input, callback) {
+                                window.location = '@Url.Action("Index","Series",new { Do = "add" })' + '&Title=' + input + '&ReturnUrl=@Request.UrlReferrer.PathAndQuery';
+                            },
+                            render: {
+                                option: function (item, escape) {
+                                    return '<div class="table-striped">' +
+                                        '<strong class="title">' + item.Title + '</strong>' +
+                                        '<p class="description">' + '</p>' +
+                                        '</div>';
                                 }
-                            });
-                        }
+                            },
+                            load: function (query, callback) {
+                                $.ajax({
+                                    url: '/query/series?query=' + encodeURIComponent(query),
+                                    type: 'GET',
+                                    error: function () {
+                                        callback();
+                                    },
+                                    success: function (res) {
+                                        callback(res);
+                                    }
+                                });
+                            }
+                        });
                     });
-                });
-                //});
                 </script>
-                <label for="seriesid" class="sr-only">Select Series</label>
-                <select id="seriesid" name="@Model.InlineEditProperty" placeholder="Select Series" required></select>
+                <label for="@Model.InlineEditProperty" class="sr-only">Select Series</label>
+                <select id="@Model.InlineEditProperty" name="@Model.InlineEditProperty" placeholder="Select Series" required></select>
             }
             else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Title))
             {
@@ -117,6 +126,11 @@
                         </div>
                     }
                 </fieldset>
+            }
+            else if (Model.InlineEditProperty.Contains("Date"))
+            {
+                <label for="@Model.InlineEditProperty" class="sr-only">@Model.InlineEditProperty</label>
+                <input id="@Model.InlineEditProperty" type="date" class="form-control" name="@Model.InlineEditProperty" required />
             }
             else
             {

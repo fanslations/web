@@ -30,7 +30,7 @@ namespace Paranovels.Mvc
 
             var tag = new TagBuilder("a");
             tag.AddCssClass("improve-this");
-            tag.InnerHtml = customHtmlIcon ?? @"<i class=""fa fa-edit""></i>Edit";
+            tag.InnerHtml = customHtmlIcon ?? @"<i class=""fa fa-edit""></i><em>Edit</em>";
             tag.Attributes.Add("data-inline-edit", inlineEditModelJson);
             if (htmlAttributes != null)
             {
@@ -50,7 +50,7 @@ namespace Paranovels.Mvc
 
             var tag = new TagBuilder("a");
             tag.AddCssClass("improve-this");
-            tag.InnerHtml = customHtmlIcon ?? @"<i class=""fa fa-edit""></i>Edit";
+            tag.InnerHtml = customHtmlIcon ?? @"<i class=""fa fa-edit""></i><em>Edit</em>";
             tag.Attributes.Add("data-inline-edit", inlineEditModelJson);
             if (htmlAttributes != null)
             {

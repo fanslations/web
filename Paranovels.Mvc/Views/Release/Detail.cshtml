@@ -102,19 +102,19 @@
             </div>
             <div class="vote-score">
                 <div class="vote @(Model.UserAction.Voted.GetValueOrDefault() == 1 ? "likes" : Model.UserAction.Voted.GetValueOrDefault() == -1 ? "dislikes" : "")">
-                    <span role="button" class="action vote-up" data-vote='{"SourceID": @Model.ID, "SourceTable": @R.SourceTable.RELEASE, "Vote": 1}' title="i like this"><i class="fa fa-thumbs-up"></i></span>
+                    <span role="button" class="action vote-up" data-vote='{"SourceID": @Model.ID, "SourceTable": @R.SourceTable.RELEASE, "Vote": 1}' title="i like this"><i class="fa fa-thumbs-o-up"></i></span>
                     <span class="score @((Model.Summarize.VoteUp - Model.Summarize.VoteDown) < 0 ? "dislikes" : "likes")">
                         @(Model.Summarize.VoteUp - Model.Summarize.VoteDown)
                     </span>
-                    <span role="button" class="action vote-down" data-vote='{"SourceID": @Model.ID, "SourceTable": @R.SourceTable.RELEASE, "Vote": -1}' title="i dislike this"><i class="fa fa-thumbs-down"></i></span>
+                    <span role="button" class="action vote-down" data-vote='{"SourceID": @Model.ID, "SourceTable": @R.SourceTable.RELEASE, "Vote": -1}' title="i dislike this"><i class="fa fa-thumbs-o-down"></i></span>
                 </div>
             </div>
             <div class="info">
                 <div>
-                    <i class="fa fa-thumbs-up"></i>@Model.Summarize.VoteUp likes
+                    <i class="fa fa-thumbs-o-up"></i>@Model.Summarize.VoteUp likes
                 </div>
                 <div>
-                    <i class="fa fa-thumbs-down"></i>@Model.Summarize.VoteDown dislikes
+                    <i class="fa fa-thumbs-o-down"></i>@Model.Summarize.VoteDown dislikes
                 </div>
             </div>
             <div class="info">

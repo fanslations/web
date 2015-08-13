@@ -25,6 +25,15 @@ namespace Paranovels.Tests.Paranovels.Proxies
 
             Assert.IsTrue(chapters.Any());
         }
+
+        [TestMethod]
+        public void Individual_feed_test()
+        {
+            var uc = new FeedChecker();
+            var chapters = uc.Check("http://www.lingson.com/tag/assassin-landlord-beauty-tenants/feed/");
+            var chapters2 = uc.CheckUsingWebClient("http://www.lingson.com/tag/assassin-landlord-beauty-tenants/feed/");
+            Assert.IsTrue(chapters.Any());
+        }
     }
 }
 

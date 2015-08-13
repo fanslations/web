@@ -34,5 +34,15 @@ namespace Paranovels.Facade
                 return id;
             }
         }
+
+        public ConnectorDetail Get(ConnectorCriteria connectorCriteria)
+        {
+            using (var uow = UnitOfWorkFactory.Create<NovelContext>())
+            {
+                var service = new ConnectorService(uow);
+                var detail = service.Get(connectorCriteria);
+                return detail;
+            }
+        }
     }
 }

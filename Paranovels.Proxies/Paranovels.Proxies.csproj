@@ -61,6 +61,10 @@
       <Project>{849B2474-5273-4BF5-9A4A-35610F81216F}</Project>
       <Name>Thi.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Thi.Web\Thi.Web.csproj">
+      <Project>{494B6367-9AB4-4839-A3DC-740B3AB952EC}</Project>
+      <Name>Thi.Web</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

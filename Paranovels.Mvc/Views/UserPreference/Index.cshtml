@@ -15,7 +15,11 @@
     json = webClient.DownloadString(Request.Url.GetLeftPart(UriPartial.Authority) + "/query/genres");
     var genres = JsonHelper.Deserialize<List<TagDetail>>(json);
 }
-
+@if (!User.Identity.IsAuthenticated)
+{
+    @SecurityHelper.Unauthorized("The features is only available to members.", "<i class='fa fa-lock'></i>Members Only", true)
+    return;
+}
 <section class="section">
     <div class="header">
         <a href="/" class="action left"><i class="fa fa-chevron-left"></i></a>

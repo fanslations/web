@@ -9,6 +9,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var tab = Request.QueryString["Tab"] ?? "Comments";
+
+    var feedColorMapper = new Dictionary<int, string>
+    {
+        {R.FeedStatus.ACTIVE, "green"},
+        {R.FeedStatus.INACTIVE, "orange"},
+        {R.FeedStatus.DEAD, "red"},
+        {R.FeedStatus.PENDING, "gray"},
+    };
 }
 <section class="section">
     <div class="header">
@@ -155,9 +163,10 @@
                         @Html.Raw(Model.Feeds.Count > 0 ? "" : "No rss feed available. Help us add a rss feed and track this series.")
                         @foreach (var item in Model.Feeds)
                         {
-                            <ul class="list-inline list-unstyled">
+                            <ul class="list-unstyled">
                                 <li>
-                                    <a href="@item.Url">@item.Url</a>
+                                    <i class="fa fa-circle" style="color: @feedColorMapper[item.Status]" title="last success date @item.LastSuccessDate"></i><a href="@item.Url">@item.Url</a>
+                                    @Html.ImproveThis(m => m.Feeds, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Series", new { FeedID = item.FeedID}) } })
                                 </li>
                             </ul>
                         }
@@ -171,7 +180,26 @@
         <div class="detail-group">
             <strong>Translations Group</strong>
             <div>
-                @if (Model.GroupID > 0)
+                <ul class="list-unstyled no-margin">
+                    <li>
+                        @Html.Raw(Model.Groups.Count > 0 ? "" : "Do you know who translated this series? Help us gave credit to group(s) that brought you this series.")
+                        @foreach (var item in Model.Groups.OrderBy(o=>o.Name))
+                        {
+                            // editing another table (connector)
+                            var connector = Model.Connectors.Single(w => w.ConnectorType == R.ConnectorType.SERIES_GROUP && w.TargetID == item.GroupID);
+                            <ul class="list-unstyled">
+                                <li>
+                                    <a href="@Url.Action("Detail", "Group", new { ID = item.GroupID, Seo = item.Name.ToSeo() })">@Html.Raw(item.Name.FormatString()) <small>(@item.Url)</small></a>
+                                    @connector.ImproveThis(m => m.TargetID, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Connector") } })
+                                </li>
+                            </ul>
+                        }
+                    </li>
+                    <li>
+                        @Html.ImproveThis(m => m.Groups, customHtmlIcon: @"<i class=""fa fa-plus-circle""></i>Add new group")
+                    </li>
+                </ul>
+                @*@if (Model.GroupID > 0)
                 {
                     <a href="@Url.Action("Detail", "Group", new {ID = Model.GroupID, Seo=Model.Group.Name.ToSeo()})">@Html.Raw(Model.Group.Name.FormatString())</a>
                 }
@@ -179,7 +207,7 @@
                 {
                     @Html.Raw("Do you know who translated this series? Click on 'Edit' to help us update it.")
                 }
-                @Html.ImproveThis(m => m.GroupID)
+                @Html.ImproveThis(m => m.GroupID)*@
             </div>
         </div>
     </div>
@@ -189,19 +217,19 @@
         <div class="toolbar clearfix">
             <div class="vote-score">
                 <div class="vote @(Model.UserAction.Voted.GetValueOrDefault() == 1 ? "likes" : Model.UserAction.Voted.GetValueOrDefault() == -1 ? "dislikes" : "")">
-                    <span role="button" class="action vote-up" data-vote='{"SourceID": @Model.ID, "SourceTable": @R.SourceTable.SERIES, "Vote": 1}' title="i like this"><i class="fa fa-thumbs-up"></i></span>
+                    <span role="button" class="action vote-up" data-vote='{"SourceID": @Model.ID, "SourceTable": @R.SourceTable.SERIES, "Vote": 1}' title="i like this"><i class="fa fa-thumbs-o-up"></i></span>
                     <span class="score @((Model.Summarize.VoteUp - Model.Summarize.VoteDown) < 0 ? "dislikes" : "likes")">
                         @(Model.Summarize.VoteUp - Model.Summarize.VoteDown)
                     </span>
-                    <span role="button" class="action vote-down" data-vote='{"SourceID": @Model.ID, "SourceTable": @R.SourceTable.SERIES, "Vote": -1}' title="i dislike this"><i class="fa fa-thumbs-down"></i></span>
+                    <span role="button" class="action vote-down" data-vote='{"SourceID": @Model.ID, "SourceTable": @R.SourceTable.SERIES, "Vote": -1}' title="i dislike this"><i class="fa fa-thumbs-o-down"></i></span>
                 </div>
             </div>
             <div class="info">
                 <div>
-                    <i class="fa fa-thumbs-up"></i>@Model.Summarize.VoteUp likes
+                    <i class="fa fa-thumbs-o-up"></i>@Model.Summarize.VoteUp likes
                 </div>
                 <div>
-                    <i class="fa fa-thumbs-down"></i>@Model.Summarize.VoteDown dislikes
+                    <i class="fa fa-thumbs-o-down"></i>@Model.Summarize.VoteDown dislikes
                 </div>
             </div>
             <div class="info">

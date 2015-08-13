@@ -86,7 +86,9 @@ namespace Paranovels.Facade
                 var service = new GroupService(uow);
                 var detail = service.Get(criteria);
 
-                detail.Series = service.View<Series>().Where(w => w.GroupID == detail.GroupID).ToList();
+                detail.Series = service.View<Connector>()
+                        .Where(w => w.IsDeleted == false && w.ConnectorType == R.ConnectorType.SERIES_GROUP && w.TargetID == detail.GroupID)
+                        .Join(service.View<Series>().All(), c=> c.SourceID, s=>s.SeriesID, (c,s) => s).ToList();
 
                 detail.Releases = service.View<Release>().Where(w => w.GroupID == detail.GroupID).ToList();
 
@@ -101,26 +103,6 @@ namespace Paranovels.Facade
                 detail.Summarize = service.View<Summarize>().Where(w => w.SourceTable == R.SourceTable.GROUP && w.SourceID == detail.GroupID).SingleOrDefault() ?? new Summarize();
                 detail.UserAction = new UserActionFacade().Get(new ViewForm { UserID = criteria.ByUserID, SourceID = detail.GroupID, SourceTable = R.SourceTable.GROUP });
                 return detail;
-            }
-        }
-
-        public bool CheckFeedUpdate(int minutes = -30)
-        {
-            var lastCheckedDate = DateTime.Now.AddMinutes(minutes);
-            using (var uow = UnitOfWorkFactory.Create<NovelContext>())
-            {
-                var service = new ConnectorService(uow);
-                var connectorFeed = service.View<Connector>().Where(w => w.ConnectorType == R.ConnectorType.GROUP_FEED)
-                    .Join(service.View<Feed>().Where(w => w.Status == R.FeedStatus.ACTIVE && w.UpdatedDate < lastCheckedDate),
-                        c => c.TargetID, f => f.FeedID, (c, f) => new { c.SourceID, f.UpdatedDate }).OrderBy(o => o.UpdatedDate).FirstOrDefault();
-
-                if (connectorFeed != null)
-                {
-                    var facade = new FeedFacade();
-                    facade.CheckFeed(new GroupCriteria { ID = connectorFeed.SourceID });
-                    return true;
-                }
-                return false;
             }
         }
     }

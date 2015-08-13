@@ -20,48 +20,6 @@ namespace Paranovels.Facade
 {
     public class FeedFacade : IFacade
     {
-        public int CheckFeed(GroupCriteria criteria)
-        {
-            using (var uow = UnitOfWorkFactory.Create<NovelContext>())
-            {
-                var service = new ReleaseService(uow);
-                var feedService = new FeedService(uow);
-                var feedIDs = service.View<Connector>()
-                    .Where(w => w.ConnectorType == R.ConnectorType.GROUP_FEED && w.SourceID == criteria.IDToInt)
-                    .Select(s => s.TargetID).ToList();
-                foreach (var feedID in feedIDs)
-                {
-                    var feed = service.View<Feed>().Where(w => w.FeedID == feedID).Single();
-                    var glossaries = service.View<Connector>().Where(w => w.ConnectorType == R.ConnectorType.GROUP_GLOSSARY && w.SourceID == criteria.IDToInt)
-                            .Join(service.View<Glossary>().All(), c => c.TargetID, g => g.GlossaryID,
-                                (c, g) => g).ToList();
-                    var releases = GetNewReleases(feed.Url);
-                    foreach (var release in releases)
-                    {
-                        if (release.Date < feed.LastSuccessDate) continue; // skip since the release date is older then the last feed date
-                        // fix release title
-                        foreach (var glossary in glossaries)
-                        {
-                            release.Title = release.Title.Replace(glossary.Raw, glossary.Final);
-                        }
-
-                        release.Summary = "";
-                        release.GroupID = criteria.IDToInt;
-                        release.SeriesID = service.View<Series>()
-                            .Where(w => w.GroupID == criteria.IDToInt)
-                            .Where(w => release.Title.Contains(w.Title))
-                            .Select(s => s.SeriesID).FirstOrDefault();
-                        service.SaveChanges(release);
-                        feed.Total = feed.Total + 1;
-                    }
-                    // update feed last process date
-                    if (releases.Any()) feed.LastSuccessDate = DateTime.Now;
-                    feedService.SaveChanges(new GenericForm<Feed> { DataModel = feed });
-                }
-            }
-            return 0;
-        }
-
         public int CheckFeed(int connectorTypeFeed, int minutes = 5)
         {
             int newReleaseCount = 0;
@@ -78,66 +36,83 @@ namespace Paranovels.Facade
                 var releaseService = new ReleaseService(uow);
 
                 var qFeed = service.View<Feed>().Where(w => w.Status == R.FeedStatus.ACTIVE && w.LastSuccessDate < lastCheckedDate);
-                var qConnector = service.View<Connector>().All();
-                var qGlossary = service.View<Glossary>().All();
-                var qSeries = service.View<Series>().All();
+                var qConnector = service.View<Connector>().Where(w => w.IsDeleted == false);
+                var qAka = service.View<Aka>().Where(w => w.IsDeleted == false);
+                var qSeries = service.View<Series>().Where(w => w.IsDeleted == false);
+                var qGroup = service.View<Group>().Where(w => w.IsDeleted == false);
 
                 var pendingUpdates = qConnector.Where(w => w.ConnectorType == connectorTypeFeed)
-                                               .Join(qFeed, c => c.TargetID, f => f.FeedID, (c, f) => new { Connector = c, Feed = f }).ToList();
+                                               .Join(qFeed, c => c.TargetID, f => f.FeedID, (c, f) => new { Connector = c, Feed = f }).OrderBy(o => o.Feed.LastSuccessDate).ToList();
+
+                var lastRelease = releaseService.View<Release>().All().OrderByDescending(o => o.ReleaseID).First();
 
                 foreach (var pendingUpdate in pendingUpdates)
                 {
                     var releases = GetNewReleases(pendingUpdate.Feed.Url);
-                    releases = releases.Where(w => w.Date > pendingUpdate.Feed.LastSuccessDate).ToList(); // skip since the release date is older then the last feed date
-                    
-                    if(!releases.Any()) continue;
-                    
-                    var connectorTypeGlossary = mapFeedGlossary[pendingUpdate.Connector.ConnectorType];
-                    var glossaries = qConnector.Where(w => w.ConnectorType == connectorTypeGlossary && w.SourceID == pendingUpdate.Connector.SourceID)
-                                               .Join(qGlossary, c => c.TargetID, g => g.GlossaryID, (c, g) => g).ToList();
+                    releases = releases.Where(w => w.Date > pendingUpdate.Feed.LastSuccessDate && w.Date < DateTime.Now).ToList(); // skip since the release date is older then the last feed date
 
-                    foreach (var release in releases) 
+                    if (!releases.Any()) continue;
+
+                    foreach (var release in releases)
                     {
-                        // fix release title
-                        foreach (var glossary in glossaries)
-                        {
-                            release.Title = release.Title.Replace(glossary.Raw, glossary.Final);
-                        }
-                        
                         if (pendingUpdate.Connector.ConnectorType == R.ConnectorType.SERIES_FEED)
                         {
                             release.SeriesID = pendingUpdate.Connector.SourceID;
                             var series = qSeries.FirstOrDefault(w => w.SeriesID == release.SeriesID);
                             if (series != null)
                             {
-                                release.GroupID = series.GroupID;
+                                var groups = qConnector.Where(w => w.ConnectorType == R.ConnectorType.SERIES_GROUP && w.SourceID == series.SeriesID)
+                                        .Join(qGroup, c => c.TargetID, g => g.GroupID, (c, g) => g).ToList();
+
+                                if (groups.Count == 0)
+                                {
+
+                                }
+                                else if (groups.Count == 1)
+                                {
+                                    release.GroupID = groups[0].GroupID;
+                                }
+                                else
+                                {
+                                    foreach (var group in groups)
+                                    {
+                                        if (new Uri(group.Url).Host == new Uri(release.Url).Host)
+                                        {
+                                            release.GroupID = group.GroupID;
+                                        }
+                                    }
+                                }
                             }
                         }
                         if (pendingUpdate.Connector.ConnectorType == R.ConnectorType.GROUP_FEED)
                         {
                             release.GroupID = pendingUpdate.Connector.SourceID;
-                            Expression<Func<Series, bool>> seriesPredicate = s => release.Title.Contains(s.Title);
 
-                            // check to see how many series this group has
-                            var seriesCount = qSeries.Count(w => w.GroupID == release.GroupID);
-                            // if less than 2 then just use the first one otherwise match with title
-                            if(seriesCount < 2)
+                            // get all series this group has
+                            var series = qConnector.Where(w => w.ConnectorType == R.ConnectorType.SERIES_GROUP && w.TargetID == release.GroupID)
+                                .Join(qSeries, c => c.SourceID, s => s.SeriesID, (c, s) => s).ToList();
+
+                            if (series.Count == 0)
                             {
-                                seriesPredicate = s => true;
+
                             }
-                            var series = qSeries.Where(w => w.GroupID == release.GroupID).FirstOrDefault(seriesPredicate);
-                            if (series != null)
+                            else if (series.Count == 1)
                             {
-                                release.SeriesID = series.SeriesID;
+                                release.SeriesID = series[0].SeriesID;
                             }
                             else
                             {
-                                var seriesIDs = qSeries.Where(w => w.GroupID == release.GroupID).Select(s => s.SeriesID).ToList();
-                                var akas = service.View<Aka>().Where(w => w.IsDeleted == false && w.SourceTable == R.SourceTable.SERIES && seriesIDs.Contains(w.SourceID)).ToList();
-                                var aka = akas.FirstOrDefault(w => release.Title.Contains(w.Text));
-                                if (aka != null)
+                                var seriesIDs = series.Select(s => s.SeriesID).ToList();
+                                var akas = qAka.Where(w => w.SourceTable == R.SourceTable.SERIES && seriesIDs.Contains(w.SourceID)).ToList();
+                                var titles = series.Select(s => new { ID = s.SeriesID, Title = s.Title })
+                                    .Union(akas.Select(s => new { ID = s.SourceID, Title = s.Text }));
+
+                                foreach (var title in titles)
                                 {
-                                    release.SeriesID = aka.SourceID;
+                                    if (release.Title.ToSeo().Contains(title.Title.ToSeo()))
+                                    {
+                                        release.SeriesID = title.ID;
+                                    }
                                 }
                             }
                         }
@@ -146,7 +121,8 @@ namespace Paranovels.Facade
                         release.Type = R.ReleaseType.CHAPTER;
                         release.ReleaseID = releaseService.SaveChanges(release);
 
-                        if (release.SeriesID > 0)
+                        // notify only if release is new
+                        if (release.ReleaseID > lastRelease.ReleaseID)
                         {
                             new ListFacade().EmailNotifySubscriber(release);
                         }
@@ -166,7 +142,7 @@ namespace Paranovels.Facade
         {
             var chapters = new FeedChecker().Check(url);
             // filters out news and announments
-            chapters = chapters.Where(w => Regex.IsMatch(w.Title, @"\d+")); // must has number in title
+            //chapters = chapters.Where(w => Regex.IsMatch(w.Title, @"\d+")); // must has number in title
             // return filtered chapters
             return chapters.ToList();
         }

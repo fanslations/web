@@ -62,5 +62,23 @@ namespace Paranovels.Services
             // save
             SaveChanges();
         }
+
+        public ConnectorDetail Get(ConnectorCriteria criteria)
+        {
+            var qConnector = View<Connector>().All();
+
+            if (criteria.IDToInt > 0)
+            {
+                qConnector = qConnector.Where(w => w.ConnectorID == criteria.IDToInt);
+            }
+
+            var connector = qConnector.SingleOrDefault();
+            if (connector == null) return null;
+
+            var detail = new ConnectorDetail();
+            MapProperty(connector, detail);
+
+            return detail;
+        }
     }
 }

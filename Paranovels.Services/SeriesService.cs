@@ -77,9 +77,7 @@ namespace Paranovels.Services
                     Title = sm.Series.Title,
                     ImageUrl = sm.Series.ImageUrl,
                     Synopsis = sm.Series.Synopsis,
-                    Status = sm.Series.Status,
-                    GroupID = sm.Series.GroupID,
-                    
+                    Status = sm.Series.Status,                  
 
                     CommentCount = s.CommentCount,
                     ViewCount = s.ViewCount,

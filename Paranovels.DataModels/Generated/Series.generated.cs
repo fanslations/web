@@ -46,9 +46,6 @@ namespace Paranovels.DataModels
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Status", TypeName = "int"), Display(Name="Status")]
 		public int Status { get; set; }
 		
-		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("GroupID", TypeName = "int"), Display(Name="Group ID")]
-		public int GroupID { get; set; }
-		
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("RawLanguage", TypeName = "int"), Display(Name="Raw Language")]
 		public int RawLanguage { get; set; }
 		

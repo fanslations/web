@@ -17,7 +17,7 @@ namespace Paranovels.ViewModels
         public List<Connector> Connectors { get; set; }
 
         [NotMapped]
-        public Group Group { get; set; }
+        public List<Group> Groups { get; set; }
         [NotMapped]
         public IList<Release> Releases { get; set; }
         [NotMapped]

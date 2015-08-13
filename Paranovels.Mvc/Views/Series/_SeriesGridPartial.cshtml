@@ -68,10 +68,10 @@
                             <i class="fa fa-rss"></i><a href="@Url.Action("Detail", "Release", new { latestRelease.ID, Seo = latestRelease.Title.ToSeo() })">@Html.Raw(latestRelease.Title.FormatString())</a>
                         </li>
                     }
-                    @if (item.Group != null)
+                    @foreach (var group in item.Groups)
                     {
                         <li title="Translations Group">
-                            <i class="fa fa-group"></i><a href="@Url.Action("Detail", "Group", new { ID = item.Group.GroupID, Seo = item.Group.Name.ToSeo() })">@item.Group.Name</a>
+                            <i class="fa fa-group"></i><a href="@Url.Action("Detail", "Group", new { ID = group.GroupID, Seo = group.Name.ToSeo() })">@group.Name</a>
                         </li>
                     }
                 </ul>

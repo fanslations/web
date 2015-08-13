@@ -33,12 +33,6 @@ namespace Paranovels.Mvc.Controllers
             return View(detail);
         }
 
-        public ContentResult CallbackFeed(GroupCriteria criteria)
-        {
-            var results = Facade<FeedFacade>().CheckFeed(criteria);
-            return new ContentResult() { Content = "OK"};
-        }
-
         public JsonResult CheckFeedUpdate(int id = 5)
         {
             var results = Facade<FeedFacade>().CheckFeed(R.ConnectorType.GROUP_FEED, id);

@@ -8,6 +8,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var tab = Request.QueryString["Tab"] ?? "Comments";
+
+    var feedColorMapper = new Dictionary<int, string>
+    {
+        {R.FeedStatus.ACTIVE, "green"},
+        {R.FeedStatus.INACTIVE, "orange"},
+        {R.FeedStatus.DEAD, "red"},
+        {R.FeedStatus.PENDING, "gray"},
+    };
 }
 <section class="section">
     <div class="header">
@@ -90,9 +98,10 @@
                         @Html.Raw(Model.Feeds.Count > 0 ? "" : "No rss feed available. Help us add a rss feed and track this group.")
                         @foreach (var item in Model.Feeds)
                         {
-                            <ul class="list-inline list-unstyled">
+                            <ul class="list-unstyled">
                                 <li>
-                                    <a href="@item.Url">@item.Url</a>
+                                    <i class="fa fa-circle" style="color: @feedColorMapper[item.Status]" title="last success date @item.LastSuccessDate"></i><a href="@item.Url">@item.Url</a>
+                                    @Html.ImproveThis(m => m.Feeds, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Group", new { FeedID = item.FeedID }) } })
                                 </li>
                             </ul>
                         }
@@ -217,7 +226,7 @@
                         Status = s.Status,
                         Synopsis = s.Synopsis,
                         ImageUrl = s.ImageUrl,
-                        Group = Model,
+                        Groups = new List<Group>(),
                         UserLists = new List<UserList>(),
                         Connectors = new List<Connector>(),
                         Releases = Model.Releases.Where(w=>w.SeriesID == s.SeriesID).ToList()

@@ -38,15 +38,15 @@
         @{ var formModel = new SeriesForm(); }
         <form class="" method="POST" action="@Url.Action("Form")" data-form-ajax='{}'>
             <div class="hidden">
-                <input type="hidden" name="@formModel.PropertyName(m=>m.Status)" value="@R.TranslationStatus.ACTIVE"/>
+                <input type="hidden" name="@formModel.PropertyName(m=>m.Status)" value="@R.TranslationStatus.ACTIVE" />
             </div>
             <div class="form-group">
                 <label id="label-title" for="title">Title</label>
-                <input id="title" name="@formModel.PropertyName(m => m.Title)" type="text" class="form-control" placeholder="Enter title" aria-labelledby="label-title" required />
+                <input id="title" name="@formModel.PropertyName(m => m.Title)" type="text" value="@Request.QueryString["Title"]" class="form-control" placeholder="Enter title" aria-labelledby="label-title" required />
             </div>
             <div class="form-group">
                 <label id="label-synopsis" for="synopsis">Synopsis</label>
-                <textarea id="synopsis" name="@formModel.PropertyName(m => m.Synopsis)" class="form-control" placeholder="Enter synopsis" aria-labelledby="label-synopsis" required></textarea>
+                <textarea id="synopsis" name="@formModel.PropertyName(m => m.Synopsis)" class="form-control" placeholder="Enter synopsis" aria-labelledby="label-synopsis" required>@Request.QueryString["Synopsis"]</textarea>
             </div>
             <div class="form-group clearfix">
                 <button type="submit" class="btn btn-primary"><i class="fa fa-plus-circle"></i>Add Novel</button>

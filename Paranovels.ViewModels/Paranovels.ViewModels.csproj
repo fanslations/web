@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Criteria Models\BaseCriteria.cs" />
     <Compile Include="Criteria Models\ListCriteria.cs" />
+    <Compile Include="Criteria Models\ConnectorCriteria.cs" />
     <Compile Include="Criteria Models\VoteCriteria.cs" />
     <Compile Include="Criteria Models\GenericCriteria.cs" />
     <Compile Include="Criteria Models\GlossaryCriteria.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Criteria Models\SeriesCriteria.cs" />
     <Compile Include="Criteria Models\ChapterCriteria.cs" />
     <Compile Include="Criteria Models\NovelTrackerCriteria.cs" />
+    <Compile Include="Detail Models\ConnectorDetail.cs" />
     <Compile Include="Detail Models\GlossaryDetail.cs" />
     <Compile Include="Detail Models\GroupDetail.cs" />
     <Compile Include="Detail Models\ReleaseDetail.cs" />

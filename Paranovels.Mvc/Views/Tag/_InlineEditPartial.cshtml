@@ -5,6 +5,11 @@
 @{
     Layout = null;
 }
+@if (!User.Identity.IsAuthenticated)
+{
+    Html.RenderPartial("_InlineEditorUnauthorizedPartial");
+    return;
+}
 <div id="@(Model.InlineEditProperty)Container" class="inline-editor">
     <form id="@(Model.InlineEditProperty)Form" method="post" action="@Url.Action("Form")" enctype="multipart/form-data">
         

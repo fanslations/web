@@ -26,28 +26,27 @@ namespace Paranovels.Facade
                 var seriesIDs = results.Data.Select(s => s.SeriesID).ToList();
                 // latest release
                 var releases = service.View<Release>().Where(w => seriesIDs.Contains(w.SeriesID)).ToList();
-                // translations group
-                var groupIDs = results.Data.Select(s => s.GroupID).ToList();
+                // connectors
+                var connectors = service.View<Connector>().Where(w => w.IsDeleted == false).Where(w => seriesIDs.Contains(w.SourceID)).ToList();
+                // groups
+                var groupIDs = connectors.Where(w => w.ConnectorType == R.ConnectorType.SERIES_GROUP).Select(s => s.TargetID).ToList();
                 var groups = service.View<Group>().Where(w => groupIDs.Contains(w.GroupID)).ToList();
 
                 // user lists 
                 var userLists = service.View<UserList>().Where(w => w.IsDeleted == false && w.UserID == searchModel.Criteria.ByUserID).ToList();
-
-                var connectors = service.View<Connector>().Where(w => w.IsDeleted == false).ToList();
-
-                var userVotedSeriesIDs =
-                    service.View<UserVote>().Where(w => w.SourceTable == R.SourceTable.SERIES && seriesIDs.Contains(w.SourceID) && w.UserID == searchModel.Criteria.ByUserID)
+                // vote
+                var userVotedSeriesIDs = service.View<UserVote>().Where(w => w.SourceTable == R.SourceTable.SERIES && seriesIDs.Contains(w.SourceID) && w.UserID == searchModel.Criteria.ByUserID)
                         .Select(s => new { SeriesID = s.SourceID, Vote = s.Vote }).ToList();
-
-                var userQualityRatedSeriesIDs =
-                    service.View<UserRate>().Where(w => w.SourceTable == R.SourceTable.SERIES && seriesIDs.Contains(w.SourceID) && w.UserID == searchModel.Criteria.ByUserID)
+                // rate
+                var userQualityRatedSeriesIDs = service.View<UserRate>().Where(w => w.SourceTable == R.SourceTable.SERIES && seriesIDs.Contains(w.SourceID) && w.UserID == searchModel.Criteria.ByUserID)
                         .Select(s => new { SeriesID = s.SourceID, Rate = s.Rate }).ToList();
 
                 // convert to PagedList<TranslationSceneGrid>
                 var data = results.Data.Select(s =>
                 {
                     s.Releases = releases.Where(w => w.SeriesID == s.SeriesID).ToList();
-                    s.Group = groups.SingleOrDefault(g => g.GroupID == s.GroupID);
+                    s.Groups = connectors.Where(w => w.ConnectorType == R.ConnectorType.SERIES_GROUP && w.SourceID == s.SeriesID)
+                                    .Join(groups, c => c.TargetID, g=> g.GroupID, (c, g) => g).ToList();
 
                     s.UserLists = userLists;
                     s.Connectors = connectors.Where(w => w.SourceID == s.SeriesID).ToList();

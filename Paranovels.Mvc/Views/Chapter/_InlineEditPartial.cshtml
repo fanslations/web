@@ -7,6 +7,11 @@
         ? "number" : inputType.Contains("Date")
             ? "date" : "text";
 }
+@if (!User.Identity.IsAuthenticated)
+{
+    Html.RenderPartial("_InlineEditorUnauthorizedPartial");
+    return;
+}
 <div id="@(Model.InlineEditProperty)Container">
     <form id="@(Model.InlineEditProperty)Form" method="post" action="@Url.Action("Form")">
         <div class="form-group">

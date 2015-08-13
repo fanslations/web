@@ -70,18 +70,10 @@ namespace Paranovels.Common //.Generated Resources
 			[Description("color: darkblue;")]
 			public const int DARK_BLUE = 2;
 				
-			/// <summary>
-			/// color: darkred;
-			/// </summary>
-			[Description("color: darkred;")]
-			public const int DARK_RED = 1;
-				
 			
 			public const string ClassName = "ColorX";
 			public static readonly Dictionary<int,string> Translate = new Dictionary<int,string> {
 												{2,"color: darkblue;"},
-							
-												{1,"color: darkred;"},
 							
 						}; // end translate dictionary
         }	
@@ -133,6 +125,12 @@ namespace Paranovels.Common //.Generated Resources
 			public const int SERIES_GLOSSARY = 10;
 				
 			/// <summary>
+			/// Connect series and group
+			/// </summary>
+			[Description("Connect series and group")]
+			public const int SERIES_GROUP = 12;
+				
+			/// <summary>
 			/// Link series to novel categories
 			/// </summary>
 			[Description("Link series to novel categories")]
@@ -172,6 +170,8 @@ namespace Paranovels.Common //.Generated Resources
 												{6,"Link series to data feed url"},
 							
 												{10,"Series Glossary"},
+							
+												{12,"Connect series and group"},
 							
 												{3,"Link series to novel categories"},
 							

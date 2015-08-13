@@ -253,7 +253,7 @@
     <Content Include="assets\css\paranovels\important.css" />
     <Compile Include="Code\Extensions\HtmlHelperExtension.cs" />
     <Compile Include="Code\Extensions\TranslateExtension.cs" />
-    <Compile Include="Code\Helpers\UserExtension.cs" />
+    <Compile Include="Code\Extensions\UserExtension.cs" />
     <Compile Include="Code\Helpers\WebHelper.cs" />
     <Compile Include="Code\SiteController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -444,6 +444,8 @@
     <Content Include="Views\Chapter\Add.cshtml" />
     <Content Include="Views\Chapter\Detail.cshtml" />
     <Content Include="Views\Account\_LoginPartial.cshtml" />
+    <Content Include="Views\Shared\_InlineEditorUnauthorizedPartial.cshtml" />
+    <Content Include="Views\Connector\_InlineEditPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Api\" />

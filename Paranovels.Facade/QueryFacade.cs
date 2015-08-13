@@ -21,7 +21,7 @@ namespace Paranovels.Facade
                 return service.Search(new SearchModel<TagCriteria>
                 {
                     Criteria = criteria,
-                    PagedListConfig = new PagedListConfig() {PageSize = 999999}
+                    PagedListConfig = new PagedListConfig() { PageSize = 999999 }
                 }).Data;
             }
         }
@@ -32,9 +32,11 @@ namespace Paranovels.Facade
             {
                 var qGroup = uow.Repository<Group>().All();
 
-                var groups = qGroup.Where(w => w.Name.Contains(criteria.Query));
-
-                return groups.ToList();
+                if (!string.IsNullOrWhiteSpace(criteria.Query))
+                {
+                    qGroup = qGroup.Where(w => w.Name.Contains(criteria.Query));
+                }
+                return qGroup.ToList();
             }
         }
 
@@ -55,9 +57,12 @@ namespace Paranovels.Facade
             {
                 var qSeries = uow.Repository<Series>().All();
 
-                var series = qSeries.Where(w => w.Title.Contains(criteria.Query));
+                if (!string.IsNullOrWhiteSpace(criteria.Query))
+                {
+                    qSeries = qSeries.Where(w => w.Title.Contains(criteria.Query));
+                }
 
-                return series.ToList();
+                return qSeries.ToList();
             }
         }
     }
