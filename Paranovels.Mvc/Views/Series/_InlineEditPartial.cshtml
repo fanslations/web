@@ -131,7 +131,49 @@
                 </script>
                 <label for="@Model.InlineEditProperty" class="sr-only">Select Translations Group</label>
                 <select id="@Model.InlineEditProperty" name="@(Model.InlineEditProperty)[0].GroupID" placeholder="Select Group" required></select>
+            }
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Authors))
+            {
+                <script>
+                    require(['jquery', 'selectize'], function ($, selectize) {
+                        'use strict';
 
+                        console.log($, selectize);
+                        $('#@Model.InlineEditProperty').selectize({
+                            valueField: 'AuthorID',
+                            labelField: 'Name',
+                            searchField: 'Name',
+                            sortField: 'Name',
+                            preload: true,
+                            create: function (input, callback) {
+                                window.location = '@Url.Action("Index","Author",new { Do = "add" })' + '&Name=' + input + '&ReturnUrl=@Request.UrlReferrer.PathAndQuery';
+                            },
+                            render: {
+                                option: function (item, escape) {
+                                    return '<div>' +
+                                        '<strong class="title">' + item.Name + '</strong>' +
+                                        '<p class="description">' + escape(item.Url) + '</p>' +
+                                        '</div>';
+                                }
+                            },
+                            load: function (query, callback) {
+
+                                $.ajax({
+                                    url: '/query/authors?query=' + encodeURIComponent(query),
+                                    type: 'GET',
+                                    error: function () {
+                                        callback();
+                                    },
+                                    success: function (res) {
+                                        callback(res);
+                                    }
+                                });
+                            }
+                        });
+                    });
+                </script>
+                <label for="@Model.InlineEditProperty" class="sr-only">Select Author</label>
+                <select id="@Model.InlineEditProperty" name="@(Model.InlineEditProperty)[0].AuthorID" placeholder="Select Author" required></select>
             }
             else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.ImageUrl))
             {

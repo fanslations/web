@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuthorService.cs" />
     <Compile Include="StickyService.cs" />
     <Compile Include="ConnectorService.cs" />
     <Compile Include="GlossaryService.cs" />

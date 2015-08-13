@@ -1,0 +1,150 @@
+﻿@using Paranovels.Common
+@using Paranovels.DataModels
+@using Paranovels.ViewModels
+@using Thi.Core
+@model AuthorDetail
+@{
+    ViewBag.Title = Model.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var tab = Request.QueryString["Tab"] ?? "Comments";
+}
+<section class="section">
+    <div class="header">
+        <a href="@Url.Action("Index")" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
+        <h1 class="title">
+            @Model.Name
+        </h1>
+    </div>
+    <div class="content">
+        <div class="detail-group">
+            <strong>Name</strong>
+            <div>
+                @Model.Name
+                @Html.ImproveThis(m => m.Name)
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong>Updated Date</strong>
+            <div>@Model.UpdatedDate.FormatDate()</div>
+        </div>
+        <div class="detail-group">
+            <strong>Rating</strong>
+            <div>@RatingHelper.DisplayRating(Model.Summarize)</div>
+        </div>
+        <div class="detail-group">
+            <strong>Website</strong>
+            <div>
+                @if (string.IsNullOrWhiteSpace(Model.Url))
+                {
+                    Html.Raw(Model.Url.FormatString());
+                }
+                else
+                {
+                    <a href="@Model.Url" target="_blank">@Model.Url<i class="fa fa-external-link right"></i></a>
+                }
+                @Html.ImproveThis(m => m.Url)
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="content">
+        <div class="toolbar clearfix">
+            <div class="vote-score">
+                <div class="vote @(Model.UserAction.Voted.GetValueOrDefault() == 1 ? "likes" : Model.UserAction.Voted.GetValueOrDefault() == -1 ? "dislikes" : "")">
+                    <span role="button" class="action vote-up" data-vote='{"SourceID": @Model.ID, "SourceTable": @R.SourceTable.GROUP, "Vote": 1}' title="i like this"><i class="fa fa-thumbs-up"></i></span>
+                    <span class="score @((Model.Summarize.VoteUp - Model.Summarize.VoteDown) < 0 ? "dislikes" : "likes")">
+                        @(Model.Summarize.VoteUp - Model.Summarize.VoteDown)
+                    </span>
+                    <span role="button" class="action vote-down" data-vote='{"SourceID": @Model.ID, "SourceTable": @R.SourceTable.GROUP, "Vote": -1}' title="i dislike this"><i class="fa fa-thumbs-down"></i></span>
+                </div>
+            </div>
+            <div class="info">
+                <div>
+                    <i class="fa fa-thumbs-up"></i>@Model.Summarize.VoteUp likes
+                </div>
+                <div>
+                    <i class="fa fa-thumbs-down"></i>@Model.Summarize.VoteDown dislikes
+                </div>
+            </div>
+            <div class="info">
+                <div>
+                    <i class="fa fa-eye"></i>@Model.Summarize.ViewCount views
+                </div>
+                <div>
+                    <i class="fa fa-check-square-o"></i>@Model.Summarize.ReadCount reads
+                </div>
+            </div>
+            <div class="info">
+                <div>
+                    <i class="fa fa-diamond"></i>@RatingHelper.DisplayRating(Model.Summarize)
+                </div>
+                <div>
+                    <i class="fa @(Model.UserAction.QualityRated > 0 ? "fa-star" : "fa-star-o")"></i>@Model.Summarize.QualityCount users rated
+                </div>
+            </div>
+            <div class="info">
+                <div>
+                    <i class="fa fa-comments"></i>@Model.Summarize.CommentCount comments
+                </div>
+
+            </div>
+            <div class="info">
+                <div>
+                    <i class="fa fa-book"></i>@Model.Series.Count() series
+                </div>
+                <div>
+                    <i class="fa fa-rss"></i>@Model.Releases.Count() releases
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="content">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="@(tab.Equals("Comments",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                <a href="?Tab=Comments#comments" aria-controls="home" role="tab">Comments (@Model.Summarize.CommentCount)</a>
+            </li>
+            <li role="presentation" class="@(tab.Equals("Series",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                <a href="?Tab=Series#series" aria-controls="home" role="tab">Series (@Model.Series.Count)</a>
+            </li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            @if (tab.Equals("Comments", StringComparison.OrdinalIgnoreCase))
+            {
+                <div role="tabpanel" class="tab-pane active" id="comments">
+                    @{
+                Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.AuthorID, SourceTable = R.SourceTable.AUTHOR, Sorted = Request.QueryString["sorted"] });
+                    }
+                </div>
+            }
+            @if (tab.Equals("Series", StringComparison.OrdinalIgnoreCase))
+            {
+                <div role="tabpanel" class="tab-pane active section" id="series">
+                    @{
+                Html.RenderPartial("~/Views/Series/_SeriesGridPartial.cshtml", new PagedList<SeriesGrid>
+                {
+                    Data = Model.Series.Select(s => new SeriesGrid()
+                    {
+                        SeriesID = s.SeriesID,
+                        Title = s.Title,
+                        UpdatedDate = s.UpdatedDate,
+                        Status = s.Status,
+                        Synopsis = s.Synopsis,
+                        ImageUrl = s.ImageUrl,
+                        Groups = new List<Group>(),
+                        UserLists = new List<UserList>(),
+                        Connectors = new List<Connector>(),
+                        Releases = Model.Releases.Where(w => w.SeriesID == s.SeriesID).ToList()
+                    }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
+                });
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</section>

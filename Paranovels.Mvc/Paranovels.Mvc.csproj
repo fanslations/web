@@ -263,6 +263,7 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\FormController.cs" />
     <Compile Include="Controllers\GlossaryController.cs" />
+    <Compile Include="Controllers\AuthorController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\ImdController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
@@ -446,6 +447,10 @@
     <Content Include="Views\Account\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_InlineEditorUnauthorizedPartial.cshtml" />
     <Content Include="Views\Connector\_InlineEditPartial.cshtml" />
+    <Content Include="Views\Author\Index.cshtml" />
+    <Content Include="Views\Author\Detail.cshtml" />
+    <Content Include="Views\Author\_InlineEditPartial.cshtml" />
+    <Content Include="Views\Author\_AuthorGridPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Api\" />

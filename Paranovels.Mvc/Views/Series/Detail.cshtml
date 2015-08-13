@@ -71,6 +71,30 @@
             </div>
         </div>
         <div class="detail-group">
+            <strong>Author(s)</strong>
+            <div>
+                <ul class="list-unstyled no-margin">
+                    <li>
+                        @Html.Raw(Model.Authors.Count > 0 ? "" : "Do you know who is the author(s)? Help us update it.")
+                        @foreach (var item in Model.Authors.OrderBy(o => o.Name))
+                        {
+                            // editing another table (connector)
+                            var connector = Model.Connectors.Single(w => w.ConnectorType == R.ConnectorType.SERIES_AUTHOR && w.TargetID == item.AuthorID);
+                            <ul class="list-unstyled">
+                                <li>
+                                    <a href="@Url.Action("Detail", "Author", new { ID = item.AuthorID, Seo = item.Name.ToSeo() })">@Html.Raw(item.Name.FormatString())</a>
+                                    @connector.ImproveThis(m => m.TargetID, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Connector") } })
+                                </li>
+                            </ul>
+                        }
+                    </li>
+                    <li>
+                        @Html.ImproveThis(m => m.Authors, customHtmlIcon: @"<i class=""fa fa-plus-circle""></i>Add new author")
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="detail-group">
             <strong>Categories</strong>
             <div>
                 @Html.Raw(string.Join(", ", Model.Categories.Select(s => string.Format(@"<a href=""{1}"">{0}</a>", s.Name, Url.Action("Detail", "Tag", new { ID = s.TagID, Seo = s.Name.ToSeo() })))).FormatString(0, 20, "Help us categorize this series? Click on 'Edit' to help us update it."))
@@ -199,15 +223,6 @@
                         @Html.ImproveThis(m => m.Groups, customHtmlIcon: @"<i class=""fa fa-plus-circle""></i>Add new group")
                     </li>
                 </ul>
-                @*@if (Model.GroupID > 0)
-                {
-                    <a href="@Url.Action("Detail", "Group", new {ID = Model.GroupID, Seo=Model.Group.Name.ToSeo()})">@Html.Raw(Model.Group.Name.FormatString())</a>
-                }
-                else
-                {
-                    @Html.Raw("Do you know who translated this series? Click on 'Edit' to help us update it.")
-                }
-                @Html.ImproveThis(m => m.GroupID)*@
             </div>
         </div>
     </div>

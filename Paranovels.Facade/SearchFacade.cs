@@ -31,7 +31,6 @@ namespace Paranovels.Facade
                 // groups
                 var groupIDs = connectors.Where(w => w.ConnectorType == R.ConnectorType.SERIES_GROUP).Select(s => s.TargetID).ToList();
                 var groups = service.View<Group>().Where(w => groupIDs.Contains(w.GroupID)).ToList();
-
                 // user lists 
                 var userLists = service.View<UserList>().Where(w => w.IsDeleted == false && w.UserID == searchModel.Criteria.ByUserID).ToList();
                 // vote
@@ -47,7 +46,7 @@ namespace Paranovels.Facade
                     s.Releases = releases.Where(w => w.SeriesID == s.SeriesID).ToList();
                     s.Groups = connectors.Where(w => w.ConnectorType == R.ConnectorType.SERIES_GROUP && w.SourceID == s.SeriesID)
                                     .Join(groups, c => c.TargetID, g=> g.GroupID, (c, g) => g).ToList();
-
+             
                     s.UserLists = userLists;
                     s.Connectors = connectors.Where(w => w.SourceID == s.SeriesID).ToList();
 

@@ -13,6 +13,9 @@ namespace Paranovels.Facade
     {
         public int SaveChanges(object formModel)
         {
+            if (formModel.GetType() == typeof(AuthorForm))
+                return new AuthorFacade().AddAuthor(formModel as AuthorForm);
+
             if (formModel.GetType() == typeof(UserForm))
                 return new UserFacade().AddUser(formModel as UserForm);
 

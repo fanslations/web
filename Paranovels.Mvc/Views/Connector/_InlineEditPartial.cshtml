@@ -58,10 +58,48 @@
                 <select id="groupid" name="@Model.InlineEditProperty" placeholder="Select Group" required></select>
 
             }
-            @if (Model.Model.ConnectorType == R.ConnectorType.SERIES_FEED && Model.InlineEditProperty == Model.PropertyName(m => m.Model.TargetID))
+            else if (Model.Model.ConnectorType == R.ConnectorType.SERIES_AUTHOR && Model.InlineEditProperty == Model.PropertyName(m => m.Model.TargetID))
             {
-                <label for="@Model.InlineEditProperty" class="sr-only">Rss Feed Url</label>
-                <input id="@Model.InlineEditProperty" type="url" class="form-control" name="@Model.InlineEditProperty" value="" required />
+            <script>
+                require(['jquery', 'selectize'], function ($, selectize) {
+                    'use strict';
+
+                    $('#groupid').selectize({
+                        valueField: 'AuthorID',
+                        labelField: 'Name',
+                        searchField: 'Name',
+                        sortField: 'Name',
+                        preload: true,
+                        create: function (input, callback) {
+                            window.location = '@Url.Action("Index","Author",new { Do = "add" })' + '&Name=' + input + '&ReturnUrl=@Request.UrlReferrer.PathAndQuery';
+                        },
+                        render: {
+                            option: function (item, escape) {
+                                return '<div>' +
+                                    '<strong class="title">' + item.Name + '</strong>' +
+                                    '<p class="description">' + escape(item.Url) + '</p>' +
+                                    '</div>';
+                            }
+                        },
+                        load: function (query, callback) {
+
+                            $.ajax({
+                                url: '/query/authors?query=' + encodeURIComponent(query),
+                                type: 'GET',
+                                error: function () {
+                                    callback();
+                                },
+                                success: function (res) {
+                                    callback(res);
+                                }
+                            });
+                        }
+                    });
+                });
+            </script>
+            <label for="groupid" class="sr-only">Select Group</label>
+            <select id="groupid" name="@Model.InlineEditProperty" placeholder="Select Group" required></select>
+
             }
             else
             {

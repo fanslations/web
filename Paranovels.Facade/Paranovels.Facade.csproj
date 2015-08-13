@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="FacadeFactory.cs" />
     <Compile Include="GlossaryFacade.cs" />
+    <Compile Include="AuthorFacade.cs" />
     <Compile Include="ListFacade.cs" />
     <Compile Include="GenericFacade.cs" />
     <Compile Include="SearchFacade.cs" />

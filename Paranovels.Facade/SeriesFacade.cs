@@ -98,6 +98,21 @@ namespace Paranovels.Facade
                         connectorService.SaveChanges(connectorForm);
                     }
                 }
+                if (form.Authors != null || form.InlineEditProperty == form.PropertyName(m => m.Authors))
+                {
+                    foreach (var author in form.Authors)
+                    {
+                        // connect series to feed
+                        var connectorForm = new ConnectorForm()
+                        {
+                            ByUserID = form.ByUserID,
+                            ConnectorType = R.ConnectorType.SERIES_AUTHOR,
+                            SourceID = id,
+                            TargetID = author.AuthorID
+                        };
+                        connectorService.SaveChanges(connectorForm);
+                    }
+                }
                 if (form.Akas != null || form.InlineEditProperty == form.PropertyName(m => m.Akas))
                 {
                     var akaService = new AkaService(uow);
@@ -125,9 +140,16 @@ namespace Paranovels.Facade
                 var service = new SeriesService(uow);
                 var detail = service.Get(criteria);
 
-                var connectorTypes = new[] { R.ConnectorType.SERIES_TAGCATEGORY, R.ConnectorType.SERIES_TAGGENRE, R.ConnectorType.SERIES_TAGCONTAIN, R.ConnectorType.SERIES_GROUP };
+                var connectorTypes = new[]
+                {
+                    R.ConnectorType.SERIES_TAGCATEGORY,
+                    R.ConnectorType.SERIES_TAGGENRE,
+                    R.ConnectorType.SERIES_TAGCONTAIN,
+                    R.ConnectorType.SERIES_GROUP,
+                    R.ConnectorType.SERIES_AUTHOR,
+                };
                 var connectors = service.View<Connector>()
-                                                 .Where(w => w.IsDeleted == false && connectorTypes.Contains(w.ConnectorType) && w.SourceID == detail.SeriesID).ToList();
+                                    .Where(w => w.IsDeleted == false && connectorTypes.Contains(w.ConnectorType) && w.SourceID == detail.SeriesID).ToList();
 
                 var tagTypes = new[] { R.TagType.NOVEL_CATEGORY, R.TagType.NOVEL_GENRE, R.TagType.NOVEL_CONTAIN };
                 var tags = service.View<Tag>().Where(w => tagTypes.Contains(w.TagType)).ToList();
@@ -138,13 +160,16 @@ namespace Paranovels.Facade
 
                 detail.Contains = tags.Where(w => w.TagType == R.TagType.NOVEL_CONTAIN && connectors.Any(a => a.ConnectorType == R.ConnectorType.SERIES_TAGCONTAIN && a.TargetID == w.TagID)).ToList();
 
+                var authorIDs = connectors.Where(w => w.ConnectorType == R.ConnectorType.SERIES_AUTHOR).Select(s=> s.TargetID).ToList();
+                detail.Authors = service.View<Author>().Where(w => authorIDs.Contains(w.AuthorID)).ToList();
+
                 var groupIDs = connectors.Where(w => w.ConnectorType == R.ConnectorType.SERIES_GROUP).Select(s=> s.TargetID).ToList();
                 detail.Groups = service.View<Group>().Where(w => groupIDs.Contains(w.GroupID)).ToList();
                 
                 detail.Summarize = service.View<Summarize>().Where(w => w.SourceTable == R.SourceTable.SERIES && w.SourceID == detail.SeriesID).SingleOrDefault() ?? new Summarize();
 
                 // get data for user lists
-                detail.Connectors = service.View<Connector>().Where(w => w.IsDeleted == false && w.SourceID == detail.ID).ToList();
+                detail.Connectors = connectors;
 
                 detail.UserLists = service.View<UserList>().Where(w => w.IsDeleted == false && w.UserID == criteria.ByUserID)
                     .OrderBy(o => o.Priority == 0 ? int.MaxValue : o.Priority).ThenBy(o => o.Name).ToList();

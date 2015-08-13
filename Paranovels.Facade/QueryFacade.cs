@@ -65,5 +65,20 @@ namespace Paranovels.Facade
                 return qSeries.ToList();
             }
         }
+
+        public IList<Author> SearchAuthor(AuthorCriteria criteria)
+        {
+            using (var uow = UnitOfWorkFactory.Create<NovelContext>())
+            {
+                var qAuthor = uow.Repository<Author>().All();
+
+                if (!string.IsNullOrWhiteSpace(criteria.Query))
+                {
+                    qAuthor = qAuthor.Where(w => w.Name.Contains(criteria.Query));
+                }
+
+                return qAuthor.ToList();
+            }
+        }
     }
 }

@@ -38,6 +38,12 @@ namespace Paranovels.Mvc.Controllers
             return Json(groupList, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult Authors(AuthorCriteria criteria)
+        {
+            var groupList = Facade<QueryFacade>().SearchAuthor(criteria);
+            return Json(groupList, JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult Comments(CommentCriteria criteria)
         {
             var searchModel = CreateSearchModel(criteria);

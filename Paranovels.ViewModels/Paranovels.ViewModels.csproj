@@ -43,6 +43,7 @@
     <Compile Include="Criteria Models\BaseCriteria.cs" />
     <Compile Include="Criteria Models\ListCriteria.cs" />
     <Compile Include="Criteria Models\ConnectorCriteria.cs" />
+    <Compile Include="Criteria Models\AuthorCriteria.cs" />
     <Compile Include="Criteria Models\VoteCriteria.cs" />
     <Compile Include="Criteria Models\GenericCriteria.cs" />
     <Compile Include="Criteria Models\GlossaryCriteria.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Criteria Models\NovelTrackerCriteria.cs" />
     <Compile Include="Detail Models\ConnectorDetail.cs" />
     <Compile Include="Detail Models\GlossaryDetail.cs" />
+    <Compile Include="Detail Models\AuthorDetail.cs" />
     <Compile Include="Detail Models\GroupDetail.cs" />
     <Compile Include="Detail Models\ReleaseDetail.cs" />
     <Compile Include="Detail Models\CommentDetail.cs" />
@@ -68,6 +70,7 @@
     <Compile Include="Detail Models\SeriesDetail.cs" />
     <Compile Include="Detail Models\ChapterDetail.cs" />
     <Compile Include="Detail Models\NovelDetail.cs" />
+    <Compile Include="Form Models\AuthorForm.cs" />
     <Compile Include="Form Models\SpamReportForm.cs" />
     <Compile Include="Form Models\GlossaryForm.cs" />
     <Compile Include="Form Models\ReleasetForm.cs" />
@@ -90,6 +93,7 @@
     <Compile Include="Form Models\NovelForm.cs" />
     <Compile Include="Form Models\UserForm.cs" />
     <Compile Include="Grid Models\CommentGrid.cs" />
+    <Compile Include="Grid Models\AuthorGrid.cs" />
     <Compile Include="Grid Models\GroupGrid.cs" />
     <Compile Include="Grid Models\ListGrid.cs" />
     <Compile Include="Grid Models\ContentGrid.cs" />
@@ -98,6 +102,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Criteria Models\TranslatorCriteria.cs" />
     <Compile Include="Sort Extensions\CommentGrid.SortExtension.cs" />
+    <Compile Include="Sort Extensions\AuthorGrid.SortExtension.cs" />
     <Compile Include="Sort Extensions\ReleaseGrid.SortExtension.cs" />
     <Compile Include="Sort Extensions\GroupGrid.SortExtension.cs" />
     <Compile Include="Sort Extensions\SeriesGrid.SortExtension.cs" />
