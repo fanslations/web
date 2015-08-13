@@ -1,0 +1,9 @@
+﻿@if (!User.Identity.IsAuthenticated)
+{
+    <div class="inline-editor">
+        <p class="alert alert-danger inline-editor no-margin">
+            You must be logged in to access this page. Click <a href="/account/loginmodal?ReturnUrl=@Request.UrlReferrer.PathAndQuery" data-modal='{}'>here to login</a>.
+        </p>
+    </div>
+
+}

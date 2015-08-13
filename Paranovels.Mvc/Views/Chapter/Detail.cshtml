@@ -1,0 +1,44 @@
+﻿@using Microsoft.Ajax.Utilities
+@using Paranovels.Common
+@using Paranovels.ViewModels
+@using Thi.Core
+@model Paranovels.ViewModels.ChapterDetail
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="section">
+    <div class="header">
+        <a href="javascript:history.go(-1);" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
+        <h1 class="title">
+            @Model.Title
+        </h1>
+    </div>
+    <div class="content">
+        <div class="detail-group">
+            <strong class="sr-only">Translating Status</strong>
+            <div>
+                <a href="@Url.Action("Translating","Chapter", new{ ID = Model.ChapterID, Seo = Model.Title.IfNullOrWhiteSpace("no title").ToSeo() })">Continue</a>
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong class="sr-only">Title</strong>
+            <div>
+                @Model.Title
+            </div>
+        </div>
+        <div class="detail-group">
+            <strong class="sr-only">Content</strong>
+            <div>
+                @foreach (var paragraph in Model.Contents)
+                {
+                    <p>
+                        @Html.Raw(paragraph.Final)
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+

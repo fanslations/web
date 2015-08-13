@@ -1,0 +1,44 @@
+﻿@using Paranovels.Common
+@model Paranovels.ViewModels.ChapterForm
+@{
+    ViewBag.Title = "Add new chapter";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<section class="section">
+    <div class="header">
+        <a href="@Url.Action("Index")" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
+        <h1 class="title">
+            @ViewBag.Title
+        </h1>
+    </div>
+    <div id="addnewchapter" class="content">
+        <form id="addchapter" method="post" action="@Url.Action("Form", "Chapter")" data-form-ajax='{}'>
+            <div id="entry">
+                <div class="hidden">
+                    <input type="hidden" name="NovelID" value="@Model.NovelID" />
+                    @*<input type="hidden" name="Volume" value="0" />
+                        <input type="hidden" name="Number" value="@Model.Number" />*@
+                    <input type="hidden" name="Status" value="@R.ChapterStatus.PENDING" />
+                </div>
+                <div class="form-group">
+                    <label id="labelnumber" for="number" class="arrow_box">Enter chapter number</label>
+                    <input id="number" name="number" type="number" value="@Model.Number" class="form-control" placeholder="Enter chapter number" aria-labelledby="labelnumber" required />
+                </div>
+                <div class="form-group">
+                    <label id="labeltitle" for="title" class="arrow_box">Enter chapter title</label>
+                    <input id="title" name="title" type="text" class="form-control" placeholder="Enter chapter title" aria-labelledby="labeltitle">
+                </div>
+                <div class="form-group">
+                    <label id="labelcontent" for="content" class="arrow_box">Enter chapter content</label>
+                    <textarea id="content" name="content" class="form-control" rows="50" placeholder="Enter chapter content" aria-labelledby="labelcontent"></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-plus-circle"></i>Add new chapter</button>
+                    <button type="button" class="btn btn-default"><i class="fa fa-times-circle"></i>Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>

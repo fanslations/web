@@ -1,0 +1,129 @@
+﻿@using Microsoft.Owin.Security
+
+@model string
+
+@{
+    ViewBag.Title = "LOG IN | SIGN UP";
+    Layout = null;
+
+    var providerIconMapper = new Dictionary<string, string>
+    {
+        {"Google", "google"},
+        {"Facebook", "facebook"},
+        {"Twitter", "twitter"},
+        {"Microsoft", "windows"},
+    };
+}
+
+<section class="section">
+    <div class="header">
+        <h1 class="title">
+            LOGIN or SIGN UP
+        </h1>
+    </div>
+    <div class="content">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist" style="width: 100%;">
+            <li role="presentation" class="@(Model == "login" ? "active" :"")"><a href="#login" aria-controls="login" role="tab" data-toggle="tab">LOG IN</a></li>
+            <li role="presentation" class="@(Model == "signup" ? "active" :"")"><a href="#signup" aria-controls="signup" role="tab" data-toggle="tab">SIGN UP</a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div id="login" role="tabpanel" class="tab-pane @(Model == "login" ? "active" :"") row">
+                <div class="col-xs-6">
+                    <p class="alert alert-info margin-bottom-10px">Enter username and password to login.</p>
+                    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="detail-group">
+                            <label for="UserName" class="sr-only">Username</label>
+                            <input type="text" name="UserName" placeholder="Username" class="input-sm form-control" required />
+
+                        </div>
+                        <div class="detail-group">
+                            <label for="Password" class="sr-only">Password</label>
+                            <input type="password" name="Password" placeholder="Password" class="input-sm form-control" required />
+
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-sign-in"></i>Login</button>
+                        </div>
+                    }
+                </div>
+                <div id="externallogin" class="col-xs-6">
+                    <p class="alert alert-info margin-bottom-10px">Or login using your social account.</p>
+                    @{
+                        var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
+
+                        using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div id="socialLoginList" class="detail-group">
+                                @foreach (AuthenticationDescription p in loginProviders)
+                                {
+                                    <button type="submit" class="btn btn-default margin-bottom-10px" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account">
+                                        <i class="fa fa-@providerIconMapper[p.AuthenticationType]"></i>@p.AuthenticationType
+                                    </button>
+                                }
+                            </div>
+                        }
+                    }
+
+
+                </div>
+
+            </div>
+            <div id="signup" role="tabpanel" class="tab-pane @(Model == "signup" ? "active" :"") row">
+                <div class="col-xs-6">
+                    <p class="alert alert-info margin-bottom-10px">Enter the information below to register.</p>
+                    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="detail-group">
+                        <label for="UserName" class="sr-only">Username</label>
+                        <input class="form-control" id="UserName" name="UserName" type="text" placeholder="Username" required="">
+                    </div>
+                    <div class="detail-group">
+                        <label for="Password" class="sr-only">Password</label>
+                        <input class="form-control" id="Password" name="Password" type="password" placeholder="Password" required="">
+                    </div>
+                    <div class="detail-group">
+                        <label for="Email" class="sr-only">Email</label>
+                        <input class="form-control" id="Email" name="Email" type="email" placeholder="Email" required="">
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-arrow-circle-right"></i>Register</button>
+                    </div>
+                    }
+                </div>
+                <div class="col-xs-6">
+                    <h3 class="margin-bottom-10px">Benefits of being members</h3>
+                    <ul class="">
+                        <li>
+                            Create reading lists
+                        </li>
+                        <li>
+                            Participate in discussions
+                        </li>
+                        <li>
+                            Receive email notification of releases
+                        </li>
+                        <li>
+                            Save tag preferences
+                        </li>
+                        <li>
+                            Start your own project
+                        </li>
+                        <li>And more as we adding new features</li>
+                    </ul>
+                </div>
+                <div class="col-xs-12 margin-top-10px small clearfix">
+                    We care about your privacy, and we never spam. By creating an account, you agree to User Agreement and Privacy Policy.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

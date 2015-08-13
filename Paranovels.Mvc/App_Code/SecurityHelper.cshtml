@@ -1,0 +1,29 @@
+﻿@using System.Web.Mvc
+@helper Unauthorized(string message = null, string header = null, bool showLogin = true)
+{
+    <section class="section">
+        @if (!string.IsNullOrWhiteSpace(header))
+        {
+            <div class="header">
+                <a href="javascript:history.go(-1);" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
+                <h1 class="title">
+                    @(new MvcHtmlString(header))
+                </h1>
+            </div>
+        }
+        <div class="content">
+            @if (!string.IsNullOrWhiteSpace(message))
+            {
+                <p class="alert alert-danger margin-bottom-10px">
+                    @(new MvcHtmlString(message))
+                </p>
+            }
+            @if (!User.Identity.IsAuthenticated && showLogin)
+            {
+                <p class="alert alert-danger no-margin">
+                    You must be logged in to access this page. Click <a href="/account/loginmodal?ReturnUrl=@Request.RawUrl" data-modal='{}'>here to login</a>.
+                </p>
+            }
+        </div>
+    </section>
+}
