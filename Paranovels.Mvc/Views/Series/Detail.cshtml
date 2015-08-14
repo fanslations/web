@@ -53,7 +53,7 @@
             </div>
         </div>
         <div class="detail-group">
-            <strong>Associated Titles</strong>
+            <strong>Associated Title(s)</strong>
             <div>
                 <ul class="list-unstyled no-margin">
                     @Html.Raw(Model.Akas.Count > 0 ? "" : "This series has no associated title.")
@@ -61,6 +61,7 @@
                     {
                         <li>
                             <a href="@Url.Action("Detail", "Series", new { Model.ID, Seo = item.Text.ToSeo() })">@item.Text</a>
+                            @Html.ImproveThis(m => m.Akas, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Series", new { AkaID = item.ID }) } })
                         </li>
                     }
                     <li>

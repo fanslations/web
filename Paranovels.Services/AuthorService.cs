@@ -67,12 +67,7 @@ namespace Paranovels.Services
             }
             if (!string.IsNullOrWhiteSpace(c.Query))
             {
-                var model = new Author();
-                var columns = new[]
-                {
-                    model.PropertyName(m => m.Name),
-                };
-                qAuthor = qAuthor.Search(columns, c.Query.ToSearchKeywords()) as IQueryable<Author>;
+                qAuthor = new AkaService(_uow).Union(qAuthor, c);
             }
 
             var results = qAuthor.GroupJoin(qSummarize, r => r.ID, s => s.SourceID,

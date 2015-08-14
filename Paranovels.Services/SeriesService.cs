@@ -64,12 +64,7 @@ namespace Paranovels.Services
             }
             if (!string.IsNullOrWhiteSpace(c.Query))
             {
-                var model = new Aka();
-                var columns = new[] { model.PropertyName(m => m.Text) };
-                qAka = qAka.Search(columns, c.Query.ToSearchKeywords()) as IQueryable<Aka>;
-                qSeries = qSeries.Union(qAka.Join(View<Series>().All(), a => a.SourceID, s => s.ID, (a, s) => s));
-
-                //qSeries = new AkaService(_uow).Union(qSeries);
+                qSeries = new AkaService(_uow).Union(qSeries, c);
             }
             if (c.IDs != null)
             {

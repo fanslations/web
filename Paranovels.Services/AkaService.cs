@@ -44,10 +44,16 @@ namespace Paranovels.Services
             return detail;
         }
 
-        public IQueryable<Series> Union(IQueryable<Series> qSeries)
+
+        public IQueryable<T> Union<T>(IQueryable<T> qSeries, BaseCriteria criteria) where T : class, IDataModel, new()
         {
-            throw new NotImplementedException();
+            var qAka = View<Aka>().All();
+
+            var columns = new[] { "Text" };
+            qAka = qAka.Search(columns, criteria.Query.ToSearchKeywords()) as IQueryable<Aka>;
+            qSeries = qSeries.Union(qAka.Join(View<T>().All(), a => a.SourceID, s => s.ID, (a, s) => s));
+
+            return qSeries;
         }
     }
-
 }

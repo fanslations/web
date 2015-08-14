@@ -63,12 +63,30 @@ namespace Paranovels.Facade
             }
         }
 
-        public int AddAuthor(AuthorForm authorForm)
+        public int AddAuthor(AuthorForm form)
         {
             using (var uow = UnitOfWorkFactory.Create<NovelContext>())
             {
                 var service = new AuthorService(uow);
-                return service.SaveChanges(authorForm);
+                var id = service.SaveChanges(form);
+
+                if (form.Akas != null || form.InlineEditProperty == form.PropertyName(m => m.Akas))
+                {
+                    var akaService = new AkaService(uow);
+                    foreach (var aka in form.Akas)
+                    {
+                        var akaForm = new AkaForm
+                        {
+                            ByUserID = form.ByUserID,
+                            SourceID = form.ID,
+                            SourceTable = R.SourceTable.AUTHOR
+                        };
+                        new PropertyMapper<Aka, AkaForm>(aka, akaForm).Map();
+                        var akaID = akaService.SaveChanges(akaForm);
+                    }
+                }
+
+                return id;
             }
         }
     }

@@ -25,6 +25,24 @@
             </div>
         </div>
         <div class="detail-group">
+            <strong>Associated Name(s)</strong>
+            <div>
+                <ul class="list-unstyled no-margin">
+                    @Html.Raw(Model.Akas.Count > 0 ? "" : "This author has no associated name.")
+                    @foreach (var item in Model.Akas)
+                    {
+                        <li>
+                            <a href="@Url.Action("Detail", "Series", new { Model.ID, Seo = item.Text.ToSeo() })">@item.Text</a>
+                            @Html.ImproveThis(m => m.Akas, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Author", new { AkaID = item.ID }) } })
+                        </li>
+                    }
+                    <li>
+                        @Html.ImproveThis(m => m.Akas, customHtmlIcon: @"<i class=""fa fa-plus-circle""></i>Add associated name")
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="detail-group">
             <strong>Updated Date</strong>
             <div>@Model.UpdatedDate.FormatDate()</div>
         </div>
