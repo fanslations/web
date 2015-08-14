@@ -22,7 +22,7 @@ namespace Paranovels.ViewModels
                 if (User == null) return "Unknown";
                 if (!string.IsNullOrWhiteSpace(User.FirstName + User.LastName)) return User.FirstName + " " + User.LastName;
                 if (!string.IsNullOrWhiteSpace(User.Username)) return User.Username;
-                return "Guest" + User.UserID;
+                return "Guest" + User.ID;
             }
         }
 

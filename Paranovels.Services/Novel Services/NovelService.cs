@@ -23,13 +23,13 @@ namespace Paranovels.Services
         {
             var tNovel = Table<Novel>();
 
-            var novel = tNovel.GetOrAdd(w => w.NovelID == novelForm.NovelID);
+            var novel = tNovel.GetOrAdd(w => w.ID == novelForm.ID);
             UpdateAuditFields(novel, novelForm.ByUserID);
             MapProperty(novelForm, novel, novelForm.InlineEditProperty);
             // save
             SaveChanges();
 
-            return novel.NovelID;
+            return novel.ID;
         }
 
         public NovelDetail Get(NovelCriteria criteria)
@@ -38,7 +38,7 @@ namespace Paranovels.Services
 
             if (criteria.IDToInt > 0)
             {
-                qNovel = qNovel.Where(w => w.NovelID == criteria.IDToInt);
+                qNovel = qNovel.Where(w => w.ID == criteria.IDToInt);
             }
             if (!string.IsNullOrWhiteSpace(criteria.Title))
             {

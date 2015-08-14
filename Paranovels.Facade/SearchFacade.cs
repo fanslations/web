@@ -23,14 +23,14 @@ namespace Paranovels.Facade
                 var service = new SeriesService(uow);
                 var results = service.Search(searchModel);
 
-                var seriesIDs = results.Data.Select(s => s.SeriesID).ToList();
+                var seriesIDs = results.Data.Select(s => s.ID).ToList();
                 // latest release
                 var releases = service.View<Release>().Where(w => seriesIDs.Contains(w.SeriesID)).ToList();
                 // connectors
                 var connectors = service.View<Connector>().Where(w => w.IsDeleted == false).Where(w => seriesIDs.Contains(w.SourceID)).ToList();
                 // groups
                 var groupIDs = connectors.Where(w => w.ConnectorType == R.ConnectorType.SERIES_GROUP).Select(s => s.TargetID).ToList();
-                var groups = service.View<Group>().Where(w => groupIDs.Contains(w.GroupID)).ToList();
+                var groups = service.View<Group>().Where(w => groupIDs.Contains(w.ID)).ToList();
                 // user lists 
                 var userLists = service.View<UserList>().Where(w => w.IsDeleted == false && w.UserID == searchModel.Criteria.ByUserID).ToList();
                 // vote
@@ -43,15 +43,15 @@ namespace Paranovels.Facade
                 // convert to PagedList<TranslationSceneGrid>
                 var data = results.Data.Select(s =>
                 {
-                    s.Releases = releases.Where(w => w.SeriesID == s.SeriesID).ToList();
-                    s.Groups = connectors.Where(w => w.ConnectorType == R.ConnectorType.SERIES_GROUP && w.SourceID == s.SeriesID)
-                                    .Join(groups, c => c.TargetID, g=> g.GroupID, (c, g) => g).ToList();
+                    s.Releases = releases.Where(w => w.SeriesID == s.ID).ToList();
+                    s.Groups = connectors.Where(w => w.ConnectorType == R.ConnectorType.SERIES_GROUP && w.SourceID == s.ID)
+                                    .Join(groups, c => c.TargetID, g => g.ID, (c, g) => g).ToList();
              
                     s.UserLists = userLists;
-                    s.Connectors = connectors.Where(w => w.SourceID == s.SeriesID).ToList();
+                    s.Connectors = connectors.Where(w => w.SourceID == s.ID).ToList();
 
-                    s.Voted = userVotedSeriesIDs.Where(w => w.SeriesID == s.SeriesID).Select(s2 => s2.Vote).SingleOrDefault();
-                    s.QualityRated = userQualityRatedSeriesIDs.Where(w => w.SeriesID == s.SeriesID).Select(s2 => s2.Rate).SingleOrDefault();
+                    s.Voted = userVotedSeriesIDs.Where(w => w.SeriesID == s.ID).Select(s2 => s2.Vote).SingleOrDefault();
+                    s.QualityRated = userQualityRatedSeriesIDs.Where(w => w.SeriesID == s.ID).Select(s2 => s2.Rate).SingleOrDefault();
 
                     return s;
                 }).ToList();
@@ -83,34 +83,34 @@ namespace Paranovels.Facade
             using (var uow = UnitOfWorkFactory.Create<NovelContext>())
             {
                 var service = new GroupService(uow);
-                var pagedList = service.Search(searchModel);
+                var results = service.Search(searchModel);
 
-                var groupIDs = pagedList.Data.Select(s => s.GroupID).Distinct();
+                var groupIDs = results.Data.Select(s => s.ID).Distinct();
 
                 // latest release
                 var releases = service.View<Release>().Where(w => groupIDs.Contains(w.GroupID)).ToList();
 
-                var userVotedReleaseIDs =
+                var userVotedGroupIDs =
                     service.View<UserVote>().Where(w => w.SourceTable == R.SourceTable.GROUP && groupIDs.Contains(w.SourceID) && w.UserID == searchModel.Criteria.ByUserID)
                         .Select(s => new { GroupID = s.SourceID, Vote = s.Vote }).ToList();
 
-                var userQualityRatedReleaseIDs =
+                var userQualityRatedGroupIDs =
                     service.View<UserRate>().Where(w => w.SourceTable == R.SourceTable.GROUP && groupIDs.Contains(w.SourceID) && w.UserID == searchModel.Criteria.ByUserID)
                         .Select(s => new { GroupID = s.SourceID, Rate = s.Rate }).ToList();
 
-                var data = pagedList.Data.Select(s =>
+                var data = results.Data.Select(s =>
                 {
-                    s.Releases = releases.Where(w => w.GroupID == s.GroupID).ToList();
+                    s.Releases = releases.Where(w => w.GroupID == s.ID).ToList();
 
-                    s.Voted = userVotedReleaseIDs.Where(w => w.GroupID == s.GroupID).Select(s2 => s2.Vote).SingleOrDefault();
-                    s.QualityRated = userQualityRatedReleaseIDs.Where(w => w.GroupID == s.GroupID).Select(s2 => s2.Rate).SingleOrDefault();
+                    s.Voted = userVotedGroupIDs.Where(w => w.GroupID == s.ID).Select(s2 => s2.Vote).SingleOrDefault();
+                    s.QualityRated = userQualityRatedGroupIDs.Where(w => w.GroupID == s.ID).Select(s2 => s2.Rate).SingleOrDefault();
 
                     return s;
                 }).ToList();
 
 
 
-                return new PagedList<GroupGrid> { Config = pagedList.Config, Data = data };
+                return new PagedList<GroupGrid> { Config = results.Config, Data = data };
             }
         }
 
@@ -123,18 +123,18 @@ namespace Paranovels.Facade
 
                 // groups
                 var groupIDs = pagedList.Data.Select(s => s.GroupID).Distinct();
-                var groups = service.View<Group>().Where(w => groupIDs.Contains(w.GroupID)).ToList();
+                var groups = service.View<Group>().Where(w => groupIDs.Contains(w.ID)).ToList();
 
                 // series
                 var seriesIDs = pagedList.Data.Select(s => s.SeriesID).Distinct();
-                var series = service.View<Series>().Where(w => seriesIDs.Contains(w.SeriesID)).ToList();
+                var series = service.View<Series>().Where(w => seriesIDs.Contains(w.ID)).ToList();
 
                 // user lists 
                 var userLists = service.View<UserList>().Where(w => w.IsDeleted == false && w.UserID == searchModel.Criteria.ByUserID).ToList();
 
                 var connectors = service.View<Connector>().Where(w => w.IsDeleted == false).ToList();
 
-                var releaseIDs = pagedList.Data.Select(s => s.ReleaseID).Distinct();
+                var releaseIDs = pagedList.Data.Select(s => s.ID).Distinct();
                 var userVotedReleaseIDs =
                     service.View<UserVote>().Where(w => w.SourceTable == R.SourceTable.RELEASE && releaseIDs.Contains(w.SourceID) && w.UserID == searchModel.Criteria.ByUserID)
                         .Select(s => new { ReleaseID = s.SourceID, Vote = s.Vote }).ToList();
@@ -154,21 +154,24 @@ namespace Paranovels.Facade
                         Criteria = new ReleaseCriteria { IDs = stickies.Select(s => s.SourceID).ToList() },
                         PagedListConfig = new PagedListConfig { PageSize = int.MaxValue }
                     });
-                    pagedList.Data = pagedList.Data.Union(stickyPageList.Data).ToList();
+                    var stickyDatas = stickyPageList.Data.Select(s =>
+                    {
+                        s.IsSticky = true;
+                        return s;
+                    });
+                    pagedList.Data = pagedList.Data.Union(stickyDatas).ToList();
                 }
 
                 var data = pagedList.Data.Select(s =>
                 {
-                    s.Group = groups.SingleOrDefault(w => w.GroupID == s.GroupID);
-                    s.Series = series.SingleOrDefault(w => w.SeriesID == s.SeriesID);
+                    s.Group = groups.SingleOrDefault(w => w.ID == s.GroupID);
+                    s.Series = series.SingleOrDefault(w => w.ID == s.SeriesID);
                     s.UserLists = userLists;
                     s.Connectors = connectors.Where(w => w.SourceID == s.SeriesID).ToList();
 
-                    s.IsSticky = stickies.Any(w => w.IsDeleted == false && w.SourceID == s.ReleaseID);
-
-                    s.Voted = userVotedReleaseIDs.Where(w => w.ReleaseID == s.ReleaseID).Select(s2 => s2.Vote).SingleOrDefault();
-                    s.QualityRated = userQualityRatedReleaseIDs.Where(w => w.ReleaseID == s.ReleaseID).Select(s2 => s2.Rate).SingleOrDefault();
-                    s.IsRead = userReadReleaseIDs.Any(w => w.ReleaseID == s.ReleaseID);
+                    s.Voted = userVotedReleaseIDs.Where(w => w.ReleaseID == s.ID).Select(s2 => s2.Vote).SingleOrDefault();
+                    s.QualityRated = userQualityRatedReleaseIDs.Where(w => w.ReleaseID == s.ID).Select(s2 => s2.Rate).SingleOrDefault();
+                    s.IsRead = userReadReleaseIDs.Any(w => w.ReleaseID == s.ID);
                     return s;
                 }).ToList();
 
@@ -187,7 +190,7 @@ namespace Paranovels.Facade
                 var c = searchModel.Criteria;
                 var results = service.View<Glossary>().Where(w => w.IsDeleted == false)
                     .Join(service.View<Connector>().Where(w => w.ConnectorType == R.ConnectorType.NOVEL_GLOSSARY && w.SourceID == c.IDToInt),
-                        g => g.GlossaryID, cn => cn.TargetID, (g, cn) => g);
+                        g => g.ID, cn => cn.TargetID, (g, cn) => g);
 
                 return results.ToPagedList(searchModel.PagedListConfig);
             }
@@ -202,17 +205,17 @@ namespace Paranovels.Facade
                 var pagedList = service.Search(searchModel);
 
                 var userIDs = pagedList.Data.Select(s => s.InsertedBy).Distinct();
-                var users = service.View<User>().Where(w => userIDs.Contains(w.UserID)).ToList();
+                var users = service.View<User>().Where(w => userIDs.Contains(w.ID)).ToList();
 
-                var commentIDs = pagedList.Data.Select(s => s.UserCommentID).Distinct();
+                var commentIDs = pagedList.Data.Select(s => s.ID).Distinct();
                 var userVotedCommentIDs = service.View<UserVote>().Where(w => w.SourceTable == R.SourceTable.COMMENT && commentIDs.Contains(w.SourceID) && w.UserID == searchModel.Criteria.ByUserID)
                                                  .Select(s => new { UserCommentID = s.SourceID, Vote = s.Vote }).ToList();
 
                 pagedList.Data = pagedList.Data.Select(s =>
                 {
-                    s.User = users.SingleOrDefault(w => w.UserID == s.InsertedBy);
+                    s.User = users.SingleOrDefault(w => w.ID == s.InsertedBy);
 
-                    s.Voted = userVotedCommentIDs.Where(w => w.UserCommentID == s.UserCommentID).Select(s2 => s2.Vote).SingleOrDefault();
+                    s.Voted = userVotedCommentIDs.Where(w => w.UserCommentID == s.ID).Select(s2 => s2.Vote).SingleOrDefault();
                     return s;
                 }).ToList();
 

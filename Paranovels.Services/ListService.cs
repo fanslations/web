@@ -22,7 +22,7 @@ namespace Paranovels.Services
         {
             var tUserList = Table<UserList>();
 
-            var userList = tUserList.GetOrAdd(w => w.UserListID == form.UserListID || (w.UserID == form.UserID && w.Name == form.Name));
+            var userList = tUserList.GetOrAdd(w => w.ID == form.ID || (w.UserID == form.UserID && w.Name == form.Name));
             MapProperty(form, userList, form.InlineEditProperty);
             UpdateAuditFields(userList, form.ByUserID);
 
@@ -35,7 +35,7 @@ namespace Paranovels.Services
             // save
             SaveChanges();
 
-            return userList.UserListID;
+            return userList.ID;
         }
 
         public PagedList<UserList> Search(SearchModel<ListCriteria> searchModel)
@@ -51,7 +51,7 @@ namespace Paranovels.Services
         {
             var qUserList = View<UserList>().All();
 
-            var userList = qUserList.SingleOrDefault(w => w.UserListID == criteria.IDToInt);
+            var userList = qUserList.SingleOrDefault(w => w.ID == criteria.IDToInt);
 
             if (userList == null) return null;
 

@@ -39,5 +39,5 @@
         </h1>
     </div>
     @{ Html.RenderPartial("~/Views/Release/_Release.cshtml", releases); }
-    <p><a href="@Url.Action("Index", "Release", new { pi = 2, ps = 50, ob = "Date desc" })" class="btn btn-primary btn-block"><i class="fa fa-history"></i>View Older Releases</a></p>
+    <p><a href="@Url.Action("Index", "Release", new { pi = 2, ps = 50 })" class="btn btn-primary btn-block"><i class="fa fa-history"></i>View Older Releases</a></p>
 </section>

@@ -32,8 +32,8 @@
         @{ var formModel = new ReleaseForm(); }
         <form class="" method="POST" action="@Url.Action("Form")" data-form-ajax='{}'>
             <div class="form-group">
-                <label id="label-date" for="date" class="arrow_box">Release Date</label>
-                <input id="date" name="@formModel.PropertyName(m=>m.Date)" type="date" class="form-control" placeholder="mm/dd/yyyy" aria-labelledby="label-date" required />
+                <label id="label-date" for="date" class="arrow_box">Release Date <small>(leave it blank to use current date and time)</small></label>
+                <input id="date" name="@formModel.PropertyName(m=>m.Date)" type="date" class="form-control" placeholder="mm/dd/yyyy" aria-labelledby="label-date" />
             </div>
             <div class="form-group">
                 <label id="label-title" for="title" class="arrow_box">Title</label>
@@ -41,7 +41,7 @@
             </div>
             <div class="form-group">
                 <label id="label-url" for="url" class="arrow_box">Url</label>
-                <input id="url" name="title" type="@formModel.PropertyName(m=>m.Url)" class="form-control" placeholder="Enter url" aria-labelledby="label-url" required />
+                <input id="url" name="@formModel.PropertyName(m=>m.Url)" type="url" class="form-control" placeholder="Enter url" aria-labelledby="label-url" required />
             </div>
             <div class="form-group clearfix">
                 <button type="submit" class="btn btn-primary"><i class="fa fa-plus-circle"></i>Add new release</button>

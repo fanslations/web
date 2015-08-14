@@ -21,13 +21,13 @@ namespace Paranovels.Services
         {
             var tSeries = Table<Series>();
 
-            var series = tSeries.GetOrAdd(w => w.SeriesID == form.SeriesID);
+            var series = tSeries.GetOrAdd(w => w.ID == form.ID);
             UpdateAuditFields(series, form.ByUserID);
             MapProperty(form, series, form.InlineEditProperty);
             // save
             SaveChanges();
 
-            return series.SeriesID;
+            return series.ID;
         }
 
         public SeriesDetail Get(SeriesCriteria criteria)
@@ -36,7 +36,7 @@ namespace Paranovels.Services
 
             if (criteria.IDToInt > 0)
             {
-                qSeries = qSeries.Where(w => w.SeriesID == criteria.IDToInt);
+                qSeries = qSeries.Where(w => w.ID == criteria.IDToInt);
             }
 
             var series = qSeries.SingleOrDefault();
@@ -52,27 +52,38 @@ namespace Paranovels.Services
         {
             var qSeries = View<Series>().All();
             var qSummarize = View<Summarize>().Where(w => w.SourceTable == R.SourceTable.SERIES);
+            var qAka = View<Aka>().Where(w => w.SourceTable == R.SourceTable.SERIES);
 
             var c = searchModel.Criteria;
 
             if (!string.IsNullOrWhiteSpace(c.Query))
             {
-                var columns = new[] { "Title", "Synopsis" };
+                var model = new Series();
+                var columns = new[] { model.PropertyName(m=>m.Title) };
                 qSeries = qSeries.Search(columns, c.Query.ToSearchKeywords()) as IQueryable<Series>;
             }
+            if (!string.IsNullOrWhiteSpace(c.Query))
+            {
+                var model = new Aka();
+                var columns = new[] { model.PropertyName(m => m.Text) };
+                qAka = qAka.Search(columns, c.Query.ToSearchKeywords()) as IQueryable<Aka>;
+                qSeries = qSeries.Union(qAka.Join(View<Series>().All(), a => a.SourceID, s => s.ID, (a, s) => s));
 
+                //qSeries = new AkaService(_uow).Union(qSeries);
+            }
             if (c.IDs != null)
             {
-                qSeries = qSeries.Where(w => c.IDs.Contains(w.SeriesID));
+                qSeries = qSeries.Where(w => c.IDs.Contains(w.ID));
             }
-
-
-
-            var results = qSeries.GroupJoin(qSummarize, r => r.SeriesID, s => s.SourceID,
+            if (c.NotIDs != null)
+            {
+                qSeries = qSeries.Where(w => !c.NotIDs.Contains(w.ID));
+            }
+            var results = qSeries.GroupJoin(qSummarize, r => r.ID, s => s.SourceID,
                 (r, s) => new { Series = r, Summarize = s.DefaultIfEmpty() })
                 .SelectMany(sm => sm.Summarize.Select(s => new SeriesGrid
                 {
-                    SeriesID = sm.Series.SeriesID,
+                    ID = sm.Series.ID,
                     UpdatedDate = sm.Series.UpdatedDate,
                     Title = sm.Series.Title,
                     ImageUrl = sm.Series.ImageUrl,

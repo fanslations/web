@@ -21,13 +21,13 @@ namespace Paranovels.Services
         {
             var tGlossary = Table<Glossary>();
 
-            var glossary = tGlossary.GetOrAdd(w => w.GlossaryID == form.GlossaryID);
+            var glossary = tGlossary.GetOrAdd(w => w.ID == form.ID);
             MapProperty(form, glossary, form.InlineEditProperty);
             UpdateAuditFields(glossary, form.ByUserID);
             // save
             SaveChanges();
 
-            return glossary.GlossaryID;
+            return glossary.ID;
         }
     }
 }

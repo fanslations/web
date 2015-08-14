@@ -21,8 +21,8 @@
                     require(['jquery', 'selectize'], function ($, selectize) {
                         'use strict';
 
-                        $('#groupid').selectize({
-                            valueField: 'GroupID',
+                        $('#@Model.InlineEditProperty').selectize({
+                            valueField: 'ID',
                             labelField: 'Name',
                             searchField: 'Name',
                             sortField: 'Name',
@@ -54,51 +54,50 @@
                         });
                     });
                 </script>
-                <label for="groupid" class="sr-only">Select Group</label>
-                <select id="groupid" name="@Model.InlineEditProperty" placeholder="Select Group" required></select>
-
+                <label for="@Model.InlineEditProperty" class="sr-only">Select Group</label>
+                <select id="@Model.InlineEditProperty" name="@Model.InlineEditProperty" placeholder="Select Group" required></select>
             }
             else if (Model.Model.ConnectorType == R.ConnectorType.SERIES_AUTHOR && Model.InlineEditProperty == Model.PropertyName(m => m.Model.TargetID))
             {
-            <script>
-                require(['jquery', 'selectize'], function ($, selectize) {
-                    'use strict';
+                <script>
+                    require(['jquery', 'selectize'], function ($, selectize) {
+                        'use strict';
 
-                    $('#groupid').selectize({
-                        valueField: 'AuthorID',
-                        labelField: 'Name',
-                        searchField: 'Name',
-                        sortField: 'Name',
-                        preload: true,
-                        create: function (input, callback) {
-                            window.location = '@Url.Action("Index","Author",new { Do = "add" })' + '&Name=' + input + '&ReturnUrl=@Request.UrlReferrer.PathAndQuery';
-                        },
-                        render: {
-                            option: function (item, escape) {
-                                return '<div>' +
-                                    '<strong class="title">' + item.Name + '</strong>' +
-                                    '<p class="description">' + escape(item.Url) + '</p>' +
-                                    '</div>';
-                            }
-                        },
-                        load: function (query, callback) {
-
-                            $.ajax({
-                                url: '/query/authors?query=' + encodeURIComponent(query),
-                                type: 'GET',
-                                error: function () {
-                                    callback();
-                                },
-                                success: function (res) {
-                                    callback(res);
+                        $('#@Model.InlineEditProperty').selectize({
+                            valueField: 'ID',
+                            labelField: 'Name',
+                            searchField: 'Name',
+                            sortField: 'Name',
+                            preload: true,
+                            create: function (input, callback) {
+                                window.location = '@Url.Action("Index","Author",new { Do = "add" })' + '&Name=' + input + '&ReturnUrl=@Request.UrlReferrer.PathAndQuery';
+                            },
+                            render: {
+                                option: function (item, escape) {
+                                    return '<div>' +
+                                        '<strong class="title">' + item.Name + '</strong>' +
+                                        '<p class="description">' + escape(item.Url) + '</p>' +
+                                        '</div>';
                                 }
-                            });
-                        }
+                            },
+                            load: function (query, callback) {
+
+                                $.ajax({
+                                    url: '/query/authors?query=' + encodeURIComponent(query),
+                                    type: 'GET',
+                                    error: function () {
+                                        callback();
+                                    },
+                                    success: function (res) {
+                                        callback(res);
+                                    }
+                                });
+                            }
+                        });
                     });
-                });
-            </script>
-            <label for="groupid" class="sr-only">Select Group</label>
-            <select id="groupid" name="@Model.InlineEditProperty" placeholder="Select Group" required></select>
+                </script>
+                <label for="@Model.InlineEditProperty" class="sr-only">Select Group</label>
+                <select id="@Model.InlineEditProperty" name="@Model.InlineEditProperty" placeholder="Select Group" required></select>
 
             }
             else

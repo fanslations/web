@@ -21,15 +21,15 @@ namespace Paranovels.Services
         {
             var tConnector = Table<Connector>();
 
-            var connector = tConnector.GetOrAdd(w => w.ConnectorID == form.ConnectorID || 
-                (form.ConnectorID == 0 && w.ConnectorType == form.ConnectorType && w.SourceID == form.SourceID && w.TargetID == form.TargetID));
+            var connector = tConnector.GetOrAdd(w => w.ID == form.ID ||
+                (form.ID == 0 && w.ConnectorType == form.ConnectorType && w.SourceID == form.SourceID && w.TargetID == form.TargetID));
 
             MapProperty(form, connector, form.InlineEditProperty); 
             UpdateAuditFields(connector, form.ByUserID);
             // save
             SaveChanges();
 
-            return connector.ConnectorID;
+            return connector.ID;
         }
 
         public void Connect(GenericForm<Connector> form, IList<int> targetIDs)
@@ -69,7 +69,7 @@ namespace Paranovels.Services
 
             if (criteria.IDToInt > 0)
             {
-                qConnector = qConnector.Where(w => w.ConnectorID == criteria.IDToInt);
+                qConnector = qConnector.Where(w => w.ID == criteria.IDToInt);
             }
 
             var connector = qConnector.SingleOrDefault();

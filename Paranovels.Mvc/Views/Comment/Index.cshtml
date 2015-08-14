@@ -54,7 +54,7 @@
                 vm.edit = {};
                 vm.delete = {};
                 vm.report = { Type: 0, Comment: ''};
-                vm.commentIds = @JsonHelper.Serialize(Model.Data.Select(s => s.UserCommentID).ToList());
+                vm.commentIds = @JsonHelper.Serialize(Model.Data.Select(s => s.ID).ToList());
                 
                 vm.init = init;
                 vm.checkReply = checkReply;
@@ -288,7 +288,7 @@
         @foreach (var item in Model.Data)
         {
             <div class="comment">
-                <div id="c@(item.UserCommentID)">
+                <div id="c@(item.ID)">
                     @if (item.IsDeleted)
                     {
                         <text>This comment has been removed.</text>
@@ -302,14 +302,14 @@
                         <div class="comment-content">@item.Comment</div>
                         <ul class="comment-options">
                             <li>
-                                <a id="reply@(item.UserCommentID)" role="button" ng-click="vm.replyComment(@item.UserCommentID, $event)"><i class="fa fa-reply"></i>reply</a>
+                                <a id="reply@(item.ID)" role="button" ng-click="vm.replyComment(@item.ID, $event)"><i class="fa fa-reply"></i>reply</a>
                             </li>
                             <li class="@(item.InsertedBy == session.UserID ? "" : "hidden")">
-                                <a id="edit@(item.UserCommentID)" role="button" ng-click="vm.editComment(@item.UserCommentID, $event)"><i class="fa fa-edit"></i>edit</a>
+                                <a id="edit@(item.ID)" role="button" ng-click="vm.editComment(@item.ID, $event)"><i class="fa fa-edit"></i>edit</a>
                             </li>
                             <li class="@(item.InsertedBy == session.UserID ? "" : "hidden")">
-                                <a id="delete@(item.UserCommentID)" role="button" ng-click="vm.deleteComment(@item.UserCommentID, $event)"><i class="fa fa-trash"></i>delete</a>
-                                <div id="cd@(item.UserCommentID)" class="hidden delete-confirm"><span class="color-red">are you sure?</span> <a class="cursor-pointer" ng-click="vm.saveDeleteComment(@item.UserCommentID, $event)">Yes</a> / <a class="cursor-pointer" ng-click="vm.cancelDeleteComment(@item.UserCommentID, $event)">NO</a></div>
+                                <a id="delete@(item.ID)" role="button" ng-click="vm.deleteComment(@item.ID, $event)"><i class="fa fa-trash"></i>delete</a>
+                                <div id="cd@(item.ID)" class="hidden delete-confirm"><span class="color-red">are you sure?</span> <a class="cursor-pointer" ng-click="vm.saveDeleteComment(@item.ID, $event)">Yes</a> / <a class="cursor-pointer" ng-click="vm.cancelDeleteComment(@item.ID, $event)">NO</a></div>
                             </li>
                             <li>
                                 <div class="comment vote @(item.Voted.GetValueOrDefault() == 1 ? "likes" : item.Voted.GetValueOrDefault() == -1 ? "dislikes" : "")">
@@ -319,12 +319,12 @@
                                 </div>
                             </li>
                             <li>
-                                <a id="report@(item.UserCommentID)" role="button" ng-click="vm.reportComment(@item.UserCommentID, $event)"><i class="fa fa-flag"></i>report</a>
+                                <a id="report@(item.ID)" role="button" ng-click="vm.reportComment(@item.ID, $event)"><i class="fa fa-flag"></i>report</a>
                             </li>
                         </ul>
                     }
                 </div>
-                <div id="r@(item.UserCommentID)" class="replies"></div>
+                <div id="r@(item.ID)" class="replies"></div>
             </div>
         }
     </div>

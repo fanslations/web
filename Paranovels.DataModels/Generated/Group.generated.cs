@@ -1,4 +1,4 @@
-// This class was automatically generated with love by ST4bby 8/13/2015 5:19:26 PM.
+// This class was automatically generated with love by ST4bby 8/14/2015 4:20:13 PM.
 // Read more at http://jbubriski.github.com/ST4bby/
 
 namespace Paranovels.DataModels
@@ -11,10 +11,8 @@ namespace Paranovels.DataModels
 	[Table("Group")]
 	public partial class Group : IDataModel
 	{
-		[NotMapped]public int ID { get { return GroupID; } set { GroupID = value; } }
-	
 		[Key, Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("GroupID", TypeName = "int"), Display(Name="Group ID")]
-		public int GroupID { get; set; }
+		public int ID { get; set; }
 		
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("InsertedBy", TypeName = "int"), Display(Name="Inserted By")]
 		public int InsertedBy { get; set; }

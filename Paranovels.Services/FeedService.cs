@@ -21,13 +21,13 @@ namespace Paranovels.Services
         {
             var tFeed = Table<Feed>();
 
-            var feed = tFeed.GetOrAdd(w => w.FeedID == form.DataModel.FeedID);
+            var feed = tFeed.GetOrAdd(w => w.ID == form.DataModel.ID);
             MapProperty(form.DataModel, feed, form.InlineEditProperty);
             UpdateAuditFields(feed, form.ByUserID);
             // save
             SaveChanges();
 
-            return feed.FeedID;
+            return feed.ID;
         }
     }
 }

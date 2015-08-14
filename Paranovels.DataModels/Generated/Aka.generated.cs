@@ -1,4 +1,4 @@
-// This class was automatically generated with love by ST4bby 8/13/2015 5:19:27 PM.
+// This class was automatically generated with love by ST4bby 8/14/2015 4:20:14 PM.
 // Read more at http://jbubriski.github.com/ST4bby/
 
 namespace Paranovels.DataModels
@@ -11,10 +11,8 @@ namespace Paranovels.DataModels
 	[Table("Aka")]
 	public partial class Aka : IDataModel
 	{
-		[NotMapped]public int ID { get { return AkaID; } set { AkaID = value; } }
-	
 		[Key, Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("AkaID", TypeName = "int"), Display(Name="Aka ID")]
-		public int AkaID { get; set; }
+		public int ID { get; set; }
 		
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("InsertedBy", TypeName = "int"), Display(Name="Inserted By")]
 		public int InsertedBy { get; set; }

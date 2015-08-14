@@ -28,7 +28,7 @@
             </div>
             <div class="col-content">
                 <div>
-                    <a href="@Url.Action("Detail", new{ ID = item.GroupID, Seo = item.Name.ToSeo() })">@item.Name</a>
+                    <a href="@Url.Action("Detail", new{ ID = item.ID, Seo = item.Name.ToSeo() })">@item.Name</a>
                 </div>
                 <div>@item.About</div>
                 <ul class="list-unstyled list-inline">
@@ -39,7 +39,7 @@
                         <i class="fa fa-certificate"></i>@Html.Raw(item.Status.Translate(R.GroupStatus.Translate).FormatString())
                     </li>
                     <li title="Comments">
-                        <i class="fa fa-comments-o"></i><a href="@Url.Action("Detail", "Group", new {ID = item.GroupID, Seo = item.Name.ToSeo()})#comments">@item.CommentCount.GetValueOrDefault() comments</a>
+                        <i class="fa fa-comments-o"></i><a href="@Url.Action("Detail", "Group", new { ID = item.ID, Seo = item.Name.ToSeo() })#comments">@item.CommentCount.GetValueOrDefault() comments</a>
                     </li>
                     <li title="Rating">
                         <i class="fa fa-diamond" title="@(item.QualityRated == 0 ? "You haven't  rated this" : string.Format("You rated {0:0.0} star(s)", item.QualityRated/2))"></i>@RatingHelper.DisplayRating(summarize)

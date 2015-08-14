@@ -21,13 +21,13 @@ namespace Paranovels.Services
         {
             var tAuthor = Table<Author>();
 
-            var author = tAuthor.GetOrAdd(w => w.AuthorID == form.AuthorID);
+            var author = tAuthor.GetOrAdd(w => w.ID == form.ID);
             MapProperty(form, author, form.InlineEditProperty);
             UpdateAuditFields(author, form.ByUserID);
             // save
             SaveChanges();
 
-            return author.AuthorID;
+            return author.ID;
         }
 
         public AuthorDetail Get(AuthorCriteria criteria)
@@ -36,7 +36,7 @@ namespace Paranovels.Services
 
             if (criteria.IDToInt > 0)
             {
-                qAuthor = qAuthor.Where(w => w.AuthorID == criteria.IDToInt);
+                qAuthor = qAuthor.Where(w => w.ID == criteria.IDToInt);
             }
 
             var author = qAuthor.SingleOrDefault();
@@ -51,7 +51,8 @@ namespace Paranovels.Services
         public PagedList<AuthorGrid> Search(SearchModel<AuthorCriteria> searchModel)
         {
             var qAuthor = View<Author>().All();
-            var qSummarize = View<Summarize>().Where(w => w.SourceTable == R.SourceTable.GROUP);
+            var qSummarize = View<Summarize>().Where(w => w.SourceTable == R.SourceTable.AUTHOR);
+            var qAka = View<Aka>().Where(w => w.SourceTable == R.SourceTable.AUTHOR);
 
             var c = searchModel.Criteria;
 
@@ -64,12 +65,21 @@ namespace Paranovels.Services
                 };
                 qAuthor = qAuthor.Search(columns, c.Query.ToSearchKeywords()) as IQueryable<Author>;
             }
+            if (!string.IsNullOrWhiteSpace(c.Query))
+            {
+                var model = new Author();
+                var columns = new[]
+                {
+                    model.PropertyName(m => m.Name),
+                };
+                qAuthor = qAuthor.Search(columns, c.Query.ToSearchKeywords()) as IQueryable<Author>;
+            }
 
-            var results = qAuthor.GroupJoin(qSummarize, r => r.AuthorID, s => s.SourceID,
+            var results = qAuthor.GroupJoin(qSummarize, r => r.ID, s => s.SourceID,
                 (r, s) => new {Author = r, Summarize = s.DefaultIfEmpty()})
                 .SelectMany(sm => sm.Summarize.Select(s => new AuthorGrid
                 {
-                    AuthorID = sm.Author.AuthorID,
+                    ID = sm.Author.ID,
                     UpdatedDate = sm.Author.UpdatedDate,
                     Name = sm.Author.Name,
                     Url = sm.Author.Url,

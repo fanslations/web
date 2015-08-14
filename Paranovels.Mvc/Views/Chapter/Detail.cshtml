@@ -19,7 +19,7 @@
         <div class="detail-group">
             <strong class="sr-only">Translating Status</strong>
             <div>
-                <a href="@Url.Action("Translating","Chapter", new{ ID = Model.ChapterID, Seo = Model.Title.IfNullOrWhiteSpace("no title").ToSeo() })">Continue</a>
+                <a href="@Url.Action("Translating", "Chapter", new { ID = Model.ID, Seo = Model.Title.IfNullOrWhiteSpace("no title").ToSeo() })">Continue</a>
             </div>
         </div>
         <div class="detail-group">

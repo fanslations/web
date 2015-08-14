@@ -83,7 +83,7 @@
                 </div>
                 <div class="hidden">
                     <input type="hidden" name="@formModel.PropertyName(m=> m.ConnectorType)" value="@R.ConnectorType.SERIES_USERLIST" />
-                    <input type="hidden" name="@formModel.PropertyName(m=> m.TargetID)" value="@Model.UserListID" />
+                    <input type="hidden" name="@formModel.PropertyName(m=> m.TargetID)" value="@Model.ID" />
                 </div>
                 <div class="form-group clearfix">
                     <button type="submit" class="btn btn-primary"><i class="fa fa-plus-circle"></i>Add to list</button>
@@ -315,14 +315,14 @@
                     QualityCount = item.QualityCount.GetValueOrDefault(),
                     QualityScore = item.QualityScore.GetValueOrDefault()
                 };
-                var read = Model.Releases.Where(w => w.SeriesID == item.SeriesID).Where(w => Model.Reads.Any(a => a.SourceID == w.ReleaseID)).OrderByDescending(o => o.Date).FirstOrDefault() ?? new Release();
-                var unreads = Model.Releases.Where(w => w.SeriesID == item.SeriesID).Where(w => w.Date > read.Date).ToList();
+                var read = Model.Releases.Where(w => w.SeriesID == item.ID).Where(w => Model.Reads.Any(a => a.SourceID == w.ID)).OrderByDescending(o => o.Date).FirstOrDefault() ?? new Release();
+                var unreads = Model.Releases.Where(w => w.SeriesID == item.ID).Where(w => w.Date > read.Date).ToList();
 
                 <tbody class="no-border">
                     <tr>
                         <td>
 
-                            <a class="btn-block" href="@Url.Action("Detail", "Series", new{ ID = item.SeriesID, Seo = item.Title.ToSeo() })">@item.Title</a>
+                            <a class="btn-block" href="@Url.Action("Detail", "Series", new { ID = item.ID, Seo = item.Title.ToSeo() })">@item.Title</a>
 
                         </td>
                         <td>
@@ -345,9 +345,9 @@
                         </td>
                         <td class="no-border" colspan="3">
 
-                            @if (read.ReleaseID > 0)
+                            @if (read.ID > 0)
                             {
-                                <a href="@Url.Action("Detail", "Release" , new { id=read.ReleaseID, seo=read.Title.ToSeo() })">@read.Title</a>
+                                <a href="@Url.Action("Detail", "Release", new { ID = read.ID, seo = read.Title.ToSeo() })">@read.Title</a>
                             }
                             else
                             {
@@ -369,7 +369,7 @@
                             }
                             @if (!unreads.Any())
                             {
-                                <div>There are no new release! <a class="" href="@Url.Action("Index","Release", new{ Do = "add", SeriesID = item.SeriesID })">Click to submit new release.</a></div>
+                                <div>There are no new release! <a class="" href="@Url.Action("Index", "Release", new { Do = "add", SeriesID = item.ID })">Click to submit new release.</a></div>
                             }
                         </td>
                     </tr>

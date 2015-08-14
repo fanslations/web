@@ -39,15 +39,15 @@
             <div role="tabpanel" class="tab-pane active" id="categories">
                 @foreach (var tag in categories.OrderBy(o => o.Name))
                 {
-                    var preference = Model.Preferences.SingleOrDefault(w => w.Type == R.PreferenceType.CATEGORY && w.SourceID == tag.TagID && w.SourceTable == R.SourceTable.TAG) ?? new UserPreference();
+                    var preference = Model.Preferences.SingleOrDefault(w => w.Type == R.PreferenceType.CATEGORY && w.SourceID == tag.ID && w.SourceTable == R.SourceTable.TAG) ?? new UserPreference();
                     <div class="detail-group">
                         <strong id="label@(tag.ID)">@tag.Name</strong>
                         <div>
                             <form class="" method="POST" action="@Url.Action("Form")" data-form-ajax='{"reload": false}'>
                                 <div class="hidden">
-                                    <input type="hidden" name="@preference.PropertyName(m=> m.UserPreferenceID)" value="@preference.UserPreferenceID" />
+                                    <input type="hidden" name="@preference.PropertyName(m => m.ID)" value="@preference.ID" />
                                     <input type="hidden" name="@preference.PropertyName(m=> m.Type)" value="@R.PreferenceType.CATEGORY" />
-                                    <input type="hidden" name="@preference.PropertyName(m=> m.SourceID)" value="@tag.TagID" />
+                                    <input type="hidden" name="@preference.PropertyName(m=> m.SourceID)" value="@tag.ID" />
                                     <input type="hidden" name="@preference.PropertyName(m=> m.SourceTable)" value="@R.SourceTable.TAG" />
                                 </div>
                                 <div class="form-group">
@@ -72,15 +72,15 @@
             <div role="tabpanel" class="tab-pane" id="genres">
                 @foreach (var tag in genres.OrderBy(o => o.Name))
                 {
-                    var preference = Model.Preferences.SingleOrDefault(w => w.Type == R.PreferenceType.GENRE && w.SourceID == tag.TagID && w.SourceTable == R.SourceTable.TAG) ?? new UserPreference();
+                    var preference = Model.Preferences.SingleOrDefault(w => w.Type == R.PreferenceType.GENRE && w.SourceID == tag.ID && w.SourceTable == R.SourceTable.TAG) ?? new UserPreference();
                     <div class="detail-group">
                         <strong id="label@(tag.ID)">@tag.Name</strong>
                         <div>
                             <form class="" method="POST" action="@Url.Action("Form")" data-form-ajax='{"reload": false}'>
                                 <div class="hidden">
-                                    <input type="hidden" name="@preference.PropertyName(m=> m.UserPreferenceID)" value="@preference.UserPreferenceID" />
+                                    <input type="hidden" name="@preference.PropertyName(m => m.ID)" value="@preference.ID" />
                                     <input type="hidden" name="@preference.PropertyName(m=> m.Type)" value="@R.PreferenceType.GENRE" />
-                                    <input type="hidden" name="@preference.PropertyName(m=> m.SourceID)" value="@tag.TagID" />
+                                    <input type="hidden" name="@preference.PropertyName(m=> m.SourceID)" value="@tag.ID" />
                                     <input type="hidden" name="@preference.PropertyName(m=> m.SourceTable)" value="@R.SourceTable.TAG" />
                                 </div>
                                 <div class="form-group">

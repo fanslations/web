@@ -22,13 +22,13 @@ namespace Paranovels.Services
         {
             var tTag = Table<Tag>();
 
-            var tag = tTag.GetOrAdd(w => w.TagID == form.TagID || (w.TagType == form.TagType && w.Name == form.Name));
+            var tag = tTag.GetOrAdd(w => w.ID == form.ID || (w.TagType == form.TagType && w.Name == form.Name));
             UpdateAuditFields(tag, form.ByUserID);
             MapProperty(form, tag, form.InlineEditProperty);
             // save
             SaveChanges();
 
-            return tag.TagID;
+            return tag.ID;
         }
 
         public PagedList<Tag> Search(SearchModel<TagCriteria> searchModel)
@@ -56,7 +56,7 @@ namespace Paranovels.Services
         public Tag Get(TagCriteria criteria)
         {
             var qTag = View<Tag>().All();
-            return qTag.SingleOrDefault(w => w.TagID == criteria.IDToInt);
+            return qTag.SingleOrDefault(w => w.ID == criteria.IDToInt);
         }
     }
 

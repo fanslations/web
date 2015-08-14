@@ -28,7 +28,7 @@ namespace Paranovels.Services
             // save
             SaveChanges();
 
-            return userRead.UserReadID;
+            return userRead.ID;
         }
 
         public int Viewing(ViewForm form)
@@ -59,7 +59,7 @@ namespace Paranovels.Services
             // save
             SaveChanges();
 
-            return userVote.UserVoteID;
+            return userVote.ID;
         }
 
         public int SummarizeVote(VoteForm form)
@@ -90,7 +90,7 @@ namespace Paranovels.Services
             // save
             SaveChanges();
 
-            return userVote.UserRateID;
+            return userVote.ID;
         }
 
         public double SummarizeRate(RateForm form)
@@ -125,7 +125,7 @@ namespace Paranovels.Services
             // walk up the chain and increase comment count
             if (form.SourceTable == R.SourceTable.COMMENT)
             {
-                var commentForm = tComment.Where(w => w.UserCommentID == form.SourceID).Select(s => new CommentForm
+                var commentForm = tComment.Where(w => w.ID == form.SourceID).Select(s => new CommentForm
                 {
                     SourceID = s.SourceID,
                     SourceTable = s.SourceTable

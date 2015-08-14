@@ -51,7 +51,7 @@
             <strong>Latests Release</strong>
             <div>
                 @{ var release = Model.Releases.OrderByDescending(o => o.Date).FirstOrDefault() ?? new Release(); }
-                <a href="@Url.Action("Detail", "Release", new { ID = release.ReleaseID, Seo = release.Title.ToSeo()})">@release.Title</a> on @release.Date.FormatDate()
+                <a href="@Url.Action("Detail", "Release", new { ID = release.ID, Seo = release.Title.ToSeo() })">@release.Title</a> on @release.Date.FormatDate()
             </div>
         </div>
         <div class="detail-group">
@@ -101,7 +101,7 @@
                             <ul class="list-unstyled">
                                 <li>
                                     <i class="fa fa-circle" style="color: @feedColorMapper[item.Status]" title="last success date @item.LastSuccessDate"></i><a href="@item.Url">@item.Url</a>
-                                    @Html.ImproveThis(m => m.Feeds, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Group", new { FeedID = item.FeedID }) } })
+                                    @Html.ImproveThis(m => m.Feeds, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Group", new { FeedID = item.ID }) } })
                                 </li>
                             </ul>
                         }
@@ -193,13 +193,13 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="@(tab.Equals("Comments",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
-                <a href="?Tab=Comments#comments" aria-controls="home" role="tab">Comments (@Model.Summarize.CommentCount)</a>
+                <a href="?Tab=Comments#comments" aria-controls="home" role="tab"><i class="fa fa-comments"></i>Comments (@Model.Summarize.CommentCount)</a>
             </li>
             <li role="presentation" class="@(tab.Equals("Series",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
-                <a href="?Tab=Series#series" aria-controls="home" role="tab">Series (@Model.Series.Count)</a>
+                <a href="?Tab=Series#series" aria-controls="home" role="tab"><i class="fa fa-book"></i>Series (@Model.Series.Count)</a>
             </li>
             <li role="presentation" class="@(tab.Equals("Releases",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
-                <a href="?Tab=Releases#releases" aria-controls="home" role="tab">Releases (@Model.Releases.Count)</a>
+                <a href="?Tab=Releases#releases" aria-controls="home" role="tab"><i class="fa fa-rss"></i>Releases (@Model.Releases.Count)</a>
             </li>
         </ul>
         <!-- Tab panes -->
@@ -208,7 +208,7 @@
             {
                 <div role="tabpanel" class="tab-pane active" id="comments">
                     @{
-                Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.GroupID, SourceTable = R.SourceTable.GROUP, Sorted = Request.QueryString["sorted"] });
+                Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.ID, SourceTable = R.SourceTable.GROUP, Sorted = Request.QueryString["sorted"] });
                     }
                 </div>
             }
@@ -220,7 +220,7 @@
                 {
                     Data = Model.Series.Select(s => new SeriesGrid()
                     {
-                        SeriesID = s.SeriesID,
+                        ID = s.ID,
                         Title = s.Title,
                         UpdatedDate = s.UpdatedDate,
                         Status = s.Status,
@@ -229,7 +229,7 @@
                         Groups = new List<Group>(),
                         UserLists = new List<UserList>(),
                         Connectors = new List<Connector>(),
-                        Releases = Model.Releases.Where(w=>w.SeriesID == s.SeriesID).ToList()
+                        Releases = Model.Releases.Where(w => w.SeriesID == s.ID).ToList()
                     }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
                 });
                     }
@@ -243,11 +243,11 @@
                 {
                     Data = Model.Releases.Select(s => new ReleaseGrid
                     {
-                        ReleaseID = s.ReleaseID,
+                        ID = s.ID,
                         Title = s.Title,
                         Date = s.Date,
                         Url = s.Url,
-                        Series = Model.Series.SingleOrDefault(w=> w.SeriesID == s.SeriesID),
+                        Series = Model.Series.SingleOrDefault(w => w.ID == s.SeriesID),
                         Group = Model,
                         UserLists = new List<UserList>(),
                         Connectors = new List<Connector>(),

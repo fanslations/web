@@ -79,10 +79,10 @@
                         @foreach (var item in Model.Authors.OrderBy(o => o.Name))
                         {
                             // editing another table (connector)
-                            var connector = Model.Connectors.Single(w => w.ConnectorType == R.ConnectorType.SERIES_AUTHOR && w.TargetID == item.AuthorID);
+                            var connector = Model.Connectors.Single(w => w.ConnectorType == R.ConnectorType.SERIES_AUTHOR && w.TargetID == item.ID);
                             <ul class="list-unstyled">
                                 <li>
-                                    <a href="@Url.Action("Detail", "Author", new { ID = item.AuthorID, Seo = item.Name.ToSeo() })">@Html.Raw(item.Name.FormatString())</a>
+                                    <a href="@Url.Action("Detail", "Author", new { ID = item.ID, Seo = item.Name.ToSeo() })">@Html.Raw(item.Name.FormatString())</a>
                                     @connector.ImproveThis(m => m.TargetID, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Connector") } })
                                 </li>
                             </ul>
@@ -97,14 +97,14 @@
         <div class="detail-group">
             <strong>Categories</strong>
             <div>
-                @Html.Raw(string.Join(", ", Model.Categories.Select(s => string.Format(@"<a href=""{1}"">{0}</a>", s.Name, Url.Action("Detail", "Tag", new { ID = s.TagID, Seo = s.Name.ToSeo() })))).FormatString(0, 20, "Help us categorize this series? Click on 'Edit' to help us update it."))
+                @Html.Raw(string.Join(", ", Model.Categories.Select(s => string.Format(@"<a href=""{1}"">{0}</a>", s.Name, Url.Action("Detail", "Tag", new { ID = s.ID, Seo = s.Name.ToSeo() })))).FormatString(0, 20, "Help us categorize this series? Click on 'Edit' to help us update it."))
                 @Html.ImproveThis(m => m.Categories)
             </div>
         </div>
         <div class="detail-group">
             <strong>Genres</strong>
             <div>
-                @Html.Raw(string.Join(", ", Model.Genres.Select(s => string.Format(@"<a href=""{1}"">{0}</a>", s.Name, Url.Action("Detail", "Tag", new { ID = s.TagID, Seo = s.Name.ToSeo() })))).FormatString(0, 20, "Do know the genres of this series? Click on 'Edit' to help us update it."))
+                @Html.Raw(string.Join(", ", Model.Genres.Select(s => string.Format(@"<a href=""{1}"">{0}</a>", s.Name, Url.Action("Detail", "Tag", new { ID = s.ID, Seo = s.Name.ToSeo() })))).FormatString(0, 20, "Do know the genres of this series? Click on 'Edit' to help us update it."))
                 @Html.ImproveThis(m => m.Genres)
             </div>
         </div>
@@ -123,7 +123,7 @@
             <strong>Latest Release</strong>
             <div>
                 @{ var release = Model.Releases.OrderByDescending(o => o.Date).FirstOrDefault() ?? new Release(); }
-                <a href="@Url.Action("Detail", "Release", new { ID = release.ReleaseID, Seo = release.Title.ToSeo()})">@release.Title</a> - @release.Date.FormatDate()
+                <a href="@Url.Action("Detail", "Release", new { ID = release.ID, Seo = release.Title.ToSeo() })">@release.Title</a> - @release.Date.FormatDate()
             </div>
         </div>
         <div class="detail-group">
@@ -160,7 +160,7 @@
                 <a href="@Model.RawUrl" target="_blank">@Model.RawUrl</a>
                 @if (string.IsNullOrWhiteSpace(Model.RawUrl))
                 {
-                    <text>No raw source url available. Click on 'Edit' to help us update it.</text>
+                    @Html.Raw("No raw source url available. Click on 'Edit' to help us update it.")
                 }
                 @Html.ImproveThis(m => m.RawUrl)
             </div>
@@ -190,7 +190,7 @@
                             <ul class="list-unstyled">
                                 <li>
                                     <i class="fa fa-circle" style="color: @feedColorMapper[item.Status]" title="last success date @item.LastSuccessDate"></i><a href="@item.Url">@item.Url</a>
-                                    @Html.ImproveThis(m => m.Feeds, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Series", new { FeedID = item.FeedID}) } })
+                                    @Html.ImproveThis(m => m.Feeds, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Series", new { FeedID = item.ID }) } })
                                 </li>
                             </ul>
                         }
@@ -210,10 +210,10 @@
                         @foreach (var item in Model.Groups.OrderBy(o=>o.Name))
                         {
                             // editing another table (connector)
-                            var connector = Model.Connectors.Single(w => w.ConnectorType == R.ConnectorType.SERIES_GROUP && w.TargetID == item.GroupID);
+                            var connector = Model.Connectors.Single(w => w.ConnectorType == R.ConnectorType.SERIES_GROUP && w.TargetID == item.ID);
                             <ul class="list-unstyled">
                                 <li>
-                                    <a href="@Url.Action("Detail", "Group", new { ID = item.GroupID, Seo = item.Name.ToSeo() })">@Html.Raw(item.Name.FormatString()) <small>(@item.Url)</small></a>
+                                    <a href="@Url.Action("Detail", "Group", new { ID = item.ID, Seo = item.Name.ToSeo() })">@Html.Raw(item.Name.FormatString()) <small>(@item.Url)</small></a>
                                     @connector.ImproveThis(m => m.TargetID, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Connector") } })
                                 </li>
                             </ul>
@@ -268,7 +268,7 @@
                     <i class="fa fa-comments"></i>@Model.Summarize.CommentCount comments
                 </div>
                 <div>
-                    <i class="fa fa-list-alt"></i>On @Model.Connectors.Count(w => w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.SourceID == Model.SeriesID) lists
+                    <i class="fa fa-list-alt"></i>On @Model.Connectors.Count(w => w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.SourceID == Model.ID) lists
                 </div>
             </div>
             <div class="info">
@@ -287,10 +287,10 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="@(tab.Equals("Comments",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
-                <a href="?Tab=Comments" aria-controls="home" role="tab">Comments (@Model.Summarize.CommentCount)</a>
+                <a href="?Tab=Comments" aria-controls="home" role="tab"><i class="fa fa-comments"></i>Comments (@Model.Summarize.CommentCount)</a>
             </li>
             <li role="presentation" class="@(tab.Equals("Releases",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
-                <a href="?Tab=Releases" aria-controls="home" role="tab">Releases (@Model.Releases.Count)</a>
+                <a href="?Tab=Releases" aria-controls="home" role="tab"><i class="fa fa-rss"></i>Releases (@Model.Releases.Count)</a>
             </li>
         </ul>
         <!-- Tab panes -->
@@ -299,7 +299,7 @@
             {
                 <div role="tabpanel" class="tab-pane active" id="comments">
                     @{
-                Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.SeriesID, SourceTable = R.SourceTable.SERIES, Sorted = Request.QueryString["sorted"] });
+                Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.ID, SourceTable = R.SourceTable.SERIES, Sorted = Request.QueryString["sorted"] });
                     }
                 </div>
             }
@@ -311,7 +311,7 @@
                 {
                     Data = Model.Releases.Select(s => new ReleaseGrid
                     {
-                        ReleaseID = s.ReleaseID,
+                        ID = s.ID,
                         Title = s.Title,
                         Date = s.Date,
                         Url = s.Url,

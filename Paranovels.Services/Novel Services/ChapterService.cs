@@ -22,7 +22,7 @@ namespace Paranovels.Services
         {
             var tChapter = Table<Chapter>();
 
-            var chapter = tChapter.GetOrAdd(w => w.ChapterID == chapterForm.ChapterID
+            var chapter = tChapter.GetOrAdd(w => w.ID == chapterForm.ID
                 || (w.NovelID == chapterForm.NovelID && w.Number == chapterForm.Number));
 
             MapProperty(chapterForm, chapter, chapterForm.InlineEditProperty);
@@ -38,11 +38,11 @@ namespace Paranovels.Services
                 var segments = chapterForm.Content.SegmentChapterContent();
                 foreach (var segment in segments)
                 {
-                    var content = tContent.GetOrAdd(w => w.ChapterID == chapter.ChapterID && w.RawHash == segment.Key);
-                    if (content.ContentID == 0) // only add when the paragraph is new (does not exist)
+                    var content = tContent.GetOrAdd(w => w.ChapterID == chapter.ID && w.RawHash == segment.Key);
+                    if (content.ID == 0) // only add when the paragraph is new (does not exist)
                     {
                         UpdateAuditFields(content, chapterForm.ByUserID);
-                        content.ChapterID = chapter.ChapterID;
+                        content.ChapterID = chapter.ID;
                         content.RawHash = segment.Key;
                         content.Final = segment.Value;
 
@@ -51,7 +51,7 @@ namespace Paranovels.Services
                     }
                 }
             }
-            return chapter.ChapterID;
+            return chapter.ID;
         }
 
         public ChapterDetail Get(ChapterCriteria criteria)
@@ -60,7 +60,7 @@ namespace Paranovels.Services
 
             if (criteria.IDToInt > 0)
             {
-                qChapter = qChapter.Where(w => w.ChapterID == criteria.IDToInt);
+                qChapter = qChapter.Where(w => w.ID == criteria.IDToInt);
             }
 
             var chapter = qChapter.FirstOrDefault();
@@ -76,7 +76,7 @@ namespace Paranovels.Services
         {
             var tContent = Table<Content>();
 
-            var content = tContent.GetOrAdd(w => w.ContentID == contentForm.ContentID);
+            var content = tContent.GetOrAdd(w => w.ID == contentForm.ID);
 
             MapProperty(contentForm, content, contentForm.InlineEditProperty);
             UpdateAuditFields(content, contentForm.ByUserID);

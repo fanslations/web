@@ -23,13 +23,13 @@ namespace Paranovels.Services
         {
             var tComment = Table<UserComment>();
 
-            var comment = tComment.GetOrAdd(w => w.UserCommentID == form.UserCommentID);
+            var comment = tComment.GetOrAdd(w => w.ID == form.ID);
             MapProperty(form, comment, form.InlineEditProperty);
             UpdateAuditFields(comment, form.ByUserID);
             // save
             SaveChanges();
 
-            return comment.UserCommentID;
+            return comment.ID;
         }
 
         public PagedList<CommentGrid> Search(SearchModel<CommentCriteria> searchModel)
@@ -50,14 +50,14 @@ namespace Paranovels.Services
             // if SourceID == 0 and SourceIDs == null then don't return any comment
             if (c.SourceID == 0 && c.SourceIDs == null)
             {
-                qComment = qComment.Where(w => w.UserCommentID == 0);
+                qComment = qComment.Where(w => w.ID == 0);
             }
 
-            var results = qComment.GroupJoin(qSummarize, uc => uc.UserCommentID, s => s.SourceID,
+            var results = qComment.GroupJoin(qSummarize, uc => uc.ID, s => s.SourceID,
                 (uc, s) => new {Comment = uc, Summarize = s.DefaultIfEmpty()})
                 .SelectMany(sm => sm.Summarize.Select(s => new CommentGrid
                 {
-                    UserCommentID = sm.Comment.UserCommentID,
+                    ID = sm.Comment.ID,
                     InsertedBy = sm.Comment.InsertedBy,
                     InsertedDate = sm.Comment.InsertedDate,
                     UpdatedBy = sm.Comment.UpdatedBy,
@@ -89,7 +89,7 @@ namespace Paranovels.Services
             var qUserComment = View<UserComment>().All();
             if (criteria.IDToInt > 0)
             {
-                qUserComment = qUserComment.Where(w => w.UserCommentID == criteria.IDToInt);
+                qUserComment = qUserComment.Where(w => w.ID == criteria.IDToInt);
             }
 
             var comment = qUserComment.SingleOrDefault();

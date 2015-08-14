@@ -22,13 +22,13 @@ namespace Paranovels.Services
         {
             var tSpamReport = Table<SpamReport>();
 
-            var spamReport = tSpamReport.GetOrAdd(w => w.SpamReportID == form.SpamReportID);
+            var spamReport = tSpamReport.GetOrAdd(w => w.ID == form.ID);
             UpdateAuditFields(spamReport, form.ByUserID);
             MapProperty(form, spamReport, form.InlineEditProperty);
             // save
             SaveChanges();
 
-            return spamReport.SpamReportID;
+            return spamReport.ID;
         }
     }
 }

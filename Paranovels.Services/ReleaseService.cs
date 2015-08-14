@@ -22,14 +22,14 @@ namespace Paranovels.Services
         {
             var tRelease = Table<Release>();
 
-            var release = tRelease.GetOrAdd(w => w.ReleaseID == form.ReleaseID || (form.ReleaseID == 0 && w.UrlHash == form.UrlHash));
+            var release = tRelease.GetOrAdd(w => w.ID == form.ID || (form.ID == 0 && w.UrlHash == form.UrlHash));
             MapProperty(form, release, form.InlineEditProperty);
             UpdateAuditFields(release, form.ByUserID);
 
             // save
             SaveChanges();
 
-            return release.ReleaseID;
+            return release.ID;
         }
 
         public ReleaseDetail Get(ReleaseCriteria criteria)
@@ -38,7 +38,7 @@ namespace Paranovels.Services
 
             if (criteria.IDToInt > 0)
             {
-                qRelease = qRelease.Where(w => w.ReleaseID == criteria.IDToInt);
+                qRelease = qRelease.Where(w => w.ID == criteria.IDToInt);
             }
 
             var release = qRelease.SingleOrDefault();
@@ -68,7 +68,7 @@ namespace Paranovels.Services
             }
             if (c.IDs != null)
             {
-                qRelease = qRelease.Where(w => c.IDs.Contains(w.ReleaseID));
+                qRelease = qRelease.Where(w => c.IDs.Contains(w.ID));
             }
 
             //if (c.ByUserID > 0)
@@ -90,11 +90,11 @@ namespace Paranovels.Services
             //}
 
 
-            var results = qRelease.GroupJoin(qSummarize, r => r.ReleaseID, s => s.SourceID,
+            var results = qRelease.GroupJoin(qSummarize, r => r.ID, s => s.SourceID,
                 (r, s) => new { Release = r, Summarize = s.DefaultIfEmpty() })
                 .SelectMany(sm => sm.Summarize.Select(s => new ReleaseGrid
                 {
-                    ReleaseID = sm.Release.ReleaseID,
+                    ID = sm.Release.ID,
                     Date = sm.Release.Date,
                     Title = sm.Release.Title,
                     Url = sm.Release.Url,

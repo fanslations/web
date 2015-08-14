@@ -17,7 +17,7 @@ namespace Paranovels.Mvc.Controllers
             var detail = Facade<NovelFacade>().GetChapter(criteria);
 
             // log views
-            var viewForm = new ViewForm { UserID = UserSession.UserID, SourceID = detail.ChapterID, SourceTable = R.SourceTable.CHAPTER };
+            var viewForm = new ViewForm { UserID = UserSession.UserID, SourceID = detail.ID, SourceTable = R.SourceTable.CHAPTER };
             Facade<UserActionFacade>().Viewing(viewForm);
 
             return View(detail);

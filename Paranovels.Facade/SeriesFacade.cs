@@ -69,7 +69,7 @@ namespace Paranovels.Facade
                         var feedID = feedService.SaveChanges(feedForm);
 
                         // add to connector only if it a new feed
-                        if (feed.FeedID == 0)
+                        if (feed.ID == 0)
                         {
                             // connect series to feed
                             var connectorForm = new ConnectorForm()
@@ -93,7 +93,7 @@ namespace Paranovels.Facade
                             ByUserID = form.ByUserID,
                             ConnectorType = R.ConnectorType.SERIES_GROUP,
                             SourceID = id,
-                            TargetID = group.GroupID
+                            TargetID = group.ID
                         };
                         connectorService.SaveChanges(connectorForm);
                     }
@@ -108,7 +108,7 @@ namespace Paranovels.Facade
                             ByUserID = form.ByUserID,
                             ConnectorType = R.ConnectorType.SERIES_AUTHOR,
                             SourceID = id,
-                            TargetID = author.AuthorID
+                            TargetID = author.ID
                         };
                         connectorService.SaveChanges(connectorForm);
                     }
@@ -149,24 +149,24 @@ namespace Paranovels.Facade
                     R.ConnectorType.SERIES_AUTHOR,
                 };
                 var connectors = service.View<Connector>()
-                                    .Where(w => w.IsDeleted == false && connectorTypes.Contains(w.ConnectorType) && w.SourceID == detail.SeriesID).ToList();
+                                    .Where(w => w.IsDeleted == false && connectorTypes.Contains(w.ConnectorType) && w.SourceID == detail.ID).ToList();
 
                 var tagTypes = new[] { R.TagType.NOVEL_CATEGORY, R.TagType.NOVEL_GENRE, R.TagType.NOVEL_CONTAIN };
                 var tags = service.View<Tag>().Where(w => tagTypes.Contains(w.TagType)).ToList();
 
-                detail.Categories = tags.Where(w => w.TagType == R.TagType.NOVEL_CATEGORY && connectors.Any(a => a.ConnectorType == R.ConnectorType.SERIES_TAGCATEGORY && a.TargetID == w.TagID)).ToList();
+                detail.Categories = tags.Where(w => w.TagType == R.TagType.NOVEL_CATEGORY && connectors.Any(a => a.ConnectorType == R.ConnectorType.SERIES_TAGCATEGORY && a.TargetID == w.ID)).ToList();
 
-                detail.Genres = tags.Where(w => w.TagType == R.TagType.NOVEL_GENRE && connectors.Any(a => a.ConnectorType == R.ConnectorType.SERIES_TAGGENRE && a.TargetID == w.TagID)).ToList();
+                detail.Genres = tags.Where(w => w.TagType == R.TagType.NOVEL_GENRE && connectors.Any(a => a.ConnectorType == R.ConnectorType.SERIES_TAGGENRE && a.TargetID == w.ID)).ToList();
 
-                detail.Contains = tags.Where(w => w.TagType == R.TagType.NOVEL_CONTAIN && connectors.Any(a => a.ConnectorType == R.ConnectorType.SERIES_TAGCONTAIN && a.TargetID == w.TagID)).ToList();
+                detail.Contains = tags.Where(w => w.TagType == R.TagType.NOVEL_CONTAIN && connectors.Any(a => a.ConnectorType == R.ConnectorType.SERIES_TAGCONTAIN && a.TargetID == w.ID)).ToList();
 
                 var authorIDs = connectors.Where(w => w.ConnectorType == R.ConnectorType.SERIES_AUTHOR).Select(s=> s.TargetID).ToList();
-                detail.Authors = service.View<Author>().Where(w => authorIDs.Contains(w.AuthorID)).ToList();
+                detail.Authors = service.View<Author>().Where(w => authorIDs.Contains(w.ID)).ToList();
 
                 var groupIDs = connectors.Where(w => w.ConnectorType == R.ConnectorType.SERIES_GROUP).Select(s=> s.TargetID).ToList();
-                detail.Groups = service.View<Group>().Where(w => groupIDs.Contains(w.GroupID)).ToList();
-                
-                detail.Summarize = service.View<Summarize>().Where(w => w.SourceTable == R.SourceTable.SERIES && w.SourceID == detail.SeriesID).SingleOrDefault() ?? new Summarize();
+                detail.Groups = service.View<Group>().Where(w => groupIDs.Contains(w.ID)).ToList();
+
+                detail.Summarize = service.View<Summarize>().Where(w => w.SourceTable == R.SourceTable.SERIES && w.SourceID == detail.ID).SingleOrDefault() ?? new Summarize();
 
                 // get data for user lists
                 detail.Connectors = connectors;
@@ -174,19 +174,19 @@ namespace Paranovels.Facade
                 detail.UserLists = service.View<UserList>().Where(w => w.IsDeleted == false && w.UserID == criteria.ByUserID)
                     .OrderBy(o => o.Priority == 0 ? int.MaxValue : o.Priority).ThenBy(o => o.Name).ToList();
 
-                detail.Releases = service.View<Release>().Where(w => w.SeriesID == detail.SeriesID).ToList();
+                detail.Releases = service.View<Release>().Where(w => w.SeriesID == detail.ID).ToList();
 
                 detail.Feeds = service.View<Connector>()
-                                .Where(w => w.ConnectorType == R.ConnectorType.SERIES_FEED && w.SourceID == detail.SeriesID)
-                                .Join(service.View<Feed>().All(), c => c.TargetID, f => f.FeedID, (c, f) => f).ToList();
+                                .Where(w => w.ConnectorType == R.ConnectorType.SERIES_FEED && w.SourceID == detail.ID)
+                                .Join(service.View<Feed>().All(), c => c.TargetID, f => f.ID, (c, f) => f).ToList();
 
                 detail.Glossaries = service.View<Connector>()
-                    .Where(w => w.ConnectorType == R.ConnectorType.SERIES_GLOSSARY && w.SourceID == detail.SeriesID)
-                    .Join(service.View<Glossary>().All(), c => c.TargetID, f => f.GlossaryID, (c, f) => f).ToList();
+                    .Where(w => w.ConnectorType == R.ConnectorType.SERIES_GLOSSARY && w.SourceID == detail.ID)
+                    .Join(service.View<Glossary>().All(), c => c.TargetID, f => f.ID, (c, f) => f).ToList();
 
-                detail.UserAction = new UserActionFacade().Get(new ViewForm { UserID = criteria.ByUserID, SourceID = detail.SeriesID, SourceTable = R.SourceTable.SERIES });
+                detail.UserAction = new UserActionFacade().Get(new ViewForm { UserID = criteria.ByUserID, SourceID = detail.ID, SourceTable = R.SourceTable.SERIES });
 
-                detail.Akas = service.View<Aka>().Where(w=> w.IsDeleted == false && w.SourceID == detail.SeriesID && w.SourceTable == R.SourceTable.SERIES).ToList();
+                detail.Akas = service.View<Aka>().Where(w => w.IsDeleted == false && w.SourceID == detail.ID && w.SourceTable == R.SourceTable.SERIES).ToList();
                 return detail;
             }
         }
@@ -197,12 +197,12 @@ namespace Paranovels.Facade
             {
                 var service = new ReleaseService(uow);
                 var detail = service.Get(criteria);
-                
-                detail.Series = service.View<Series>().Where(w => w.SeriesID == detail.SeriesID).SingleOrDefault() ?? new Series();
 
-                detail.Group = service.View<Group>().Where(w => w.GroupID == detail.GroupID).SingleOrDefault() ?? new Group();
+                detail.Series = service.View<Series>().Where(w => w.ID == detail.SeriesID).SingleOrDefault() ?? new Series();
 
-                detail.Summarize = service.View<Summarize>().Where(w=> w.SourceTable == R.SourceTable.RELEASE && w.SourceID == detail.ReleaseID).SingleOrDefault() ?? new Summarize();
+                detail.Group = service.View<Group>().Where(w => w.ID == detail.GroupID).SingleOrDefault() ?? new Group();
+
+                detail.Summarize = service.View<Summarize>().Where(w => w.SourceTable == R.SourceTable.RELEASE && w.SourceID == detail.ID).SingleOrDefault() ?? new Summarize();
 
                 // get data for user lists
 
@@ -211,9 +211,9 @@ namespace Paranovels.Facade
                 detail.UserLists = service.View<UserList>().Where(w => w.IsDeleted == false && w.UserID == criteria.ByUserID)
                     .OrderBy(o => o.Priority == 0 ? int.MaxValue : o.Priority).ThenBy(o => o.Name).ToList();
 
-                detail.UserAction = new UserActionFacade().Get(new ViewForm { UserID = criteria.ByUserID, SourceID = detail.ReleaseID, SourceTable = R.SourceTable.RELEASE });
-                
-                detail.Sticky = service.View<Sticky>().Where(w=> w.SourceID == detail.ReleaseID && w.SourceTable == R.SourceTable.RELEASE).SingleOrDefault() ?? new Sticky();
+                detail.UserAction = new UserActionFacade().Get(new ViewForm { UserID = criteria.ByUserID, SourceID = detail.ID, SourceTable = R.SourceTable.RELEASE });
+
+                detail.Sticky = service.View<Sticky>().Where(w => w.SourceID == detail.ID && w.SourceTable == R.SourceTable.RELEASE).SingleOrDefault() ?? new Sticky();
 
                 return detail;
             }

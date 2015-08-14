@@ -21,7 +21,7 @@
                         'use strict';
 
                         $('#@Model.InlineEditProperty').selectize({
-                            valueField: 'GroupID',
+                            valueField: 'ID',
                             labelField: 'Name',
                             searchField: 'Name',
                             sortField: 'Name',
@@ -55,7 +55,7 @@
                             }
                         });
                     });
-</script>
+                </script>
                 <label for="@Model.InlineEditProperty" class="sr-only">Select Translations Group</label>
                 <select id="@Model.InlineEditProperty" name="@Model.InlineEditProperty" placeholder="Select Group" required></select>
             }
@@ -65,8 +65,8 @@
                     require(['jquery', 'selectize'], function ($, selectize) {
                         'use strict';
 
-                        $('#seriesid').selectize({
-                            valueField: 'SeriesID',
+                        $('#@Model.InlineEditProperty').selectize({
+                            valueField: 'ID',
                             labelField: 'Title',
                             searchField: 'Title',
                             sortField: 'Title',

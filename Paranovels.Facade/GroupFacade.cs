@@ -38,7 +38,7 @@ namespace Paranovels.Facade
                         var feedID = feedService.SaveChanges(feedForm);
 
                         // add to connector only if it a new feed
-                        if (feed.FeedID == 0)
+                        if (feed.ID == 0)
                         {
                             // connect series to feed
                             var connectorForm = new ConnectorForm()
@@ -87,21 +87,21 @@ namespace Paranovels.Facade
                 var detail = service.Get(criteria);
 
                 detail.Series = service.View<Connector>()
-                        .Where(w => w.IsDeleted == false && w.ConnectorType == R.ConnectorType.SERIES_GROUP && w.TargetID == detail.GroupID)
-                        .Join(service.View<Series>().All(), c=> c.SourceID, s=>s.SeriesID, (c,s) => s).ToList();
+                        .Where(w => w.IsDeleted == false && w.ConnectorType == R.ConnectorType.SERIES_GROUP && w.TargetID == detail.ID)
+                        .Join(service.View<Series>().All(), c => c.SourceID, s => s.ID, (c, s) => s).ToList();
 
-                detail.Releases = service.View<Release>().Where(w => w.GroupID == detail.GroupID).ToList();
+                detail.Releases = service.View<Release>().Where(w => w.GroupID == detail.ID).ToList();
 
                 detail.Feeds = service.View<Connector>()
-                        .Where(w => w.ConnectorType == R.ConnectorType.GROUP_FEED && w.SourceID == detail.GroupID)
-                        .Join(service.View<Feed>().All(), c => c.TargetID, f => f.FeedID, (c, f) => f).ToList();
+                        .Where(w => w.ConnectorType == R.ConnectorType.GROUP_FEED && w.SourceID == detail.ID)
+                        .Join(service.View<Feed>().All(), c => c.TargetID, f => f.ID, (c, f) => f).ToList();
 
                 detail.Glossaries = service.View<Connector>()
-                    .Where(w => w.ConnectorType == R.ConnectorType.GROUP_GLOSSARY && w.SourceID == detail.GroupID)
-                    .Join(service.View<Glossary>().All(), c => c.TargetID, f => f.GlossaryID, (c, f) => f).ToList();
+                    .Where(w => w.ConnectorType == R.ConnectorType.GROUP_GLOSSARY && w.SourceID == detail.ID)
+                    .Join(service.View<Glossary>().All(), c => c.TargetID, f => f.ID, (c, f) => f).ToList();
 
-                detail.Summarize = service.View<Summarize>().Where(w => w.SourceTable == R.SourceTable.GROUP && w.SourceID == detail.GroupID).SingleOrDefault() ?? new Summarize();
-                detail.UserAction = new UserActionFacade().Get(new ViewForm { UserID = criteria.ByUserID, SourceID = detail.GroupID, SourceTable = R.SourceTable.GROUP });
+                detail.Summarize = service.View<Summarize>().Where(w => w.SourceTable == R.SourceTable.GROUP && w.SourceID == detail.ID).SingleOrDefault() ?? new Summarize();
+                detail.UserAction = new UserActionFacade().Get(new ViewForm { UserID = criteria.ByUserID, SourceID = detail.ID, SourceTable = R.SourceTable.GROUP });
                 return detail;
             }
         }

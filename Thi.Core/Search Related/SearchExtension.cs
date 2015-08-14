@@ -33,7 +33,7 @@ namespace Thi.Core
         public static string[] ToSearchKeywords(this string query)
         {
             return query.ToLower().SplitReservedQuote()
-                .Where(w => !w.Contains("=")).ToArray(); // remove mapped keyword
+                .Where(w => !w.Contains("=")).Distinct().ToArray(); // remove mapped keyword
         }
 
         static object CastTo(string value, string typeName)

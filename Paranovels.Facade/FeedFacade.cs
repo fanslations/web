@@ -24,11 +24,6 @@ namespace Paranovels.Facade
         {
             int newReleaseCount = 0;
             var lastCheckedDate = DateTime.Now.AddMinutes(Math.Abs(minutes) * -1);
-            var mapFeedGlossary = new Dictionary<int, int>
-            {
-                {R.ConnectorType.SERIES_FEED, R.ConnectorType.SERIES_GLOSSARY},
-                {R.ConnectorType.GROUP_FEED, R.ConnectorType.GROUP_GLOSSARY}
-            };
 
             using (var uow = UnitOfWorkFactory.Create<NovelContext>())
             {
@@ -42,9 +37,9 @@ namespace Paranovels.Facade
                 var qGroup = service.View<Group>().Where(w => w.IsDeleted == false);
 
                 var pendingUpdates = qConnector.Where(w => w.ConnectorType == connectorTypeFeed)
-                                               .Join(qFeed, c => c.TargetID, f => f.FeedID, (c, f) => new { Connector = c, Feed = f }).OrderBy(o => o.Feed.LastSuccessDate).ToList();
+                                               .Join(qFeed, c => c.TargetID, f => f.ID, (c, f) => new { Connector = c, Feed = f }).OrderBy(o => o.Feed.LastSuccessDate).ToList();
 
-                var lastRelease = releaseService.View<Release>().All().OrderByDescending(o => o.ReleaseID).First();
+                var lastRelease = releaseService.View<Release>().All().OrderByDescending(o => o.ID).First();
 
                 foreach (var pendingUpdate in pendingUpdates)
                 {
@@ -58,11 +53,11 @@ namespace Paranovels.Facade
                         if (pendingUpdate.Connector.ConnectorType == R.ConnectorType.SERIES_FEED)
                         {
                             release.SeriesID = pendingUpdate.Connector.SourceID;
-                            var series = qSeries.FirstOrDefault(w => w.SeriesID == release.SeriesID);
+                            var series = qSeries.FirstOrDefault(w => w.ID == release.SeriesID);
                             if (series != null)
                             {
-                                var groups = qConnector.Where(w => w.ConnectorType == R.ConnectorType.SERIES_GROUP && w.SourceID == series.SeriesID)
-                                        .Join(qGroup, c => c.TargetID, g => g.GroupID, (c, g) => g).ToList();
+                                var groups = qConnector.Where(w => w.ConnectorType == R.ConnectorType.SERIES_GROUP && w.SourceID == series.ID)
+                                        .Join(qGroup, c => c.TargetID, g => g.ID, (c, g) => g).ToList();
 
                                 if (groups.Count == 0)
                                 {
@@ -70,7 +65,7 @@ namespace Paranovels.Facade
                                 }
                                 else if (groups.Count == 1)
                                 {
-                                    release.GroupID = groups[0].GroupID;
+                                    release.GroupID = groups[0].ID;
                                 }
                                 else
                                 {
@@ -78,7 +73,7 @@ namespace Paranovels.Facade
                                     {
                                         if (new Uri(group.Url).Host == new Uri(release.Url).Host)
                                         {
-                                            release.GroupID = group.GroupID;
+                                            release.GroupID = group.ID;
                                         }
                                     }
                                 }
@@ -90,7 +85,7 @@ namespace Paranovels.Facade
 
                             // get all series this group has
                             var series = qConnector.Where(w => w.ConnectorType == R.ConnectorType.SERIES_GROUP && w.TargetID == release.GroupID)
-                                .Join(qSeries, c => c.SourceID, s => s.SeriesID, (c, s) => s).ToList();
+                                .Join(qSeries, c => c.SourceID, s => s.ID, (c, s) => s).ToList();
 
                             if (series.Count == 0)
                             {
@@ -98,13 +93,13 @@ namespace Paranovels.Facade
                             }
                             else if (series.Count == 1)
                             {
-                                release.SeriesID = series[0].SeriesID;
+                                release.SeriesID = series[0].ID;
                             }
                             else
                             {
-                                var seriesIDs = series.Select(s => s.SeriesID).ToList();
+                                var seriesIDs = series.Select(s => s.ID).ToList();
                                 var akas = qAka.Where(w => w.SourceTable == R.SourceTable.SERIES && seriesIDs.Contains(w.SourceID)).ToList();
-                                var titles = series.Select(s => new { ID = s.SeriesID, Title = s.Title })
+                                var titles = series.Select(s => new { ID = s.ID, Title = s.Title })
                                     .Union(akas.Select(s => new { ID = s.SourceID, Title = s.Text }));
 
                                 foreach (var title in titles)
@@ -119,10 +114,10 @@ namespace Paranovels.Facade
 
                         release.Summary = "";
                         release.Type = R.ReleaseType.CHAPTER;
-                        release.ReleaseID = releaseService.SaveChanges(release);
+                        release.ID = releaseService.SaveChanges(release);
 
                         // notify only if release is new
-                        if (release.ReleaseID > lastRelease.ReleaseID)
+                        if (release.ID > lastRelease.ID)
                         {
                             new ListFacade().EmailNotifySubscriber(release);
                         }

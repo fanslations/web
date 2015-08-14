@@ -44,7 +44,7 @@ namespace Paranovels.Facade
                     };
                     detail.Series = service.View<Series>().Where(w => w.IsDeleted == false)
                         .Join(service.View<Connector>().Where(w => w.IsDeleted == false).Where(w=> sourceIDs.Contains(w.ConnectorType) && w.TargetID == tag.ID),
-                            ts => ts.SeriesID, c => c.SourceID,
+                            ts => ts.ID, c => c.SourceID,
                             (ts, c) => ts).ToList();
                 }
                 return detail;

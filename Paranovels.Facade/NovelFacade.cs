@@ -62,13 +62,13 @@ namespace Paranovels.Facade
 
                 var qAuthor = service.View<Author>().All();
                 var authors = qConnector.Where(w => w.ConnectorType == R.ConnectorType.NOVEL_AUTHOR)
-                    .Where(w => w.SourceID == detail.NovelID).Select(s => s.TargetID).ToList();
-                detail.Authors = qAuthor.Where(w => authors.Contains(w.AuthorID)).ToList();
+                    .Where(w => w.SourceID == detail.ID).Select(s => s.TargetID).ToList();
+                detail.Authors = qAuthor.Where(w => authors.Contains(w.ID)).ToList();
 
                 // chapter
                 var qChapter = service.View<Chapter>().All();
 
-                qChapter = qChapter.Where(w => w.NovelID == detail.NovelID);
+                qChapter = qChapter.Where(w => w.NovelID == detail.ID);
 
                 detail.Chapters = qChapter.ToList();
 
@@ -93,9 +93,9 @@ namespace Paranovels.Facade
                 var detail = service.Get(criteria);
 
                 // chapter content
-                var qContent = service.View<Content>().Where(w => w.ChapterID == detail.ChapterID).Select(s => new ContentGrid
+                var qContent = service.View<Content>().Where(w => w.ChapterID == detail.ID).Select(s => new ContentGrid
                 {
-                    ContentID = s.ContentID,
+                    ID = s.ID,
                     RawHash =  s.RawHash,
                     Final = s.Final,
                 });

@@ -53,7 +53,7 @@
             <li class="row-list">
                 <div class="col-content">
                     <div>
-                        <a href="@Url.Action("Detail", new{ ID = item.TagID, Seo = (item.TagType.Translate(R.TagType.Translate) + " " + item.Name).ToSeo() })">@item.Name</a>
+                        <a href="@Url.Action("Detail", new { ID = item.ID, Seo = (item.TagType.Translate(R.TagType.Translate) + " " + item.Name).ToSeo() })">@item.Name</a>
                     </div>
                     <div>@Html.Raw(item.Description.FormatString(200))</div>
                 </div>

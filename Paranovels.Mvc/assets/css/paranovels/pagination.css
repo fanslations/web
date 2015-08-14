@@ -52,6 +52,9 @@
     .mobile .pagination li.current, .mobile .pagination li.page, .mobile .pagination li.first, .mobile .pagination li.last, .mobile .pagination li.dot {
         display: none !important;
     }
+    .mobile .pagination li.toc a {
+        border-radius: 5px;
+    }
 
     .pagination > li {
         display: inline-block !important;

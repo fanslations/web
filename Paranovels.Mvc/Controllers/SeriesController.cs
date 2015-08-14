@@ -26,7 +26,7 @@ namespace Paranovels.Mvc.Controllers
             var detail = Facade<SeriesFacade>().GetSeries(criteria);
             
             // log views
-            var viewForm = new ViewForm { UserID = UserSession.UserID, SourceID = detail.SeriesID, SourceTable = R.SourceTable.SERIES };
+            var viewForm = new ViewForm { UserID = criteria.ByUserID, SourceID = detail.ID, SourceTable = R.SourceTable.SERIES };
             Facade<UserActionFacade>().Viewing(viewForm);
 
             return View(detail);
@@ -40,7 +40,6 @@ namespace Paranovels.Mvc.Controllers
         [HttpPost]
         public JsonResult Form(SeriesForm form, HttpPostedFileBase image, string imagePath)
         {
-            var r = Request.QueryString;
             if (image != null && image.ContentLength > 0)
             {
                 var driveService = GoogleDriveService.GetDriveService();

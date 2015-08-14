@@ -1,4 +1,4 @@
-// This class was automatically generated with love by ST4bby 8/13/2015 5:19:26 PM.
+// This class was automatically generated with love by ST4bby 8/14/2015 4:20:13 PM.
 // Read more at http://jbubriski.github.com/ST4bby/
 
 namespace Paranovels.DataModels
@@ -11,10 +11,8 @@ namespace Paranovels.DataModels
 	[Table("SpamReport")]
 	public partial class SpamReport : IDataModel
 	{
-		[NotMapped]public int ID { get { return SpamReportID; } set { SpamReportID = value; } }
-	
 		[Key, Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("SpamReportID", TypeName = "int"), Display(Name="Spam Report ID")]
-		public int SpamReportID { get; set; }
+		public int ID { get; set; }
 		
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("InsertedBy", TypeName = "int"), Display(Name="Inserted By")]
 		public int InsertedBy { get; set; }

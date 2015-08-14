@@ -22,7 +22,7 @@ namespace Paranovels.Services
         {
             var tUserPreference = Table<UserPreference>();
 
-            var userPreference = tUserPreference.GetOrAdd(w => w.UserPreferenceID == form.UserPreferenceID ||
+            var userPreference = tUserPreference.GetOrAdd(w => w.ID == form.ID ||
                 (w.UserID == form.UserID && w.Type == form.Type && w.SourceID == form.SourceID && w.SourceTable == form.SourceTable));
 
             MapProperty(form, userPreference, form.InlineEditProperty);
@@ -35,7 +35,7 @@ namespace Paranovels.Services
             // save
             SaveChanges();
 
-            return userPreference.UserPreferenceID;
+            return userPreference.ID;
         }
     }
 }

@@ -24,10 +24,11 @@ namespace Paranovels.Mvc.Controllers
 
         public ActionResult Detail(GroupCriteria criteria)
         {
+            criteria.ByUserID = UserSession.UserID;
             var detail = Facade<GroupFacade>().GetGroup(criteria);
 
             // log views
-            var viewForm = new ViewForm { UserID = UserSession.UserID, SourceID = detail.GroupID, SourceTable = R.SourceTable.GROUP };
+            var viewForm = new ViewForm { UserID = criteria.ByUserID, SourceID = detail.ID, SourceTable = R.SourceTable.GROUP };
             Facade<UserActionFacade>().Viewing(viewForm);
 
             return View(detail);

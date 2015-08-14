@@ -10,7 +10,7 @@
             <li><strong><i class="fa fa-list-alt"></i>Your lists:</strong></li>
             @foreach (var item in Model.UserLists)
             {
-                var connector = Model.Connectors.SingleOrDefault(w => w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.TargetID == item.UserListID) ?? new Connector { IsDeleted = true };
+                var connector = Model.Connectors.SingleOrDefault(w => w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.TargetID == item.ID) ?? new Connector { IsDeleted = true };
                 <li class="action connect toggle" data-toggle='{"target":"#add@(item.ID), #remove@(item.ID)"}' data-connect='{ "ConnectorID": @(connector.ID), "ConnectorType": @R.ConnectorType.SERIES_USERLIST, "SourceID": @Model.ID, "TargetID": @item.ID, "IsDeleted": "@(connector.IsDeleted == false)" }' role="button">
                     <div id="add@(item.ID)" title="Remove from @item.Name" class="animated zoomIn" style="@(connector.IsDeleted == false ? "" : "display:none;")">
                         <span class="fa" style="@(item.IsColorIcon ? string.Format("color:{0};",item.Color.ToColorHex()) : "")">&#xf@(Convert.ToString(item.Icon, 16).PadLeft(3, '0'));</span>@item.Name

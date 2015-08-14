@@ -1,4 +1,4 @@
-// This class was automatically generated with love by ST4bby 8/13/2015 5:19:27 PM.
+// This class was automatically generated with love by ST4bby 8/14/2015 4:20:13 PM.
 // Read more at http://jbubriski.github.com/ST4bby/
 
 namespace Paranovels.DataModels
@@ -11,10 +11,8 @@ namespace Paranovels.DataModels
 	[Table("UserList")]
 	public partial class UserList : IDataModel
 	{
-		[NotMapped]public int ID { get { return UserListID; } set { UserListID = value; } }
-	
 		[Key, Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("UserListID", TypeName = "int"), Display(Name="User List ID")]
-		public int UserListID { get; set; }
+		public int ID { get; set; }
 		
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("InsertedBy", TypeName = "int"), Display(Name="Inserted By")]
 		public int InsertedBy { get; set; }

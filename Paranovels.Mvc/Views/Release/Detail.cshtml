@@ -8,7 +8,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     // needed in case release doesnot have summarize yet!
-    Model.Summarize.SourceID = Model.ReleaseID;
+    Model.Summarize.SourceID = Model.ID;
 }
 
 
@@ -19,7 +19,7 @@
             @Model.Title
         </h1>
     </div>
-    @{ Html.RenderPartial("~/Views/UserList/_AddSeriesToList.cshtml", new SeriesDetail { SeriesID = Model.SeriesID, UserLists = Model.UserLists, Connectors = Model.Connectors }); }
+    @{ Html.RenderPartial("~/Views/UserList/_AddSeriesToList.cshtml", new SeriesDetail { ID = Model.SeriesID, UserLists = Model.UserLists, Connectors = Model.Connectors }); }
     <div class="content">
         <div class="detail-group">
             <strong class="sr-only">Summary</strong>
@@ -38,7 +38,7 @@
         <div class="detail-group">
             <strong>Release Url</strong>
             <div>
-                <a href="@Url.Action("Out", "Release", new { ID = Model.ReleaseID, Url = Model.Url, Seo = Model.Title.ToSeo() })">@Model.Url</a>
+                <a href="@Url.Action("Out", "Release", new { ID = Model.ID, Url = Model.Url, Seo = Model.Title.ToSeo() })">@Model.Url</a>
                 @Html.ImproveThis(m => m.Url)
             </div>
         </div>
@@ -92,7 +92,7 @@
         <div class="toolbar clearfix">
             <div class="read-it animated bounceIn">
                 @{
-                    var autoAddListIDs = Model.UserLists.Where(w => w.IsDeleted == false && w.IsAutoAddWhenRead).Select(s => s.UserListID).ToList();
+                    var autoAddListIDs = Model.UserLists.Where(w => w.IsDeleted == false && w.IsAutoAddWhenRead).Select(s => s.ID).ToList();
                     var inListIDs = Model.Connectors.Where(w => w.IsDeleted == false && w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.SourceID == Model.SeriesID).Select(s => s.TargetID).ToList();
                     // get list IDs that has 'IsAutoAddWhenRead' enabled but not already in list
                     var notInListIDs = autoAddListIDs.Except(inListIDs);
@@ -151,13 +151,13 @@
             <div class="toolbar clearfix">
                 <div class="info">
                     <div>
-                        @if (Model.Sticky.StickyID > 0 && Model.Sticky.IsDeleted == false)
+                        @if (Model.Sticky.ID > 0 && Model.Sticky.IsDeleted == false)
                         {
-                            <a role="button" class="action sticky" data-sticky='{ "StickyID": @Model.Sticky.StickyID, "SourceID": @Model.ID, "SourceTable": @R.SourceTable.RELEASE, "IsDeleted": true }' title="click to unpin"><i class="fa fa-thumb-tack color-red"></i>Pinned</a>
+                            <a role="button" class="action sticky" data-sticky='{ "ID": @Model.Sticky.ID, "SourceID": @Model.ID, "SourceTable": @R.SourceTable.RELEASE, "IsDeleted": true }' title="click to unpin"><i class="fa fa-thumb-tack color-red"></i>Pinned</a>
                         }
                         else
                         {
-                            <a role="button" class="action sticky" data-sticky='{ "StickyID": @Model.Sticky.StickyID, "SourceID": @Model.ID, "SourceTable": @R.SourceTable.RELEASE }' title="click to pin"><i class="fa fa-thumb-tack"></i>Not pinned</a>
+                            <a role="button" class="action sticky" data-sticky='{ "ID": @Model.Sticky.ID, "SourceID": @Model.ID, "SourceTable": @R.SourceTable.RELEASE }' title="click to pin"><i class="fa fa-thumb-tack"></i>Not pinned</a>
                         }
                     </div>
                     <div>
@@ -168,13 +168,27 @@
         </div>
     </section>
 }
-@if (Model.Series.SeriesID > 0)
+@if (Model.Series.ID > 0)
 {
-    <section class="section">
-        <div class="content text-center clearfix">
-            <a class="pull-left btn btn-success" href="@Url.Action("PreviousChapter", "Release", new {ID = Model.Series.SeriesID, Seo = Model.Series.Title.ToSeo(), Model.Date})"><i class="fa fa-arrow-circle-left"></i>Previous Chapter</a>
+    <section class="section mobile">
+        <div class="content pagination-container">
+            <ul class="pagination">
+                <li class="active previous">
+                    <a class="" href="@Url.Action("PreviousChapter", "Release", new { ID = Model.Series.ID, Seo = Model.Series.Title.ToSeo(), Model.Date })"><i class="fa fa-arrow-circle-left"></i>Previous Chapter</a>
+
+                </li>
+                <li class="active toc">
+                    <a class="" href="@Url.Action("Detail", "Series", new { ID = Model.Series.ID, Seo = Model.Series.Title.ToSeo(), Tab = "Releases" })">Table of Contents (All Releases)</a>
+
+                </li>
+                <li class="active next">
+                    <a class="" href="@Url.Action("NextChapter", "Release", new { ID = Model.Series.ID, Seo = Model.Series.Title.ToSeo(), Model.Date })">Next Chapter<i class="fa fa-arrow-circle-right right"></i></a>
+
+                </li>
+            </ul>
+            @*<a class="pull-left btn btn-success" href="@Url.Action("PreviousChapter", "Release", new {ID = Model.Series.SeriesID, Seo = Model.Series.Title.ToSeo(), Model.Date})"><i class="fa fa-arrow-circle-left"></i>Previous Chapter</a>
             <a class="btn btn-success" href="@Url.Action("Detail", "Series", new {ID = Model.Series.SeriesID, Seo = Model.Series.Title.ToSeo(), Tab = "Releases"})">Table of Contents (All Releases)</a>
-            <a class="pull-right btn btn-success" href="@Url.Action("NextChapter", "Release", new {ID = Model.Series.SeriesID, Seo = Model.Series.Title.ToSeo(), Model.Date})">Next Chapter<i class="fa fa-arrow-circle-right right"></i></a>
+            <a class="pull-right btn btn-success" href="@Url.Action("NextChapter", "Release", new {ID = Model.Series.SeriesID, Seo = Model.Series.Title.ToSeo(), Model.Date})">Next Chapter<i class="fa fa-arrow-circle-right right"></i></a>*@
         </div>
     </section>
 }
@@ -182,13 +196,13 @@
     <div class="content">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#comments" aria-controls="home" role="tab" data-toggle="tab">Comments (@Model.Summarize.CommentCount)</a></li>
+            <li role="presentation" class="active"><a href="#comments" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-comments"></i>Comments (@Model.Summarize.CommentCount)</a></li>
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="comments">
                 @{
-                    Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.ReleaseID, SourceTable = R.SourceTable.RELEASE, Sorted = Request.QueryString["sorted"] });
+                    Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.ID, SourceTable = R.SourceTable.RELEASE, Sorted = Request.QueryString["sorted"] });
                 }
             </div>
         </div>

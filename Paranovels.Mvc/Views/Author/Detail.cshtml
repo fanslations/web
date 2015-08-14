@@ -37,7 +37,7 @@
             <div>
                 @if (string.IsNullOrWhiteSpace(Model.Url))
                 {
-                    Html.Raw(Model.Url.FormatString());
+                    @Html.Raw("Does the author has website? Help us update it.");
                 }
                 else
                 {
@@ -53,7 +53,7 @@
         <div class="toolbar clearfix">
             <div class="vote-score">
                 <div class="vote @(Model.UserAction.Voted.GetValueOrDefault() == 1 ? "likes" : Model.UserAction.Voted.GetValueOrDefault() == -1 ? "dislikes" : "")">
-                    <span role="button" class="action vote-up" data-vote='{"SourceID": @Model.ID, "SourceTable": @R.SourceTable.GROUP, "Vote": 1}' title="i like this"><i class="fa fa-thumbs-up"></i></span>
+                    <span role="button" class="action vote-up" data-vote='{"SourceID": @Model.ID, "SourceTable": @R.SourceTable.AUTHOR, "Vote": 1}' title="i like this"><i class="fa fa-thumbs-up"></i></span>
                     <span class="score @((Model.Summarize.VoteUp - Model.Summarize.VoteDown) < 0 ? "dislikes" : "likes")">
                         @(Model.Summarize.VoteUp - Model.Summarize.VoteDown)
                     </span>
@@ -106,10 +106,13 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="@(tab.Equals("Comments",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
-                <a href="?Tab=Comments#comments" aria-controls="home" role="tab">Comments (@Model.Summarize.CommentCount)</a>
+                <a href="?Tab=Comments#comments" aria-controls="home" role="tab"><i class="fa fa-comments"></i>Comments (@Model.Summarize.CommentCount)</a>
             </li>
             <li role="presentation" class="@(tab.Equals("Series",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
-                <a href="?Tab=Series#series" aria-controls="home" role="tab">Series (@Model.Series.Count)</a>
+                <a href="?Tab=Series#series" aria-controls="home" role="tab"><i class="fa fa-book"></i>Series (@Model.Series.Count)</a>
+            </li>
+            <li role="presentation" class="@(tab.Equals("Releases",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                <a href="?Tab=Releases#releases" aria-controls="home" role="tab"><i class="fa fa-rss"></i>Releases (@Model.Releases.Count)</a>
             </li>
         </ul>
         <!-- Tab panes -->
@@ -118,7 +121,7 @@
             {
                 <div role="tabpanel" class="tab-pane active" id="comments">
                     @{
-                Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.AuthorID, SourceTable = R.SourceTable.AUTHOR, Sorted = Request.QueryString["sorted"] });
+                Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.ID, SourceTable = R.SourceTable.AUTHOR, Sorted = Request.QueryString["sorted"] });
                     }
                 </div>
             }
@@ -130,7 +133,7 @@
                 {
                     Data = Model.Series.Select(s => new SeriesGrid()
                     {
-                        SeriesID = s.SeriesID,
+                        ID = s.ID,
                         Title = s.Title,
                         UpdatedDate = s.UpdatedDate,
                         Status = s.Status,
@@ -139,7 +142,28 @@
                         Groups = new List<Group>(),
                         UserLists = new List<UserList>(),
                         Connectors = new List<Connector>(),
-                        Releases = Model.Releases.Where(w => w.SeriesID == s.SeriesID).ToList()
+                        Releases = Model.Releases.Where(w => w.SeriesID == s.ID).ToList()
+                    }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
+                });
+                    }
+                </div>
+            }
+            @if (tab.Equals("Releases", StringComparison.OrdinalIgnoreCase))
+            {
+                <div role="tabpanel" class="tab-pane active section" id="releases">
+                    @{
+                Html.RenderPartial("~/Views/Release/_Release.cshtml", new PagedList<ReleaseGrid>
+                {
+                    Data = Model.Releases.Select(s => new ReleaseGrid
+                    {
+                        ID = s.ID,
+                        Title = s.Title,
+                        Date = s.Date,
+                        Url = s.Url,
+                        Series = Model.Series.SingleOrDefault(w => w.ID == s.SeriesID),
+                        Group = new Group(),
+                        UserLists = new List<UserList>(),
+                        Connectors = new List<Connector>(),
                     }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
                 });
                     }

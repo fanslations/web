@@ -47,10 +47,10 @@
             }
             else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Feeds))
             {
-                var feed = Model.Model.Feeds.SingleOrDefault(w => w.FeedID == int.Parse(Request.QueryString["FeedID"] ?? "0")) ?? new Feed { Status = R.FeedStatus.ACTIVE };
+                var feed = Model.Model.Feeds.SingleOrDefault(w => w.ID == int.Parse(Request.QueryString["FeedID"] ?? "0")) ?? new Feed { Status = R.FeedStatus.ACTIVE };
                 <label for="@Model.InlineEditProperty" class="sr-only">Rss Feed Url</label>
                 <input id="@Model.InlineEditProperty" type="url" class="form-control" name="@(Model.InlineEditProperty)[0].@feed.PropertyName(m=>m.Url)" value="@feed.Url" required />
-                <div class="@(feed.FeedID > 0 ? "margin-top-10px" : "hidden")">
+                <div class="@(feed.ID > 0 ? "margin-top-10px" : "hidden")">
                     @foreach (var status in R.FeedStatus.Translate)
                     {
                         <label class="checkbox-inline">
@@ -59,7 +59,7 @@
                         </label>
 
                     }
-                    <input type="hidden" class="form-control" name="@(Model.InlineEditProperty)[0].@feed.PropertyName(m=>m.FeedID)" value="@feed.FeedID" required />
+                    <input type="hidden" class="form-control" name="@(Model.InlineEditProperty)[0].@feed.PropertyName(m => m.ID)" value="@feed.ID" required />
                 </div>
             }
             else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Glossaries))

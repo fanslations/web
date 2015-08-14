@@ -60,13 +60,13 @@
         {
             Data = Model.Series.Where(filterStatus).Select(s => new SeriesGrid
             {
-                SeriesID = s.SeriesID,
+                ID = s.ID,
                 Title = s.Title,
                 UpdatedDate = s.UpdatedDate,
                 Status = s.Status,
                 Synopsis = s.Synopsis,
                 ImageUrl = s.ImageUrl,
-                Group = null,
+                Groups = new List<Group>(),
                 UserLists = new List<UserList>(),
                 Connectors = new List<Connector>(),
                 Releases = new List<Release>()

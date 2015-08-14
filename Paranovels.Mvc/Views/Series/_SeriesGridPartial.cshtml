@@ -38,14 +38,14 @@
                     {
                         if (list.IsPlaceInFrontOfTitle)
                         {
-                            var connector = item.Connectors.SingleOrDefault(w => w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.TargetID == list.UserListID);
+                            var connector = item.Connectors.SingleOrDefault(w => w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.TargetID == list.ID);
                             if (connector != null && connector.IsDeleted == false)
                             {
                                 <span class="fa animated bounce no-margin" style="@(list.IsColorIcon ? string.Format("color:{0};", list.Color.ToColorHex()) : "")" title="this indicated that it in your @list.Name">&#xf@(Convert.ToString(list.Icon, 16).PadLeft(3, '0'));</span>
                             }
                         }
                     }
-                    <a href="@Url.Action("Detail", "Series", new{ ID = item.SeriesID, Seo = item.Title.ToSeo() })">@item.Title</a>
+                    <a href="@Url.Action("Detail", "Series", new { ID = item.ID, Seo = item.Title.ToSeo() })">@item.Title</a>
                 </div>
                 <div>@Html.Raw(item.Synopsis.FormatString(100))</div>
                 <ul class="list-unstyled list-inline">
@@ -54,7 +54,7 @@
                         <i class="fa fa-certificate"></i>@Html.Raw(item.Status.Translate(R.TranslationStatus.Translate).FormatString())
                     </li>
                     <li title="Comments">
-                        <i class="fa fa-comments-o"></i><a href="@Url.Action("Detail", "Series", new { ID = item.SeriesID, Seo = item.Title.ToSeo() })#comments">@item.CommentCount.GetValueOrDefault() comments</a>
+                        <i class="fa fa-comments-o"></i><a href="@Url.Action("Detail", "Series", new { ID = item.ID, Seo = item.Title.ToSeo() })#comments">@item.CommentCount.GetValueOrDefault() comments</a>
                     </li>
                     @if (true)
                     {
@@ -71,7 +71,7 @@
                     @foreach (var group in item.Groups)
                     {
                         <li title="Translations Group">
-                            <i class="fa fa-group"></i><a href="@Url.Action("Detail", "Group", new { ID = group.GroupID, Seo = group.Name.ToSeo() })">@group.Name</a>
+                            <i class="fa fa-group"></i><a href="@Url.Action("Detail", "Group", new { ID = group.ID, Seo = group.Name.ToSeo() })">@group.Name</a>
                         </li>
                     }
                 </ul>

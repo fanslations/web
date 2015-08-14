@@ -26,7 +26,7 @@ namespace Paranovels.Mvc.Controllers
             criteria.ByUserID = UserSession.UserID;
             var detail = Facade<SeriesFacade>().GetRelease(criteria);
             // log views
-            var viewForm = new ViewForm { UserID = UserSession.UserID, SourceID = detail.ReleaseID, SourceTable = R.SourceTable.RELEASE };
+            var viewForm = new ViewForm { UserID = criteria.ByUserID, SourceID = detail.ID, SourceTable = R.SourceTable.RELEASE };
             Facade<UserActionFacade>().Viewing(viewForm);
             return View(detail);
         }
@@ -40,7 +40,7 @@ namespace Paranovels.Mvc.Controllers
                 if (release == null)
                     return View(detail);
 
-                return RedirectPermanent(Url.Action("Detail", "Release", new { ID = release.ReleaseID, Seo = release.Title.ToSeo() }));
+                return RedirectPermanent(Url.Action("Detail", "Release", new { ID = release.ID, Seo = release.Title.ToSeo() }));
             }
             return null;
         }
@@ -54,7 +54,7 @@ namespace Paranovels.Mvc.Controllers
                 if (release == null)
                     return View(detail);
 
-                return RedirectPermanent(Url.Action("Detail", "Release", new { ID = release.ReleaseID, Seo = release.Title.ToSeo() }));
+                return RedirectPermanent(Url.Action("Detail", "Release", new { ID = release.ID, Seo = release.Title.ToSeo() }));
             }
             return null;
         }
@@ -97,6 +97,11 @@ namespace Paranovels.Mvc.Controllers
             if (!string.IsNullOrWhiteSpace(form.Url))
             {
                 form.UrlHash = form.Url.GetIntHash();
+            }
+            // use current datetime if release date is not specified
+            if (form.ID == 0 && form.Date == DateTime.MinValue)
+            {
+                form.Date = DateTime.Now;
             }
             return SaveChanges(form);
         }

@@ -99,11 +99,11 @@
                 <ul class="list-unstyled">
                     @foreach (var chapter in Model.Chapters.OrderBy(o => o.Volume).ThenBy(o=>o.Number))
                     {
-                        <li><a href="@Url.Action("Detail","Chapter", new{ ID=chapter.ChapterID, Seo = chapter.Title.IfNullOrWhiteSpace("no title").ToSeo() })">Volume @(chapter.Volume) Chapter @(chapter.Number) - @chapter.Title</a></li>
+                        <li><a href="@Url.Action("Detail", "Chapter", new { ID = chapter.ID, Seo = chapter.Title.IfNullOrWhiteSpace("no title").ToSeo() })">Volume @(chapter.Volume) Chapter @(chapter.Number) - @chapter.Title</a></li>
                     }
                 </ul>
                 <p>
-                    <a href="@Url.Action("Add", "Chapter", new { NovelID = Model.NovelID, Number = Model.Chapters.OrderByDescending(o=>o.Volume).ThenByDescending(o => o.Number).Select(s => s.Number).FirstOrDefault() + 1 })">
+                    <a href="@Url.Action("Add", "Chapter", new { NovelID = Model.ID, Number = Model.Chapters.OrderByDescending(o => o.Volume).ThenByDescending(o => o.Number).Select(s => s.Number).FirstOrDefault() + 1 })">
                         <i class="fa fa-plus-circle"></i>Add new chapter
                     </a>
                 </p>

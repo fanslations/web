@@ -21,13 +21,13 @@ namespace Paranovels.Services
         {
             var tUser = Table<User>();
 
-            var user = tUser.GetOrAdd(w => w.UserID == form.UserID || w.Username == form.Username);
+            var user = tUser.GetOrAdd(w => w.ID == form.ID || w.Username == form.Username);
             UpdateAuditFields(user, form.ByUserID);
             MapProperty(form, user, form.InlineEditProperty);
             // save
             SaveChanges();
 
-            return user.UserID;
+            return user.ID;
         }
 
         public UserDetail Get(UserCriteria criteria)
@@ -36,7 +36,7 @@ namespace Paranovels.Services
 
             if (criteria.IDToInt > 0)
             {
-                qUser = qUser.Where(w => w.UserID == criteria.IDToInt);
+                qUser = qUser.Where(w => w.ID == criteria.IDToInt);
             }
             if (!string.IsNullOrWhiteSpace(criteria.Username))
             {
@@ -59,7 +59,7 @@ namespace Paranovels.Services
             var c = searchModel.Criteria;
             if (c.UserIDs != null && c.UserIDs.Any())
             {
-                qUser = qUser.Where(w => c.UserIDs.Contains(w.UserID));
+                qUser = qUser.Where(w => c.UserIDs.Contains(w.ID));
             }
 
             return qUser.ToPagedList(searchModel.PagedListConfig);

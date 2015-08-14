@@ -280,7 +280,7 @@ WHERE t.object_id = @TableId";
 
         var annotations      = GetAnnotations( column );
 
-        return String.Format( "{0}public {1} {2} {{ get; set; }}", annotations, String.Format( typeFormat,type ), column.Name.Replace(" ","") );
+        return String.Format( "{0}public {1} {2} {{ get; set; }}", annotations, String.Format( typeFormat,type ), column.IsIdentity ? "ID" : column.Name.Replace(" ","") );
     }
 
     string GetAnnotations( Column col )
@@ -372,7 +372,8 @@ WHERE t.object_id = @TableId";
             Out( CreateClassSignature( table, UsePartialClass ) );
             Out( "{" );
 
-			Out( "\t" + string.Format(@"[NotMapped]public int ID {{ get {{ return {0}ID; }} set {{ {0}ID = value; }} }}", table.Name) + System.Environment.NewLine );
+			//Out( "\t" + string.Format(@"[NotMapped]public int ID {{ get {{ return {0}ID; }} set {{ {0}ID = value; }} }}", table.Name) + System.Environment.NewLine );
+			//Out( "\t" + string.Format(@"[DatabaseGenerated(DatabaseGeneratedOption.Identity)]public int {0}ID {{ get; set; }}", table.Name) + System.Environment.NewLine );
 
             PushIndent( "\t" );
                 // Properties.

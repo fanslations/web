@@ -21,13 +21,13 @@ namespace Paranovels.Services
         {
             var tGroup = Table<Group>();
 
-            var group = tGroup.GetOrAdd(w => w.GroupID == form.GroupID);
+            var group = tGroup.GetOrAdd(w => w.ID == form.ID);
             MapProperty(form, group, form.InlineEditProperty);
             UpdateAuditFields(group, form.ByUserID);
             // save
             SaveChanges();
 
-            return group.GroupID;
+            return group.ID;
         }
 
         public GroupDetail Get(GroupCriteria criteria)
@@ -36,7 +36,7 @@ namespace Paranovels.Services
 
             if (criteria.IDToInt > 0)
             {
-                qGroup = qGroup.Where(w => w.GroupID == criteria.IDToInt);
+                qGroup = qGroup.Where(w => w.ID == criteria.IDToInt);
             }
 
             var group = qGroup.SingleOrDefault();
@@ -65,11 +65,11 @@ namespace Paranovels.Services
                 qGroup = qGroup.Search(columns, c.Query.ToSearchKeywords()) as IQueryable<Group>;
             }
 
-            var results = qGroup.GroupJoin(qSummarize, r => r.GroupID, s => s.SourceID,
+            var results = qGroup.GroupJoin(qSummarize, r => r.ID, s => s.SourceID,
                 (r, s) => new {Group = r, Summarize = s.DefaultIfEmpty()})
                 .SelectMany(sm => sm.Summarize.Select(s => new GroupGrid
                 {
-                    GroupID = sm.Group.GroupID,
+                    ID = sm.Group.ID,
                     UpdatedDate = sm.Group.UpdatedDate,
                     Status = sm.Group.Status,
                     Name = sm.Group.Name,

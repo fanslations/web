@@ -53,14 +53,14 @@
                 {
                     if (list.IsPlaceInFrontOfTitle)
                     {
-                        var connector = item.Connectors.SingleOrDefault(w => w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.SourceID == item.SeriesID && w.TargetID == list.UserListID);
+                        var connector = item.Connectors.SingleOrDefault(w => w.ConnectorType == R.ConnectorType.SERIES_USERLIST && w.SourceID == item.SeriesID && w.TargetID == list.ID);
                         if (connector != null && connector.IsDeleted == false)
                         {
                             <span class="fa animated bounce no-margin" style="@(list.IsColorIcon ? string.Format("color:{0};", list.Color.ToColorHex()) : "")" title="this indicated that it in your @list.Name">&#xf@(Convert.ToString(list.Icon, 16).PadLeft(3, '0'));</span>
                         }
                     }
                 }
-                <a href="@Url.Action("Detail", "Release", new {ID = item.ReleaseID, Seo = item.Title.ToSeo()})" class="fs-12em">@item.Title</a>
+                <a href="@Url.Action("Detail", "Release", new { ID = item.ID, Seo = item.Title.ToSeo() })" class="fs-12em">@item.Title</a>
                 @if (item.Series == null)
                 {
                     @item.ImproveThis(m => m.Title, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Release") } })
@@ -71,7 +71,7 @@
                 @if (item.QualityRated.HasValue)
                 {
                     <li title="Comments">
-                        <i class="fa fa-comments-o"></i><a href="@Url.Action("Detail", "Release", new {ID = item.ReleaseID, Seo = item.Title.ToSeo()})#comments">@item.CommentCount.GetValueOrDefault() comments</a>
+                        <i class="fa fa-comments-o"></i><a href="@Url.Action("Detail", "Release", new { ID = item.ID, Seo = item.Title.ToSeo() })#comments">@item.CommentCount.GetValueOrDefault() comments</a>
                     </li>
                     <li title="Rating">
                         <i class="fa fa-diamond" title="@(item.QualityRated == 0 ? "You haven't  rated this" : string.Format("You rated {0:0.0} star(s)", item.QualityRated/2))"></i>@RatingHelper.DisplayRating(summarize)
@@ -111,9 +111,9 @@
             {
                 @DisplayGrid(item)
             }
-            @foreach (var date in datas.GroupBy(g => g.Date.ToLocalTime().Date).Select(s => s.Key))
+            @foreach (var date in datas.GroupBy(g => g.Date.Date).Select(s => s.Key))
             {
-                var dateItems = datas.Where(w => w.Date.ToLocalTime().Date == date).ToList();
+                var dateItems = datas.Where(w => w.Date.Date == date).ToList();
 
                 <li class="row-list @(date == DateTime.Now.Date ? "hidden" : "")">
                     <strong class="color-green">@date.ToLongDateString()</strong>
@@ -127,7 +127,7 @@
                  {
                      <li id="view-mores@(date.ToString("ddMMyyyy"))" class="row-mores">
                          <a role="button" class="" onclick="$('.already-read@(date.ToString("ddMMyyyy"))').removeClass('hidden'); $('#view-mores@(date.ToString("ddMMyyyy"))').addClass('hidden');" href="javascript:;">
-                             <i class="fa fa-history"></i>@Model.Data.Where(w => w.Date.Date == date).Count(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)) release(s) hidden. <strong>Click to View</strong>
+                             <i class="fa fa-history"></i>@datas.Where(w => w.Date.Date == date).Count(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)) release(s) hidden. <strong>Click to View</strong>
                          </a>
                      </li>
                  }
@@ -153,7 +153,7 @@
             {
                 <li id="view-mores" class="row-mores">
                     <a role="button" class="" onclick="$('.already-read').removeClass('hidden'); $('#view-mores').addClass('hidden');" href="javascript:;">
-                        <i class="fa fa-history"></i>@Model.Data.Count(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)) release(s) hidden. <strong>Click to View</strong>
+                        <i class="fa fa-history"></i>@datas.Count(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)) release(s) hidden. <strong>Click to View</strong>
                     </a>
                 </li>
             }

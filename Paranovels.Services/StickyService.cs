@@ -22,15 +22,15 @@ namespace Paranovels.Services
         {
             var tSticky = Table<Sticky>();
 
-            var sticky = tSticky.GetOrAdd(w => w.StickyID == form.StickyID || 
-                (form.StickyID == 0 && w.SourceID == form.SourceID && w.SourceTable == form.SourceTable));
+            var sticky = tSticky.GetOrAdd(w => w.ID == form.ID ||
+                (form.ID == 0 && w.SourceID == form.SourceID && w.SourceTable == form.SourceTable));
 
             MapProperty(form, sticky, form.InlineEditProperty);
             UpdateAuditFields(sticky, form.ByUserID);
             // save
             SaveChanges();
 
-            return sticky.StickyID;
+            return sticky.ID;
         }
     }
 }

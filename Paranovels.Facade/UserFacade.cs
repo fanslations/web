@@ -43,13 +43,13 @@ namespace Paranovels.Facade
                 }
 
                 var session = new AuthSession();
-                session.UserID = detail.UserID;
+                session.UserID = detail.ID;
                 session.Username = detail.Username;
                 session.FirstName = detail.FirstName;
                 session.LastName = detail.LastName;
                 session.Email = detail.Email;
 
-                criteria.ByUserID = detail.UserID;
+                criteria.ByUserID = detail.ID;
                 session.HiddenSeriesIDs = GetHiddenSeriesIDs(criteria);
 
                 return session;
@@ -63,7 +63,7 @@ namespace Paranovels.Facade
                 var service = new UserService(uow);
                 var detail = service.Get(criteria);
 
-                detail.Preferences = service.View<UserPreference>().Where(w => w.UserID == detail.UserID).ToList();
+                detail.Preferences = service.View<UserPreference>().Where(w => w.UserID == detail.ID).ToList();
 
                 detail.HideSeriesIDs = GetHiddenSeriesIDs(criteria);
 
@@ -102,7 +102,7 @@ namespace Paranovels.Facade
 
                 // end
                 // start - get series IDs that user don't want to vee via user lists
-                var hiddenUserListIDs = service.View<UserList>().Where(w => w.IsDeleted == false && w.UserID == criteria.ByUserID && w.IsHiddenInFrontpage == true).Select(s => s.UserListID).ToList();
+                var hiddenUserListIDs = service.View<UserList>().Where(w => w.IsDeleted == false && w.UserID == criteria.ByUserID && w.IsHiddenInFrontpage == true).Select(s => s.ID).ToList();
                 var qConnector2 = service.View<Connector>().Where(w => w.ConnectorType == R.ConnectorType.SERIES_USERLIST);
 
                 var hiddenSeriesIDs2 = qConnector2.Where(w => w.ConnectorType == R.ConnectorType.SERIES_USERLIST && hiddenUserListIDs.Contains(w.TargetID)).Select(s => s.SourceID);

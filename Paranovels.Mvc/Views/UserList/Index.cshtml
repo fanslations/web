@@ -67,7 +67,7 @@
                     <li data-form='{ "ID":@item.ID, "UserID":@item.UserID, "InlineEditProperty":"Priority", "Priority": @item.Priority}' class="row-list">
                         <div class="col-content">
                             <strong>
-                                <a href="@Url.Action("Detail", new{ ID = item.UserListID, Seo = item.Name.ToSeo() })">
+                                <a href="@Url.Action("Detail", new { ID = item.ID, Seo = item.Name.ToSeo() })">
                                     <span class="fa" style="color: @(item.Color.ToColorHex());">&#xf@(Convert.ToString(item.Icon, 16).PadLeft(3, '0'));</span>@item.Name
                                 </a>
                             </strong>
