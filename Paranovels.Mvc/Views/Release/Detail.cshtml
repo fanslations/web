@@ -4,7 +4,8 @@
 @using Thi.Core
 @model ReleaseDetail
 @{
-    ViewBag.Title = Model.Title;
+    ViewBag.Title = (Model.Type == R.ReleaseType.CHAPTER && Model.Series != null) ? Model.Series.Title + " " + Model.Title.ExtractVolume() + " " + Model.Title.ExtractChapter()
+                                                                                  : Model.Title;
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     // needed in case release doesnot have summarize yet!
@@ -16,7 +17,7 @@
     <div class="header">
         <a href="javascript:history.go(-1);" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
         <h1 class="title">
-            @Model.Title
+            @ViewBag.Title
         </h1>
     </div>
     @{ Html.RenderPartial("~/Views/UserList/_AddSeriesToList.cshtml", new SeriesDetail { ID = Model.SeriesID, UserLists = Model.UserLists, Connectors = Model.Connectors }); }

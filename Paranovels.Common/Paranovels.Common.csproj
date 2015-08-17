@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthSession.cs" />
+    <Compile Include="Extensions\TitleExtension.cs" />
     <Compile Include="RegexPattern.cs" />
     <Compile Include="Generated Resources\StaticResource.generated.cs">
       <AutoGen>True</AutoGen>

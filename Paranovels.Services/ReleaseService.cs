@@ -98,6 +98,7 @@ namespace Paranovels.Services
                     Date = sm.Release.Date,
                     Title = sm.Release.Title,
                     Url = sm.Release.Url,
+                    Type = sm.Release.Type,
                     Summary = sm.Release.Summary,
                     GroupID = sm.Release.GroupID,
                     SeriesID = sm.Release.SeriesID,

@@ -19,6 +19,8 @@ namespace Paranovels.ViewModels
         public List<UserList> UserLists { get; set; }
         [NotMapped]
         public List<Connector> Connectors { get; set; }
+        [NotMapped]
+        public List<Tag> Tags { get; set; }
 
         // from Summarize
         public int? CommentCount { get; set; }

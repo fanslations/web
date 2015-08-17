@@ -21,7 +21,7 @@ namespace Paranovels.ViewModels
         [NotMapped]
         public IList<Release> Releases { get; set; }
         [NotMapped]
-        public List<Tag> Categories { get; set; }
+        public List<Tag> Tags { get; set; }
 
         // from Summarize
         public int? CommentCount { get; set; }

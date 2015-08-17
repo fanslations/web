@@ -33,6 +33,10 @@
                 </a>
             </div>
             <div class="col-content">
+                <ul class="list-unstyled list-inline fs-09em">
+                    <li class="label label-success original-language">@item.RawLanguage.Translate(R.Language.Translate)</li>
+                    @TagHelper.DisplayTags(item.Tags)
+                </ul>
                 <div>
                     @foreach (var list in item.UserLists ?? new List<UserList>())
                     {

@@ -10,7 +10,7 @@
         return (r.QualityScore / r.QualityCount) == rating ? "checked" : "data-a=" + ((double)r.QualityScore / r.QualityCount);
     };
     <fieldset class="rating">
-        <legend class="sr-only">Translation Quality Rating</legend>
+        <legend class="sr-only">Rating (1-10)</legend>
         <input type="radio" id="star5-@(id)" name="rating@(id)" value="10" @checkRating(item, 10) />
         <label class="full action rate" for="star5-@(id)" title="Awesome - 5 stars" data-rate='{"SourceID": @item.SourceID, "SourceTable": @item.SourceTable, "Rate": 10}'></label>
         <input type="radio" id="star4half-@(id)" name="rating@(id)" value="9" @checkRating(item, 9) />

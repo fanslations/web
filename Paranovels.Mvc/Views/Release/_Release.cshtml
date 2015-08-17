@@ -5,7 +5,7 @@
 @model Thi.Core.PagedList<Paranovels.ViewModels.ReleaseGrid>
 @{
     var session = User.GetSession();
-    
+
     var sortedModel = new SortedModel
     {
         Sorted = Request.QueryString["sorted"] ?? "new",
@@ -44,11 +44,25 @@
                 }*@
         </div>
         <div class="col-content">
-            @if (item.IsSticky)
-            {
-                <i class="fa fa-thumb-tack color-red pull-right" title="pinned"></i>
-            }
+            <ul class="list-unstyled list-inline fs-09em">
+                @if (item.Series != null)
+                {
+                    <li class="label label-success original-language">@item.Series.RawLanguage.Translate(R.Language.Translate)</li>
+                    @TagHelper.DisplayTags(item.Tags)
+                }
+                else if(item.Type == R.ReleaseType.NEWS)
+                {
+                    <li class="label label-default release-type">
+                        @item.Type.Translate(R.ReleaseType.Translate)
+                    </li>
+                }
+            </ul>
             <div>
+                @if (item.IsSticky)
+                {
+                    <i class="fa fa-thumb-tack color-red pull-right" title="pinned"></i>
+                }
+
                 @foreach (var list in item.UserLists ?? new List<UserList>())
                 {
                     if (list.IsPlaceInFrontOfTitle)
@@ -60,12 +74,18 @@
                         }
                     }
                 }
-                <a href="@Url.Action("Detail", "Release", new { ID = item.ID, Seo = item.Title.ToSeo() })" class="fs-12em">@item.Title</a>
-                @if (item.Series == null)
+                @if (item.Series != null)
                 {
-                    @item.ImproveThis(m => m.Title, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Release") } })
+                    <a href="@Url.Action("Detail", "Release", new {ID = item.ID, Seo = item.Title.ToSeo()})" class="fs-12em">@(item.Title.IsChapterRelease() ? item.Series.Title + " "  + item.Title.ExtractVolumeChapter() : item.Title)</a>
                 }
+                else
+                {
+                    <a href="@Url.Action("Detail", "Release", new {ID = item.ID, Seo = item.Title.ToSeo()})" class="fs-12em">@item.Title</a>
+                    @*@item.ImproveThis(m => m.Title, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Release") } })*@
+                }
+
             </div>
+
             <ul class="list-unstyled list-inline fs-09em">
                 <li title="Release Date"><i class="fa fa-clock-o"></i><time class="timeago" datetime="@item.Date.ToString("u")">@item.Date.ToString("u")</time></li>
                 @if (item.QualityRated.HasValue)
@@ -121,20 +141,20 @@
 
                 foreach (var item in dateItems.Where(w => w.IsRead != true && !session.HiddenSeriesIDs.Contains(w.SeriesID)))
                 {
-                     @DisplayGrid(item)
-                 }
+                    @DisplayGrid(item)
+                }
                 if (dateItems.Any(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)))
-                 {
-                     <li id="view-mores@(date.ToString("ddMMyyyy"))" class="row-mores">
-                         <a role="button" class="" onclick="$('.already-read@(date.ToString("ddMMyyyy"))').removeClass('hidden'); $('#view-mores@(date.ToString("ddMMyyyy"))').addClass('hidden');" href="javascript:;">
-                             <i class="fa fa-history"></i>@datas.Where(w => w.Date.Date == date).Count(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)) release(s) hidden. <strong>Click to View</strong>
-                         </a>
-                     </li>
-                 }
+                {
+                    <li id="view-mores@(date.ToString("ddMMyyyy"))" class="row-mores">
+                        <a role="button" class="" onclick="$('.already-read@(date.ToString("ddMMyyyy"))').removeClass('hidden'); $('#view-mores@(date.ToString("ddMMyyyy"))').addClass('hidden');" href="javascript:;">
+                            <i class="fa fa-history"></i>@datas.Where(w => w.Date.Date == date).Count(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)) release(s) hidden. <strong>Click to View</strong>
+                        </a>
+                    </li>
+                }
                 foreach (var item in dateItems.Where(w => w.IsRead == true || session.HiddenSeriesIDs.Contains(w.SeriesID)))
-                 {
-                     @DisplayGrid(item, "row-list hidden opacity-05 already-read" + date.ToString("ddMMyyyy"))
-                 }
+                {
+                    @DisplayGrid(item, "row-list hidden opacity-05 already-read" + date.ToString("ddMMyyyy"))
+                }
             }
         </ul>
     }

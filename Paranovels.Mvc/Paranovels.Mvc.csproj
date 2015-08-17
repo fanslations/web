@@ -365,6 +365,7 @@
     <Content Include="assets\fonts\FontAwesome.otf" />
     <Content Include="App_Code\RatingHelper.cshtml" />
     <Content Include="App_Code\SecurityHelper.cshtml" />
+    <Content Include="App_Code\TagHelper.cshtml" />
     <None Include="Properties\PublishProfiles\Azure Server.pubxml" />
     <None Include="Properties\PublishProfiles\Trong Server.pubxml" />
     <None Include="Properties\PublishProfiles\MSU Server.pubxml" />

@@ -347,7 +347,7 @@
 
                             @if (read.ID > 0)
                             {
-                                <a href="@Url.Action("Detail", "Release", new { ID = read.ID, seo = read.Title.ToSeo() })">@read.Title</a>
+                                <a href="@Url.Action("Detail", "Release", new { ID = read.ID, seo = read.Title.ToSeo() })">@read.Title.ExtractVolumeChapter()</a>
                             }
                             else
                             {
@@ -363,7 +363,7 @@
                             @foreach (var unread in unreads)
                             {
                                 <div class="clearfix">
-                                    <a class="" href="@Url.Action("Detail", "Release", new { unread.ID, Seo = unread.Title.ToSeo() })">@unread.Title</a>
+                                    <a class="" href="@Url.Action("Detail", "Release", new { unread.ID, Seo = unread.Title.ToSeo() })">@unread.Title.ExtractVolumeChapter()</a>
                                     <a class="pull-right" href="@Url.Action("Read", "Release", new { unread.ID, unread.Url, Seo = unread.Title.ToSeo() })" target="_blank">Read It<i class="fa fa-external-link right"></i></a>
                                 </div>
                             }

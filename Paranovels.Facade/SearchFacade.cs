@@ -28,6 +28,9 @@ namespace Paranovels.Facade
                 var releases = service.View<Release>().Where(w => seriesIDs.Contains(w.SeriesID)).ToList();
                 // connectors
                 var connectors = service.View<Connector>().Where(w => w.IsDeleted == false).Where(w => seriesIDs.Contains(w.SourceID)).ToList();
+                // tags
+                var tagTypes = new[] { R.TagType.NOVEL_CATEGORY, R.TagType.NOVEL_GENRE };
+                var tags = service.View<Tag>().Where(w => w.IsDeleted == false && tagTypes.Contains(w.TagType)).ToList();
                 // groups
                 var groupIDs = connectors.Where(w => w.ConnectorType == R.ConnectorType.SERIES_GROUP).Select(s => s.TargetID).ToList();
                 var groups = service.View<Group>().Where(w => groupIDs.Contains(w.ID)).ToList();
@@ -46,9 +49,10 @@ namespace Paranovels.Facade
                     s.Releases = releases.Where(w => w.SeriesID == s.ID).ToList();
                     s.Groups = connectors.Where(w => w.ConnectorType == R.ConnectorType.SERIES_GROUP && w.SourceID == s.ID)
                                     .Join(groups, c => c.TargetID, g => g.ID, (c, g) => g).ToList();
-             
+
                     s.UserLists = userLists;
                     s.Connectors = connectors.Where(w => w.SourceID == s.ID).ToList();
+                    s.Tags = tags.Where(w => connectors.Any(w2 => w2.SourceID == s.ID && w2.TargetID == w.ID)).ToList();
 
                     s.Voted = userVotedSeriesIDs.Where(w => w.SeriesID == s.ID).Select(s2 => s2.Vote).SingleOrDefault();
                     s.QualityRated = userQualityRatedSeriesIDs.Where(w => w.SeriesID == s.ID).Select(s2 => s2.Rate).SingleOrDefault();
@@ -132,8 +136,13 @@ namespace Paranovels.Facade
                 // user lists 
                 var userLists = service.View<UserList>().Where(w => w.IsDeleted == false && w.UserID == searchModel.Criteria.ByUserID).ToList();
 
-                var connectors = service.View<Connector>().Where(w => w.IsDeleted == false).ToList();
+                var connectors = service.View<Connector>().Where(w => w.IsDeleted == false && seriesIDs.Contains(w.SourceID)).ToList();
 
+                // tag
+                var tagTypes = new[] {R.TagType.NOVEL_CATEGORY, R.TagType.NOVEL_GENRE};
+                var tags = service.View<Tag>().Where(w => w.IsDeleted == false && tagTypes.Contains(w.TagType)).ToList();
+
+                // user actions
                 var releaseIDs = pagedList.Data.Select(s => s.ID).Distinct();
                 var userVotedReleaseIDs =
                     service.View<UserVote>().Where(w => w.SourceTable == R.SourceTable.RELEASE && releaseIDs.Contains(w.SourceID) && w.UserID == searchModel.Criteria.ByUserID)
@@ -146,6 +155,7 @@ namespace Paranovels.Facade
                 var userReadReleaseIDs = service.View<UserRead>().Where(w => w.SourceTable == R.SourceTable.RELEASE && releaseIDs.Contains(w.SourceID) && w.UserID == searchModel.Criteria.ByUserID)
                         .Select(s => new { ReleaseID = s.SourceID }).ToList();
 
+                // sticky
                 var stickies = service.View<Sticky>().Where(w => w.IsDeleted == false && w.SourceTable == R.SourceTable.RELEASE).ToList();
                 if (stickies.Any())
                 {
@@ -167,7 +177,8 @@ namespace Paranovels.Facade
                     s.Group = groups.SingleOrDefault(w => w.ID == s.GroupID);
                     s.Series = series.SingleOrDefault(w => w.ID == s.SeriesID);
                     s.UserLists = userLists;
-                    s.Connectors = connectors.Where(w => w.SourceID == s.SeriesID).ToList();
+                    s.Connectors = connectors;
+                    s.Tags = tags.Where(w=> connectors.Any(w2 => w2.SourceID == s.SeriesID &&w2.TargetID ==w.ID)).ToList();
 
                     s.Voted = userVotedReleaseIDs.Where(w => w.ReleaseID == s.ID).Select(s2 => s2.Vote).SingleOrDefault();
                     s.QualityRated = userQualityRatedReleaseIDs.Where(w => w.ReleaseID == s.ID).Select(s2 => s2.Rate).SingleOrDefault();
