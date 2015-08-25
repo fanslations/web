@@ -96,9 +96,7 @@ namespace Paranovels.Facade
                         .Where(w => w.ConnectorType == R.ConnectorType.GROUP_FEED && w.SourceID == detail.ID)
                         .Join(service.View<Feed>().All(), c => c.TargetID, f => f.ID, (c, f) => f).ToList();
 
-                detail.Glossaries = service.View<Connector>()
-                    .Where(w => w.ConnectorType == R.ConnectorType.GROUP_GLOSSARY && w.SourceID == detail.ID)
-                    .Join(service.View<Glossary>().All(), c => c.TargetID, f => f.ID, (c, f) => f).ToList();
+                detail.Glossaries = service.View<Glossary>().Where(w => w.SourceTable == R.SourceTable.GROUP && w.SourceID == detail.ID).ToList();
 
                 detail.Summarize = service.View<Summarize>().Where(w => w.SourceTable == R.SourceTable.GROUP && w.SourceID == detail.ID).SingleOrDefault() ?? new Summarize();
                 detail.UserAction = new UserActionFacade().Get(new ViewForm { UserID = criteria.ByUserID, SourceID = detail.ID, SourceTable = R.SourceTable.GROUP });

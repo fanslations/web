@@ -12,8 +12,8 @@
 <html lang="en-US" class="device @device">
 <head>
     <title>@(ViewBag.Title ?? "Home") - Fanslations</title>
-    <meta name="description" content="@(ViewBag.Description ?? "Translating light novels, web novels from other languages to English. Fanslations also aggregated new releases from other translations group for easier access.")">
-    <meta name="keywords" content="@(ViewBag.Keywords ?? "web light novels releases tracker, web light novels translation, fan translation of web light novels, aggregattor of web light novels releases")">
+    @*<meta name="description" content="@(ViewBag.Description ?? "Translating light novels, web novels from other languages to English. Fanslations also aggregated new releases from other translations group for easier access.")">*@
+    @*<meta name="keywords" content="@(ViewBag.Keywords ?? "web light novels releases tracker, web light novels translation, fan translation of web light novels, aggregattor of web light novels releases")">*@
     <meta name="author" content="Fanslations" />
     <meta name="copyright" content="Fanslations" />
     @Html.Partial("_LayoutHeader", new { Portal = "public" })
@@ -80,12 +80,23 @@
                     <ul class="menu-section-list">
                         <li><a href="/"><i class="fa fa-home"></i>Home</a></li>
                         <li><a href="@Url.Action("Index", "Project")"><i class="fa fa-lightbulb-o"></i>Projects</a></li>
-                        <li><a href="@Url.Action("Index", "Release", new { ps = 50 })"><i class="fa fa-rss-square"></i>Releases</a></li>
+                        <li><a href="@Url.Action("Index", "Release")"><i class="fa fa">&#xf143;</i>Releases</a></li>
                         <li><a href="@Url.Action("Index", "Series")"><i class="fa fa-book"></i>Series</a></li>
                         <li><a href="@Url.Action("Index", "Group")"><i class="fa fa-group"></i>Groups</a></li>
                         <li><a href="@Url.Action("Index", "Author")"><i class="fa fa-group"></i>Authors</a></li>
-                        <li><a href="@Url.Action("List", "Tag", new { id = 3, Seo = "categories" })"><i class="fa fa-tag"></i>Categories</a></li>
-                        <li><a href="@Url.Action("List", "Tag", new { id = 2, Seo = "geners" })"><i class="fa fa-tag"></i>Genres</a></li>
+                        <li><a href="@Url.Action("List", "Tag", new { ID = 3, Seo = "categories" })"><i class="fa fa-tag"></i>Categories</a></li>
+                        <li><a href="@Url.Action("List", "Tag", new { ID = 2, Seo = "geners" })"><i class="fa fa-tag"></i>Genres</a></li>
+                    </ul>
+                </section>
+                <section class="menu-section">
+                    <h2 class="menu-section-title">Resources</h2>
+                    <ul class="menu-section-list">
+                        <li>
+                            <a href="@Url.Action("Index", "Glossary")"><i class="fa fa-puzzle-piece"></i>Glossaries</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Public", "UserList")"><i class="fa fa-list-alt"></i>Public Lists</a>
+                        </li>
                     </ul>
                 </section>
                 <section class="menu-section">

@@ -47,10 +47,12 @@
             <ul class="list-unstyled list-inline fs-09em">
                 @if (item.Series != null)
                 {
-                    <li class="label label-success original-language">@item.Series.RawLanguage.Translate(R.Language.Translate)</li>
-                    @TagHelper.DisplayTags(item.Tags)
+                    <li class="label label-success">@item.Series.RawLanguage.Translate(R.Language.Translate)</li>
+                    @TagHelper.DisplayTags(item.Tags.Where(w => w.TagType == R.TagType.CATEGORY), "label label-primary")
+                    <li class="label label-info">@(item.Series.RawLanguage == R.Language.ENGLISH ? "Original" : "Translation")</li>
+                    @TagHelper.DisplayTags(item.Tags.Where(w => w.TagType == R.TagType.GENRE), "label label-warning")
                 }
-                else if(item.Type == R.ReleaseType.NEWS)
+                else if (item.Type == R.ReleaseType.NEWS)
                 {
                     <li class="label label-default release-type">
                         @item.Type.Translate(R.ReleaseType.Translate)
@@ -74,16 +76,8 @@
                         }
                     }
                 }
-                @if (item.Series != null)
-                {
-                    <a href="@Url.Action("Detail", "Release", new {ID = item.ID, Seo = item.Title.ToSeo()})" class="fs-12em">@(item.Title.IsChapterRelease() ? item.Series.Title + " "  + item.Title.ExtractVolumeChapter() : item.Title)</a>
-                }
-                else
-                {
-                    <a href="@Url.Action("Detail", "Release", new {ID = item.ID, Seo = item.Title.ToSeo()})" class="fs-12em">@item.Title</a>
-                    @*@item.ImproveThis(m => m.Title, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Release") } })*@
-                }
-
+                <a href="@Url.Action("Detail", "Release", new {ID = item.ID, Seo = item.Title.ToSeo()})" class="fs-12em">@item.PrettyTitle</a>
+                @*@item.ImproveThis(m => m.Title, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Release") } })*@
             </div>
 
             <ul class="list-unstyled list-inline fs-09em">

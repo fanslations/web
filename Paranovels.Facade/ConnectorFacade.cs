@@ -44,5 +44,15 @@ namespace Paranovels.Facade
                 return detail;
             }
         }
+
+        public int SaveCheck(CheckForm form)
+        {
+            using (var uow = UnitOfWorkFactory.Create<NovelContext>())
+            {
+                var service = new CheckService(uow);
+                var id = service.SaveChanges(form);
+                return id;
+            }
+        }
     }
 }

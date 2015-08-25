@@ -44,6 +44,7 @@
     <Compile Include="Generated\Aka.generated.cs" />
     <Compile Include="Generated\Author.generated.cs" />
     <Compile Include="Generated\Chapter.generated.cs" />
+    <Compile Include="Generated\Check.generated.cs" />
     <Compile Include="Generated\Connector.generated.cs" />
     <Compile Include="Generated\Content.generated.cs" />
     <Compile Include="Generated\Feed.generated.cs" />

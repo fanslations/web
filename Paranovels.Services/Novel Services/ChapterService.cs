@@ -18,30 +18,30 @@ namespace Paranovels.Services
         {
         }
 
-        public int SaveChanges(ChapterForm chapterForm)
+        public int SaveChanges(ChapterForm form)
         {
             var tChapter = Table<Chapter>();
 
-            var chapter = tChapter.GetOrAdd(w => w.ID == chapterForm.ID
-                || (w.NovelID == chapterForm.NovelID && w.Number == chapterForm.Number));
+            var chapter = tChapter.GetOrAdd(w => w.ID == form.ID
+                || (w.ID == 0 && w.NovelID == form.NovelID && w.Volume == form.Volume && w.Number == form.Number));
 
-            MapProperty(chapterForm, chapter, chapterForm.InlineEditProperty);
-            UpdateAuditFields(chapter, chapterForm.ByUserID);
+            MapProperty(form, chapter, form.InlineEditProperty);
+            UpdateAuditFields(chapter, form.ByUserID);
             // save
             SaveChanges();
 
             // save chapter content
-            if (!string.IsNullOrWhiteSpace(chapterForm.Content))
+            if (!string.IsNullOrWhiteSpace(form.Content))
             {
                 var tContent = Table<Content>();
 
-                var segments = chapterForm.Content.SegmentChapterContent();
+                var segments = form.Content.SegmentChapterContent();
                 foreach (var segment in segments)
                 {
                     var content = tContent.GetOrAdd(w => w.ChapterID == chapter.ID && w.RawHash == segment.Key);
                     if (content.ID == 0) // only add when the paragraph is new (does not exist)
                     {
-                        UpdateAuditFields(content, chapterForm.ByUserID);
+                        UpdateAuditFields(content, form.ByUserID);
                         content.ChapterID = chapter.ID;
                         content.RawHash = segment.Key;
                         content.Final = segment.Value;

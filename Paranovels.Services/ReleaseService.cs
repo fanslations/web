@@ -95,6 +95,11 @@ namespace Paranovels.Services
                 .SelectMany(sm => sm.Summarize.Select(s => new ReleaseGrid
                 {
                     ID = sm.Release.ID,
+                    InsertedBy = sm.Release.InsertedBy,
+                    InsertedDate = sm.Release.InsertedDate,
+                    UpdatedBy = sm.Release.UpdatedBy,
+                    UpdatedDate = sm.Release.UpdatedDate,
+                    IsDeleted = sm.Release.IsDeleted,
                     Date = sm.Release.Date,
                     Title = sm.Release.Title,
                     Url = sm.Release.Url,

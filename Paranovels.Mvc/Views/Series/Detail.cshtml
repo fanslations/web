@@ -1,11 +1,13 @@
-﻿@using System.Web.UI.WebControls
-@using Paranovels.Common
+﻿@using Paranovels.Common
 @using Paranovels.DataModels
 @using Paranovels.ViewModels
 @using Thi.Core
 @model SeriesDetail
 @{
     ViewBag.Title = Model.Title;
+    ViewBag.Description = Model.Synopsis.Peek();
+    ViewBag.Keywords = string.Join(", ", Model.Akas.Select(s => s.Text));
+
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var tab = Request.QueryString["Tab"] ?? "Comments";
@@ -121,10 +123,23 @@
             </div>
         </div>
         <div class="detail-group">
-            <strong>Latest Release</strong>
+            <strong>Latest Releases</strong>
             <div>
-                @{ var release = Model.Releases.OrderByDescending(o => o.Date).FirstOrDefault() ?? new Release(); }
-                <a href="@Url.Action("Detail", "Release", new { ID = release.ID, Seo = release.Title.ToSeo() })">@release.Title</a> - @release.Date.FormatDate()
+                <ul class="list-unstyled">
+                    @if (!Model.Releases.Any())
+                    {
+                        <li>
+                            There is no release yet! <a class="" href="@Url.Action("Index", "Release", new { Do = "add", SeriesID = Model.ID })">Click to <i class="fa fa-plus-circle"></i>submit new release.</a>
+                        </li>
+                    }
+                    @foreach (var release in Model.Releases.OrderByDescending(o => o.Date).Take(5))
+                    {
+                        <li>
+                            <span>@release.Date.FormatDate()</span> - 
+                            <a href="@Url.Action("Detail", "Release", new {ID = release.ID, Seo = release.Title.ToSeo()})">@Model.Title @release.Title.ExtractVolumeChapter()</a>
+                        </li>
+                    }
+                </ul>
             </div>
         </div>
         <div class="detail-group">
@@ -143,7 +158,6 @@
             <div>
                 @{
                     var daysOfRelease = Model.Releases.Where(w => w.Date > DateTime.Now.AddDays(DAYS * -1)).GroupBy(o => o.Date.DayOfWeek).OrderByDescending(o => o.Count()).Select(s => s.Key).ToList();
-
                 }
                 @string.Join(", ", daysOfRelease)
             </div>
@@ -151,7 +165,7 @@
         <div class="detail-group">
             <strong>Orginal Language</strong>
             <div>
-                @Model.RawLanguage.Translate(R.Language.Translate)
+                @Html.Raw(Model.RawLanguage.Translate(R.Language.Translate).FormatString(0, 20, "Missing original language. Click on 'Edit' to help us update it."))
                 @Html.ImproveThis(m => m.RawLanguage)
             </div>
         </div>
@@ -288,46 +302,73 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="@(tab.Equals("Comments",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
-                <a href="?Tab=Comments" aria-controls="home" role="tab"><i class="fa fa-comments"></i>Comments (@Model.Summarize.CommentCount)</a>
+                <a href="?Tab=Comments" aria-controls="tabcontent" role="tab"><i class="fa fa-comments"></i>Comments (@Model.Summarize.CommentCount)</a>
             </li>
             <li role="presentation" class="@(tab.Equals("Releases",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
-                <a href="?Tab=Releases" aria-controls="home" role="tab"><i class="fa fa-rss"></i>Releases (@Model.Releases.Count)</a>
+                <a href="?Tab=Releases" aria-controls="tabcontent" role="tab"><i class="fa fa-rss"></i>Releases (@Model.Releases.Count)</a>
+            </li>
+            <li role="presentation" class="@(tab.Equals("Glossaries",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                <a href="?Tab=Glossaries" aria-controls="tabcontent" role="tab"><i class="fa fa-puzzle-piece"></i>Glossaries (@Model.Glossaries.Count)</a>
             </li>
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
-            @if (tab.Equals("Comments", StringComparison.OrdinalIgnoreCase))
-            {
-                <div role="tabpanel" class="tab-pane active" id="comments">
-                    @{
-                Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.ID, SourceTable = R.SourceTable.SERIES, Sorted = Request.QueryString["sorted"] });
-                    }
-                </div>
-            }
-            @if (tab.Equals("Releases", StringComparison.OrdinalIgnoreCase))
-            {
-                <div role="tabpanel" class="tab-pane active section" id="releases">
-                    @{
-                Html.RenderPartial("~/Views/Release/_Release.cshtml", new PagedList<ReleaseGrid>
+            <div role="tabpanel" class="tab-pane active" id="tabcontent">
+                @if (tab.Equals("Comments", StringComparison.OrdinalIgnoreCase))
                 {
-                    Data = Model.Releases.Select(s => new ReleaseGrid
+                    Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.ID, SourceTable = R.SourceTable.SERIES, Sorted = Request.QueryString["sorted"] });
+                }
+                @if (tab.Equals("Releases", StringComparison.OrdinalIgnoreCase))
+                {
+                    Html.RenderPartial("~/Views/Release/_Release.cshtml", new PagedList<ReleaseGrid>
                     {
-                        ID = s.ID,
-                        Title = s.Title,
-                        Date = s.Date,
-                        Url = s.Url,
-                        Type = s.Type,
-                        Series = Model,
-                        Group = Model.Group,
-                        UserLists = new List<UserList>(),
-                        Connectors = new List<Connector>(),
-                        Tags = new List<Tag>()
+                        Data = Model.Releases.Select(s => new ReleaseGrid
+                        {
+                            ID = s.ID,
+                            Title = s.Title,
+                            Date = s.Date,
+                            Url = s.Url,
+                            Type = s.Type,
+                            Series = Model,
+                            Group = Model.Group,
+                            UserLists = new List<UserList>(),
+                            Connectors = new List<Connector>(),
+                            Tags = new List<Tag>()
 
-                    }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
-                });
-                    }
-                </div>
-            }
+                        }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
+                    });
+                }
+                @if (tab.Equals("Glossaries", StringComparison.OrdinalIgnoreCase))
+                {
+                    Html.RenderPartial("~/Views/Glossary/_GlossaryGridPartial.cshtml", new PagedList<GlossaryGrid>
+                    {
+                        Data = Model.Glossaries.Select(s => new GlossaryGrid
+                        {
+                            ID = s.ID,
+                            UpdatedDate = s.UpdatedDate,
+                            SourceID = s.SourceID,
+                            SourceTable = s.SourceTable,
+                            Type = s.Type,
+                            RawLanguage = s.RawLanguage,
+                            Raw = s.Raw,
+                            Final = s.Final,
+                            Definition = s.Definition
+                        }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
+                    });
+
+                    <div class="well well-sm">
+                        @{
+                            Html.RenderPartial("~/Views/Glossary/_FormPartial.cshtml", new GlossaryForm
+                            {
+                                SourceID = Model.ID,
+                                SourceTable = R.SourceTable.SERIES,
+                                RawLanguage =  Model.RawLanguage
+                            });
+                        }
+                    </div>
+                }
+            </div>
+
         </div>
     </div>
 </section>

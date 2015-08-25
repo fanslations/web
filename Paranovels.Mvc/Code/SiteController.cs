@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.ServiceModel.Syndication;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
@@ -25,6 +26,30 @@ namespace Paranovels.Mvc
                 Criteria = criteria,
                 PagedListConfig = new PagedListConfig { Prefix = prefix }.ConfigWith(Request.QueryString),
             };
+        }
+
+        protected ActionResult FeedGenerator<T>(IEnumerable<T> feedItems, string feedType) where T : class, IFeed, new()
+        {
+            var feed = new SyndicationFeed();
+            var items = new List<SyndicationItem>();
+
+            foreach (var data in feedItems)
+            {
+                var item = new SyndicationItem();
+
+                item.Id = data.Url;
+                item.Title = new TextSyndicationContent(data.Title);
+                item.Content = new TextSyndicationContent(data.Content);
+                item.BaseUri = new Uri("http://www.fanslations.com");
+                item.Links.Add(new SyndicationLink(new Uri(item.BaseUri, data.Url)));
+                item.PublishDate = data.InsertedDate;
+                item.LastUpdatedTime = data.UpdatedDate;
+
+                items.Add(item);
+            }
+            feed.Items = items;
+
+            return new FeedResult(feed, feedType);
         }
 
         protected static string RenderViewToHtml(Controller thisController, string viewName, object model)

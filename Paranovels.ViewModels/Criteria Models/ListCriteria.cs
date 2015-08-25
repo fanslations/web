@@ -11,5 +11,6 @@ namespace Paranovels.ViewModels
     {
         public int SourceID { get; set; }
         public int SourceTable { get; set; }
+        public bool IsPublic { get; set; }
     }
 }

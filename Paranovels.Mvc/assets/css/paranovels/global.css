@@ -28,6 +28,13 @@ a {
     display: none;
 }
 
+.hover .show {
+    visibility: hidden; 
+}
+.hover:hover .show, .hover.on .show {
+    visibility: visible; 
+}
+
 .cursor-pointer {
     cursor: pointer !important;
 }
@@ -94,4 +101,31 @@ a {
 
 .more-less.on .less {
     display: inline;
+}
+
+
+a.rss20 {
+    padding: 3px 8px 3px 0px;
+    border: 1px solid darkorange;
+    border-radius: 3px;
+}
+a.rss20 .fa {
+    color: white;
+    border-right: 1px solid darkorange;
+    padding: 4px 18px 4px 10px;
+    margin-right: 5px;
+    background: darkorange;
+}
+
+a.atom10 {
+    padding: 3px 8px 3px 0px;
+    border: 1px solid darkgoldenrod;
+    border-radius: 3px;
+}
+a.atom10 .fa {
+    color: white;
+    border-right: 1px solid darkgoldenrod;
+    padding: 4px 18px 4px 10px;
+    margin-right: 5px;
+    background: darkgoldenrod;
 }

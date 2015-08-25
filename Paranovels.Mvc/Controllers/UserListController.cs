@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
@@ -28,6 +29,16 @@ namespace Paranovels.Mvc.Controllers
             var detail = Facade<ListFacade>().Get(criteria);
 
             return View(detail);
+        }
+
+        public ActionResult Public(ListCriteria criteria)
+        {
+            var searchModel = CreateSearchModel(criteria);
+            criteria.ByUserID = 0;
+            criteria.IsPublic = true; // get public list only
+            var pagedList = Facade<ListFacade>().Search(searchModel);
+
+            return View(pagedList);
         }
 
         [HttpPost]

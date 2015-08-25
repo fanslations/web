@@ -60,20 +60,36 @@ namespace Paranovels.Common //.Generated Resources
 						}; // end translate dictionary
         }	
         /// <summary>
-        /// ColorX auto generated class.
+        /// CheckType auto generated class.
         /// </summary>
-        public partial class ColorX 
+        public partial class CheckType 
         {		
 			/// <summary>
-			/// color: darkblue;
+			/// Editing
 			/// </summary>
-			[Description("color: darkblue;")]
-			public const int DARK_BLUE = 2;
+			[Description("Editing")]
+			public const int EDITING = 200;
+				
+			/// <summary>
+			/// Proofreading
+			/// </summary>
+			[Description("Proofreading")]
+			public const int PROOFREADING = 300;
+				
+			/// <summary>
+			/// Translating
+			/// </summary>
+			[Description("Translating")]
+			public const int TRANSLATING = 100;
 				
 			
-			public const string ClassName = "ColorX";
+			public const string ClassName = "CheckType";
 			public static readonly Dictionary<int,string> Translate = new Dictionary<int,string> {
-												{2,"color: darkblue;"},
+												{200,"Editing"},
+							
+												{300,"Proofreading"},
+							
+												{100,"Translating"},
 							
 						}; // end translate dictionary
         }	
@@ -107,6 +123,48 @@ namespace Paranovels.Common //.Generated Resources
 			public const int NOVEL_GLOSSARY = 8;
 				
 			/// <summary>
+			/// Connect novel and group
+			/// </summary>
+			[Description("Connect novel and group")]
+			public const int NOVEL_GROUP = 15;
+				
+			/// <summary>
+			/// Connect novel and publisher
+			/// </summary>
+			[Description("Connect novel and publisher")]
+			public const int NOVEL_PUBLISHER = 16;
+				
+			/// <summary>
+			/// Link novel to categories
+			/// </summary>
+			[Description("Link novel to categories")]
+			public const int NOVEL_TAGCATEGORY = 18;
+				
+			/// <summary>
+			/// Link novel to contains
+			/// </summary>
+			[Description("Link novel to contains")]
+			public const int NOVEL_TAGCONTAIN = 21;
+				
+			/// <summary>
+			/// Link novel to genres
+			/// </summary>
+			[Description("Link novel to genres")]
+			public const int NOVEL_TAGGENRE = 19;
+				
+			/// <summary>
+			/// Connect novel and themes
+			/// </summary>
+			[Description("Connect novel and themes")]
+			public const int NOVEL_TAGTHEME = 20;
+				
+			/// <summary>
+			/// Link novel to user list
+			/// </summary>
+			[Description("Link novel to user list")]
+			public const int NOVEL_USERLIST = 17;
+				
+			/// <summary>
 			/// Link series to an author
 			/// </summary>
 			[Description("Link series to an author")]
@@ -131,6 +189,12 @@ namespace Paranovels.Common //.Generated Resources
 			public const int SERIES_GROUP = 12;
 				
 			/// <summary>
+			/// Connect series and publisher
+			/// </summary>
+			[Description("Connect series and publisher")]
+			public const int SERIES_PUBLISHER = 13;
+				
+			/// <summary>
 			/// Link series to novel categories
 			/// </summary>
 			[Description("Link series to novel categories")]
@@ -149,9 +213,15 @@ namespace Paranovels.Common //.Generated Resources
 			public const int SERIES_TAGGENRE = 2;
 				
 			/// <summary>
-			/// Link seriesto user list
+			/// Connect series and tag themes
 			/// </summary>
-			[Description("Link seriesto user list")]
+			[Description("Connect series and tag themes")]
+			public const int SERIES_TAGTHEME = 14;
+				
+			/// <summary>
+			/// Link series to user list
+			/// </summary>
+			[Description("Link series to user list")]
 			public const int SERIES_USERLIST = 9;
 				
 			
@@ -165,6 +235,20 @@ namespace Paranovels.Common //.Generated Resources
 							
 												{8,"Novel Glossary"},
 							
+												{15,"Connect novel and group"},
+							
+												{16,"Connect novel and publisher"},
+							
+												{18,"Link novel to categories"},
+							
+												{21,"Link novel to contains"},
+							
+												{19,"Link novel to genres"},
+							
+												{20,"Connect novel and themes"},
+							
+												{17,"Link novel to user list"},
+							
 												{11,"Link series to an author"},
 							
 												{6,"Link series to data feed url"},
@@ -173,13 +257,17 @@ namespace Paranovels.Common //.Generated Resources
 							
 												{12,"Connect series and group"},
 							
+												{13,"Connect series and publisher"},
+							
 												{3,"Link series to novel categories"},
 							
 												{4,"Link series to novel contains"},
 							
 												{2,"Link series to novel genres"},
 							
-												{9,"Link seriesto user list"},
+												{14,"Connect series and tag themes"},
+							
+												{9,"Link series to user list"},
 							
 						}; // end translate dictionary
         }	
@@ -359,12 +447,6 @@ namespace Paranovels.Common //.Generated Resources
         public partial class ListType 
         {		
 			/// <summary>
-			/// <i class='fa fa-check'></i>
-			/// </summary>
-			[Description("<i class='fa fa-check'></i>")]
-			public const int COMPLETED = 300;
-				
-			/// <summary>
 			/// <i class='fa fa-list-alt'></i>
 			/// </summary>
 			[Description("<i class='fa fa-list-alt'></i>")]
@@ -395,12 +477,6 @@ namespace Paranovels.Common //.Generated Resources
 			public const int ON_HOLD = 500;
 				
 			/// <summary>
-			/// <i class='fa fa-laptop'></i>
-			/// </summary>
-			[Description("<i class='fa fa-laptop'></i>")]
-			public const int READING = 100;
-				
-			/// <summary>
 			/// <i class='fa fa-thumbs-up'></i>
 			/// </summary>
 			[Description("<i class='fa fa-thumbs-up'></i>")]
@@ -412,17 +488,9 @@ namespace Paranovels.Common //.Generated Resources
 			[Description("<i class='fa fa-eye'></i>")]
 			public const int WATCH = 800;
 				
-			/// <summary>
-			/// <i class='fa fa-magic'></i>
-			/// </summary>
-			[Description("<i class='fa fa-magic'></i>")]
-			public const int WISH = 200;
-				
 			
 			public const string ClassName = "ListType";
 			public static readonly Dictionary<int,string> Translate = new Dictionary<int,string> {
-												{300,"<i class='fa fa-check'></i>"},
-							
 												{0,"<i class='fa fa-list-alt'></i>"},
 							
 												{400,"<i class='fa fa-times'></i>"},
@@ -433,13 +501,9 @@ namespace Paranovels.Common //.Generated Resources
 							
 												{500,"<i class='fa fa-paw'></i>"},
 							
-												{100,"<i class='fa fa-laptop'></i>"},
-							
 												{700,"<i class='fa fa-thumbs-up'></i>"},
 							
 												{800,"<i class='fa fa-eye'></i>"},
-							
-												{200,"<i class='fa fa-magic'></i>"},
 							
 						}; // end translate dictionary
         }	
@@ -637,6 +701,18 @@ namespace Paranovels.Common //.Generated Resources
 			public const int COMMENT = 7;
 				
 			/// <summary>
+			/// Content
+			/// </summary>
+			[Description("Content")]
+			public const int CONTENT = 9;
+				
+			/// <summary>
+			/// Glossary
+			/// </summary>
+			[Description("Glossary")]
+			public const int GLOSSARY = 10;
+				
+			/// <summary>
 			/// Group
 			/// </summary>
 			[Description("Group")]
@@ -666,6 +742,12 @@ namespace Paranovels.Common //.Generated Resources
 			[Description("Tag")]
 			public const int TAG = 8;
 				
+			/// <summary>
+			/// User List
+			/// </summary>
+			[Description("User List")]
+			public const int USERLIST = 11;
+				
 			
 			public const string ClassName = "SourceTable";
 			public static readonly Dictionary<int,string> Translate = new Dictionary<int,string> {
@@ -674,6 +756,10 @@ namespace Paranovels.Common //.Generated Resources
 												{5,"Chapter"},
 							
 												{7,"Comment"},
+							
+												{9,"Content"},
+							
+												{10,"Glossary"},
 							
 												{3,"Group"},
 							
@@ -684,6 +770,8 @@ namespace Paranovels.Common //.Generated Resources
 												{2,"Series"},
 							
 												{8,"Tag"},
+							
+												{11,"User List"},
 							
 						}; // end translate dictionary
         }	
@@ -751,39 +839,47 @@ namespace Paranovels.Common //.Generated Resources
         public partial class TagType 
         {		
 			/// <summary>
-			/// Glossary
-			/// </summary>
-			[Description("Glossary")]
-			public const int GLOSSARY = 1;
-				
-			/// <summary>
 			/// Categories
 			/// </summary>
 			[Description("Categories")]
-			public const int NOVEL_CATEGORY = 3;
+			public const int CATEGORY = 3;
 				
 			/// <summary>
 			/// Contains
 			/// </summary>
 			[Description("Contains")]
-			public const int NOVEL_CONTAIN = 4;
+			public const int CONTAIN = 4;
 				
 			/// <summary>
 			/// Genres
 			/// </summary>
 			[Description("Genres")]
-			public const int NOVEL_GENRE = 2;
+			public const int GENRE = 2;
+				
+			/// <summary>
+			/// Glossaries
+			/// </summary>
+			[Description("Glossaries")]
+			public const int GLOSSARY = 1;
+				
+			/// <summary>
+			/// Themes
+			/// </summary>
+			[Description("Themes")]
+			public const int THEME = 5;
 				
 			
 			public const string ClassName = "TagType";
 			public static readonly Dictionary<int,string> Translate = new Dictionary<int,string> {
-												{1,"Glossary"},
-							
 												{3,"Categories"},
 							
 												{4,"Contains"},
 							
 												{2,"Genres"},
+							
+												{1,"Glossaries"},
+							
+												{5,"Themes"},
 							
 						}; // end translate dictionary
         }	

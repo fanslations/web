@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Paranovels.Common;
 using Paranovels.Facade;
 using Paranovels.ViewModels;
+using Thi.Core;
 using Thi.Web;
 
 namespace Paranovels.Mvc.Controllers
@@ -17,6 +18,21 @@ namespace Paranovels.Mvc.Controllers
         {
             var searchModel = CreateSearchModel(criteria);
             var pagedList = Facade<SearchFacade>().Search(searchModel);
+
+            // alternative version
+            if (!string.IsNullOrWhiteSpace(criteria.Alt))
+            {
+                var feedItems = pagedList.Data.Select(s => new FeedGrid
+                {
+                    InsertedDate = s.InsertedDate,
+                    UpdatedDate = s.UpdatedDate,
+                    Title = s.Title,
+                    Url = Url.Action("Detail", "Series", new { ID = s.ID, Seo = s.Title.ToSeo() }),
+                    Content = s.Synopsis
+                });
+                return FeedGenerator(feedItems, criteria.Alt);
+            }
+
             return View(pagedList);
         }
 
@@ -59,6 +75,12 @@ namespace Paranovels.Mvc.Controllers
         {
             var results = Facade<FeedFacade>().CheckFeed(R.ConnectorType.SERIES_FEED, id);
             return Json(results, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult CheckFeed(string feedUrl)
+        {
+            var releases = Facade<FeedFacade>().GetNewReleases(feedUrl);
+            return Json(releases, JsonRequestBehavior.AllowGet);
         }
     }
 }

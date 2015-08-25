@@ -5,7 +5,7 @@
 @{
     var queryStrings = Request.QueryString.AllKeys.Where(w => w != "sorted");
 }
-<div>
+<div class="position-relative">
     <form class="form-inline" method="GET" action="@Request.RawUrl">
         <div class="hidden">
             @foreach (var item in queryStrings)
@@ -16,14 +16,18 @@
         <label for="sorted">
             Sorted by
         </label>
-            <select id="sorted" name="sorted" class="action submit">
-                @foreach (var item in Model.SortOptions)
-                {
-                    <option value="@item.Key" @(Model.Sorted == item.Key ? "selected" : "")>@item.Value</option>
-                }
-            </select>
+        <select id="sorted" name="sorted" class="action submit">
+            @foreach (var item in Model.SortOptions)
+            {
+                <option value="@item.Key" @(Model.Sorted == item.Key ? "selected" : "")>@item.Value</option>
+            }
+        </select>
         <noscript>
             <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
         </noscript>
     </form>
+    <div class="position-absolute top-0px right-0px">
+        <a href="@Request.RawUrl.UrlAddQuery("Alt","rss20")" class="rss20"><i class="fa">&#xf09e;</i>rss 2.0</a>
+        <a href="@Request.RawUrl.UrlAddQuery("Alt","atom10")" class="atom10"><i class="fa">&#xf09e;</i>atom 1.0</a>
+    </div>
 </div>

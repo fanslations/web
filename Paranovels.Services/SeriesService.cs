@@ -84,7 +84,8 @@ namespace Paranovels.Services
                     ImageUrl = sm.Series.ImageUrl,
                     Synopsis = sm.Series.Synopsis,
                     Status = sm.Series.Status,                  
-
+                    RawLanguage = sm.Series.RawLanguage,
+                    
                     CommentCount = s.CommentCount,
                     ViewCount = s.ViewCount,
                     VoteUp = s.VoteUp,

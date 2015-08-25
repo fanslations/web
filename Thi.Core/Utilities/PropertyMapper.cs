@@ -78,7 +78,7 @@ namespace Thi.Core
 
         void HandleDateTime(PropertyInfo propertyInfo, object newValue)
         {
-            if (propertyInfo.PropertyType != typeof(DateTime)) return;
+            if (propertyInfo.PropertyType != typeof(DateTime) || (DateTime)newValue == DateTime.MinValue) return;
 
             // pre-process value
             var value = (DateTime)newValue;

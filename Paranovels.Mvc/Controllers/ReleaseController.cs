@@ -18,6 +18,19 @@ namespace Paranovels.Mvc.Controllers
             var searchModel = CreateSearchModel(criteria);
             var pagedList = Facade<SearchFacade>().Search(searchModel);
 
+            // alternative version
+            if (!string.IsNullOrWhiteSpace(criteria.Alt))
+            {
+                var feedItems = pagedList.Data.Select(s => new FeedGrid()
+                {
+                    InsertedDate = s.InsertedDate,
+                    UpdatedDate = s.UpdatedDate,
+                    Title = s.Title,
+                    Url = Url.Action("Detail", "Release", new { ID = s.ID, Seo = s.PrettyTitle.ToSeo() }),
+                });
+                return FeedGenerator(feedItems, criteria.Alt);
+            }
+
             return View(pagedList);
         }
 

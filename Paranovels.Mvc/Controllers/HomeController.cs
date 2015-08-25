@@ -15,8 +15,23 @@ namespace Paranovels.Mvc.Controllers
         {
             // get last 100 releases
             var searchModel = CreateSearchModel(criteria);
-            searchModel.PagedListConfig = new PagedListConfig { PageSize = 50 };
-            ViewBag.Releases = Facade<SearchFacade>().Search(searchModel);
+            searchModel.PagedListConfig = new PagedListConfig { PageSize = 40 };
+            var pagedList = Facade<SearchFacade>().Search(searchModel);
+
+            // alternative version
+            if (!string.IsNullOrWhiteSpace(criteria.Alt))
+            {
+                var feedItems = pagedList.Data.Select(s => new FeedGrid()
+                {
+                    InsertedDate = s.InsertedDate,
+                    UpdatedDate = s.UpdatedDate,
+                    Title = s.Title,
+                    Url = Url.Action("Detail", "Release", new { ID = s.ID, Seo = s.PrettyTitle.ToSeo() }),
+                });
+                return FeedGenerator(feedItems, criteria.Alt);
+            }
+
+            ViewBag.Releases = pagedList;
             return View();
         }
 

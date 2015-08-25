@@ -33,8 +33,10 @@ namespace Paranovels.ViewModels
 
         public string Sorted { get; set; }
 
-        public string SearchType { get; set; }
+        public string Alt { get; set; }
 
+        public string SearchType { get; set; }
+        
         public Dictionary<string, string> HiddenFields { get; set; } 
     }
 }

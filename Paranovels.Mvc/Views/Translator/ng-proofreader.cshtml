@@ -1,0 +1,25 @@
+﻿@model dynamic
+
+@{
+    Layout = null;
+}
+
+<div class="translator">
+    <div class="clearfix">
+        <ul class="list-unstyled list-inline pull-right">
+            <li>
+                <a href="" class="btn btn-sm btn-primary" ng-click="save()"><i class="fa fa-save"></i>Save</a>
+            </li>
+            <li>
+                <a href="" class="btn btn-sm btn-primary" ng-click="saveCheck()"><i class="fa fa-save"></i>Save & <i class="fa fa-check-circle"></i>Check</a>
+            </li>
+            <li>
+                <a href="" class="btn btn-sm btn-default" ng-click="discard()"><i class="fa fa-trash"></i>Discard</a>
+            </li>
+        </ul>
+    </div>
+    <div>
+        <p class="alert alert-info">Nothing here yet! Let me know if you known any tools that proofreader can use.</p>
+    </div>
+    <a href="" ng-click='close()' class="position-absolute top-0px right-0px cursor-pointer padding-5px" role="button"><i class="fa fa-times-circle"></i><span class="sr-only">Close</span></a>
+</div>

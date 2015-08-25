@@ -24,11 +24,11 @@ a.improve-this.on:after {
 
 .improve-img {
     position: relative;
+    min-height: 20px;
 }
-
     .improve-img .improve-this {
         position: absolute;
-        left: 5px;
+        left: 0;
         bottom: 0;
     }
 

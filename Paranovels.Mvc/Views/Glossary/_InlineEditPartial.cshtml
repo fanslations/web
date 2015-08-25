@@ -1,0 +1,66 @@
+﻿@using Paranovels.Common
+@using Paranovels.ViewModels
+@using Thi.Core
+@model InlineEditForm<GlossaryDetail>
+@{
+    Layout = null;
+}
+
+@if (!User.Identity.IsAuthenticated)
+{
+    Html.RenderPartial("_InlineEditorUnauthorizedPartial");
+    return;
+}
+<div id="@(Model.InlineEditProperty)Container" class="inline-editor">
+    <form id="@(Model.InlineEditProperty)Form" method="post" action="@Url.Action("Form")" enctype="multipart/form-data">
+        <div class="form-group">
+            @if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Raw))
+            {
+                <label for="@Model.InlineEditProperty" class="sr-only">@Model.InlineEditProperty</label>
+                <input id="@Model.InlineEditProperty" type="text" class="form-control" name="@Model.InlineEditProperty" value="@Model.Model.Raw" required />
+            }
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Final))
+            {
+
+                <label for="@Model.InlineEditProperty" class="sr-only">@Model.InlineEditProperty</label>
+                <input id="@Model.InlineEditProperty" type="text" class="form-control" name="@Model.InlineEditProperty" value="@Model.Model.Final" required />
+
+            }
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Definition))
+            {
+
+                <label for="@Model.InlineEditProperty" class="sr-only">@Model.InlineEditProperty</label>
+                <textarea id="@Model.InlineEditProperty" class="form-control" name="@Model.InlineEditProperty" required>@Model.Model.Definition</textarea>
+
+            }
+            else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.RawLanguage))
+            {
+                <fieldset class="form-control">
+                    <legend class="sr-only">Language</legend>
+                    @foreach (var item in R.Language.Translate)
+                    {
+                        <div class="radio">
+                            <label>
+                                <input id="status-@item.Key" type="radio" name="@Model.InlineEditProperty" value="@item.Key" checked="@(Model.Model.RawLanguage == item.Key)" required />
+                                @item.Value
+                            </label>
+                        </div>
+                    }
+                </fieldset>
+            }
+            else
+            {
+                <label for="@Model.InlineEditProperty" class="sr-only">@Model.InlineEditProperty</label>
+                <input id="@Model.InlineEditProperty" type="text" class="form-control" name="@Model.InlineEditProperty" required />
+            }
+        </div>
+        <div class="hidden">
+            <input type="hidden" name="ID" value="@Model.ID" />
+            <input type="hidden" name="InlineEditProperty" value="@Model.InlineEditProperty" />
+        </div>
+        <div class="form-group clearfix">
+            <button id="@(Model.InlineEditProperty)Submit" type="submit" class="btn btn-primary"><i class="fa fa-save"></i>Save</button>
+            <button id="@(Model.InlineEditProperty)Cancel" type="button" class="btn btn-default"><i class="fa fa-times-circle"></i>Cancel</button>
+        </div>
+    </form>
+</div>

@@ -29,20 +29,12 @@ namespace Paranovels.Facade
                         var glossaryService = new GlossaryService(uow);
                         var glossaryForm = new GlossaryForm();
                         new PropertyMapper<Glossary, GlossaryForm>(glossary, glossaryForm).Map();
+                        glossaryForm.SourceID = id;
+                        glossaryForm.SourceTable = R.SourceTable.NOVEL;
                         glossaryForm.ByUserID = form.ByUserID;
 
                         var glossaryID = glossaryService.SaveChanges(glossaryForm);
 
-                        // connect group to glossary
-                        var connectorService = new ConnectorService(uow);
-                        var connectorForm = new ConnectorForm()
-                        {
-                            ByUserID = form.ByUserID,
-                            ConnectorType = R.ConnectorType.NOVEL_GLOSSARY,
-                            SourceID = id,
-                            TargetID = glossaryID
-                        };
-                        connectorService.SaveChanges(connectorForm);
                     }
                 }
                 return id;
@@ -71,7 +63,8 @@ namespace Paranovels.Facade
                 qChapter = qChapter.Where(w => w.NovelID == detail.ID);
 
                 detail.Chapters = qChapter.ToList();
-
+                // summarize
+                detail.Summarize = service.View<Summarize>().Where(w => w.SourceTable == R.SourceTable.NOVEL && w.SourceID == detail.ID).SingleOrDefault() ?? new Summarize();
                 return detail;
             }
         }
@@ -92,22 +85,36 @@ namespace Paranovels.Facade
                 var service = new ChapterService(uow);
                 var detail = service.Get(criteria);
 
+                // novel 
+                detail.Novel = service.View<Novel>().Where(w => w.ID == detail.NovelID).Single();
                 // chapter content
-                var qContent = service.View<Content>().Where(w => w.ChapterID == detail.ID).Select(s => new ContentGrid
+                var contents = service.View<Content>().Where(w => w.ChapterID == detail.ID).Select(s => new ContentGrid
                 {
                     ID = s.ID,
                     RawHash =  s.RawHash,
                     Final = s.Final,
-                });
+                }).ToList();
+                
+                // summarize
+                detail.Summarize = service.View<Summarize>().Where(w => w.SourceTable == R.SourceTable.CHAPTER && w.SourceID == detail.ID).SingleOrDefault() ?? new Summarize();
+                // glossary
+                detail.Glossaries = service.View<Glossary>().Where(w => w.SourceTable == R.SourceTable.NOVEL && w.SourceID == detail.NovelID).ToList();
+                // checked
+                var contentIDs = contents.Select(s => s.ID).ToList();
+                detail.Checks = service.View<Check>().Where(w=> w.IsDeleted == false && contentIDs.Contains(w.SourceID) && w.SourceTable == R.SourceTable.CONTENT).ToList();
+                // segments (paragraphs)
+                var paragraphs = detail.Content.ToParagraphs().Select((s, i) => new { Index = i, Raw = s, RawHash = s.GetIntHash() });
 
-                var segments = detail.Content.SegmentChapterContent();
-
-                int paragraph = 0;
-                detail.Contents = qContent.ToList().Select(s =>
+                detail.Contents = paragraphs.Join(contents, p=>p.RawHash, c=>c.RawHash, (p,c) => new ContentGrid
                 {
-                    s.Paragraph = paragraph++;
-                    s.Raw = segments.ContainsKey(s.RawHash) ? segments[s.RawHash] : "Segment not found.";
-                    return s;
+                    ID = c.ID,
+                    Final = c.Final,
+                    Paragraph = p.Index,
+                    RawHash = p.RawHash,
+                    Raw = p.Raw,
+                    IsTranslated = detail.Checks.Any(w => w.Type == R.CheckType.TRANSLATING && w.SourceID == c.ID),
+                    IsEdited = detail.Checks.Any(w => w.Type == R.CheckType.EDITING && w.SourceID == c.ID),
+                    IsProofread = detail.Checks.Any(w => w.Type == R.CheckType.PROOFREADING && w.SourceID == c.ID),
                 }).ToList();
 
                 return detail;

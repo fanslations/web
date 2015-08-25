@@ -1,0 +1,69 @@
+﻿@using Paranovels.Common
+@using Thi.Core
+@model Thi.Core.PagedList<Paranovels.ViewModels.GlossaryGrid>
+
+<table class="table table-condensed table-responsive table-hover">
+    <thead>
+        <tr>
+            <th>Lang</th>
+            <th>Term</th>
+            <th>Translated</th>
+            <th>Date</th>
+            <th>Source</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Data)
+        {
+            <tr>
+                <td>
+                    @item.RawLanguage.Translate(R.Language.Translate)
+                </td>
+                <td>
+                    @item.Raw
+                </td>
+                <td class="hover">
+                    <a href="@Url.Action("Detail","Glossary", new { ID = item.ID, Seo = item.Final.ToSeo() })">@item.Final</a>
+                    <div class="show pull-right">
+                        <a role="button" class="action toggle" data-toggle='{"target":".detail@(item.ID)"}'><i class="fa fa-file-text-o"></i></a>
+                    </div>
+                </td>
+                <td>
+                    @item.UpdatedDate.FormatDate()
+                </td>
+                <td>
+                    @if (item.SourceTable == R.SourceTable.SERIES)
+                    {
+                        <a href="@Url.Action("Detail", "Series", new { ID = item.SourceID, Seo = item.Final.ToSeo() })">Series</a>
+                    }
+                    else if (item.SourceTable == R.SourceTable.GROUP)
+                    {
+                        <a href="@Url.Action("Detail", "Group", new { ID = item.SourceID, Seo = item.Final.ToSeo() })">Group</a>
+                    }
+                    else if (item.SourceTable == R.SourceTable.NOVEL)
+                    {
+                        <a href="@Url.Action("Detail", "Novel", new {ID = item.SourceID, Seo = item.Final.ToSeo()})">Novel</a>
+                    }
+                    else
+                    {
+
+                    }
+                </td>
+            </tr>
+            <tr class="animated detail@(item.ID)" style="display: none;">
+                <td colspan="8" class="text-info">
+                    @item.Definition
+                </td>
+            </tr>
+        }
+    </tbody>
+    @if (!Model.Data.Any())
+    {
+        <tfoot>
+            <tr>
+                <td colspan="8">No glossary found.</td>
+            </tr>
+        </tfoot>
+    }
+</table>
+

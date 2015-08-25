@@ -10,6 +10,7 @@ namespace Paranovels.ViewModels
 {
     public class ListDetail: UserList, IDetailModel
     {
+        public IList<Connector> Connectors { get; set; } 
         public IList<SeriesGrid> Series { get; set; }
 
         public IList<Release> Releases { get; set; }

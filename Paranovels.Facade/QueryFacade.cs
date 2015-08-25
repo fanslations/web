@@ -80,5 +80,35 @@ namespace Paranovels.Facade
                 return qAuthor.ToList();
             }
         }
+
+        public IList<Release> SearchRelease(ReleaseCriteria criteria)
+        {
+            using (var uow = UnitOfWorkFactory.Create<NovelContext>())
+            {
+                var qRelease = uow.Repository<Release>().All();
+
+                if (!string.IsNullOrWhiteSpace(criteria.Query))
+                {
+                    qRelease = qRelease.Where(w => w.Title.Contains(criteria.Query));
+                }
+
+                return qRelease.ToList();
+            }
+        }
+
+        public IList<Glossary> SearchGlossary(GlossaryCriteria criteria)
+        {
+            using (var uow = UnitOfWorkFactory.Create<NovelContext>())
+            {
+                var qGlossary = uow.Repository<Glossary>().All();
+
+                if (!string.IsNullOrWhiteSpace(criteria.Query))
+                {
+                    qGlossary = qGlossary.Where(w => w.Raw.Contains(criteria.Query) || w.Final.Contains(criteria.Query));
+                }
+
+                return qGlossary.ToList();
+            }
+        }
     }
 }

@@ -1,14 +1,15 @@
 ﻿@using Paranovels.Common
+@using Thi.Core
 @model Paranovels.ViewModels.ChapterForm
 @{
-    ViewBag.Title = "Add new chapter";
+    ViewBag.Title = "Add new chapter for " + Request.QueryString["Title"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 
 <section class="section">
     <div class="header">
-        <a href="@Url.Action("Index")" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
+        <a href="javascript:history.go(-1);" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
         <h1 class="title">
             @ViewBag.Title
         </h1>
@@ -18,25 +19,28 @@
             <div id="entry">
                 <div class="hidden">
                     <input type="hidden" name="NovelID" value="@Model.NovelID" />
-                    @*<input type="hidden" name="Volume" value="0" />
-                        <input type="hidden" name="Number" value="@Model.Number" />*@
                     <input type="hidden" name="Status" value="@R.ChapterStatus.PENDING" />
+                    <input type="hidden" name="ReturnUrl" value="@Url.Action("Detail", "Novel", new { ID = Model.NovelID, Seo = (Request.QueryString["Title"] ?? "new chapter").ToSeo(), Do = "toc" })" />
                 </div>
                 <div class="form-group">
-                    <label id="labelnumber" for="number" class="arrow_box">Enter chapter number</label>
-                    <input id="number" name="number" type="number" value="@Model.Number" class="form-control" placeholder="Enter chapter number" aria-labelledby="labelnumber" required />
+                    <label id="labelvolume" for="number">Enter chapter volume</label>
+                    <input id="number" name="@Model.PropertyName(m=>m.Volume)" type="number" value="@Model.Volume" class="form-control" placeholder="Enter chapter volume" aria-labelledby="labelvolume" required />
                 </div>
                 <div class="form-group">
-                    <label id="labeltitle" for="title" class="arrow_box">Enter chapter title</label>
-                    <input id="title" name="title" type="text" class="form-control" placeholder="Enter chapter title" aria-labelledby="labeltitle">
+                    <label id="labelnumber" for="number">Enter chapter number</label>
+                    <input id="number" name="@Model.PropertyName(m=>m.Number)" type="number" value="@Model.Number" class="form-control" placeholder="Enter chapter number" aria-labelledby="labelnumber" required />
                 </div>
                 <div class="form-group">
-                    <label id="labelcontent" for="content" class="arrow_box">Enter chapter content</label>
-                    <textarea id="content" name="content" class="form-control" rows="50" placeholder="Enter chapter content" aria-labelledby="labelcontent"></textarea>
+                    <label id="labeltitle" for="title">Enter chapter title</label>
+                    <input id="title" name="@Model.PropertyName(m=>m.Title)" type="text" class="form-control" placeholder="Enter chapter title" aria-labelledby="labeltitle">
+                </div>
+                <div class="form-group">
+                    <label id="labelcontent" for="content">Enter chapter content</label>
+                    <textarea id="content" name="@Model.PropertyName(m=>m.Content)" class="form-control" rows="50" placeholder="Enter chapter content" aria-labelledby="labelcontent"></textarea>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary"><i class="fa fa-plus-circle"></i>Add new chapter</button>
-                    <button type="button" class="btn btn-default"><i class="fa fa-times-circle"></i>Cancel</button>
+                    <button type="button" class="btn btn-default" onclick="history.go(-1)"><i class="fa fa-times-circle"></i>Cancel</button>
                 </div>
             </div>
         </form>

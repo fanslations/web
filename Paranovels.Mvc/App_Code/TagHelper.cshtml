@@ -1,0 +1,13 @@
+﻿@using Paranovels.Common
+@using Paranovels.DataModels
+@helper DisplayTags(IEnumerable<Tag> tags, string cssClass)
+{
+    if (tags == null)
+    {
+        return;
+    }
+    foreach (var tag in tags)
+    {
+        <li class="@cssClass">@tag.Name</li>
+    }
+}

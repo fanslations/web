@@ -1,9 +1,16 @@
 ﻿@using Paranovels.Common
+@using Paranovels.ViewModels
 @using Thi.Core
-@model Thi.Core.PagedList<Paranovels.DataModels.Novel>
+@model Thi.Core.PagedList<Paranovels.ViewModels.NovelGrid>
 @{
     ViewBag.Title = "Novels";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var sortedModel = new SortedModel
+    {
+        Sorted = Request.QueryString["sorted"] ?? "new",
+        SortOptions = Model.Data.AsQueryable().SortOptions()
+    };
 }
 
 <section class="section">
@@ -14,30 +21,11 @@
         </h1>
         <a class="action right" href="@Url.Action("Add")"><i class="fa fa-plus-circle"></i></a>
     </div>
-    <ul class="grid">
-        @foreach (var item in Model.Data)
-        {
-            <li class="row-list">
-                <div class="col-image">
-                    <a href="#" class="">
-                        <img src="@item.ImageUrl.ToGoogleDriveImageUrl()" class="img-rounded" title="@item.Title's cover image" />
-                    </a>
-                </div>
-                <div class="col-content">
-                    <div>
-                        <a href="@Url.Action("Detail", new { ID = item.ID, Seo = item.Title.ToSeo() })">@item.Title</a>
-                    </div>
-                    <div>@item.Synopsis</div>
-                    <ul class="list-unstyled list-inline">
-                        <li title="Status"><i class="fa fa-certificate"></i>@item.Status.Translate(R.TranslationStatus.Translate)</li>
-                        <li class="divider divider-pipe divider-black"></li>
-                        <li title="Updated Date"><i class="fa fa-calendar"></i>@item.UpdatedDate.FormatDate()</li>
-                        <li class="divider divider-pipe divider-black"></li>
-                        <li title="Latest Release"><i class="fa fa-rss"></i>@item.Status.Translate(R.TranslationStatus.Translate)</li>
-                    </ul>
-                </div>
-            </li>
+    <div class="content">
+        @{
+            Html.RenderPartial("_Sorted", sortedModel);
         }
-    </ul>
-    @Html.Raw(Model.ToPagination(Request.RawUrl))
+    </div>
+    @{ Html.RenderPartial("_NovelGridPartial", Model); }
+    @Html.Raw(Model.ToPagination(Request.RawUrl, 5))
 </section>

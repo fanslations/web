@@ -1,0 +1,43 @@
+﻿@using Paranovels.Common
+@using Thi.Core
+@model Thi.Core.PagedList<Paranovels.ViewModels.GlossaryGrid>
+@{
+    ViewBag.Title = "Glossaries";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="section">
+    <div class="header">
+        <a href="@Url.Action("Index")" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
+        <h1 class="title">
+            @ViewBag.Title
+        </h1>
+        <ul class="pull-right list-unstyled list-inline">
+            <li class="no-padding">
+                <a class="action right" href="@Url.Action("Add", "Glossary", new { })" title="Add new glossary">
+                    <i class="fa fa-plus-circle"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="content">
+        <p>
+            These are glossaries added during the translating process, submitted by our users. Any users can add a new glossary, vote and comment on the glossary. This glossary will be use by translators when during translating process, when same glossary exists the one with higher vote will be use when translating.
+        </p>
+
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="@(Convert.ToInt32(ViewContext.RouteData.Values["ID"]) == 0 ? "active" : "") )"><a href="@Url.Action("Index", "Glossary", new { ID = 0, Seo = "all-languages" })" aria-controls="glossaries" role="tab"><i class="fa fa-globe"></i>All languages</a></li>
+            @foreach (var item in R.Language.Translate)
+            {
+                <li role="presentation" class="@(Convert.ToInt32(ViewContext.RouteData.Values["ID"]) == item.Key ? "active" : "") )"><a href="@Url.Action("Index", "Glossary", new { ID = item.Key, Seo = item.Value.ToSeo() })" aria-controls="glossaries" role="tab"><i class="fa fa-globe"></i>@item.Value</a></li>
+            }
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="glossaries">
+                @{ Html.RenderPartial("~/Views/Glossary/_GlossaryGridPartial.cshtml", Model); }
+                @Html.Raw(Model.ToPagination(Request.RawUrl, 5))
+            </div>
+        </div>
+    </div>
+</section>

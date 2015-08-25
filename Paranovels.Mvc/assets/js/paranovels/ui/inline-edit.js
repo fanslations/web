@@ -11,7 +11,7 @@
 
                 var $this = $(this);
                 var json = $this.data('inline-edit');
-                var inlineEditPostUrl = json.PostUrl || $this.data('posturl') || '../../../inlineedit';
+                var inlineEditPostUrl = json.PostUrl || $this.data('posturl') || '/' + location.pathname.split("/")[1] + '/inlineedit/';
 
                 $this.on('click', function () {
 

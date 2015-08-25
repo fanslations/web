@@ -12,5 +12,11 @@ namespace Paranovels.ViewModels
     {
         public List<Chapter> Chapters { get; set; }
         public List<Author> Authors { get; set; }
+        public List<Tag> Genres { get; set; }
+        public List<Tag> Categories { get; set; }
+        public List<Group> Groups { get; set; }
+        public List<Aka> Akas { get; set; }
+        public string RawUrl { get; set; }
+        public Summarize Summarize { get; set; }
     }
 }

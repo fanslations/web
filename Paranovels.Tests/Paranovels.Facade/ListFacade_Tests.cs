@@ -17,7 +17,7 @@ namespace Paranovels.Tests.Paranovels.Facade
 
             foreach (var item in list)
             {
-                Console.WriteLine("{0} {1} {2} {3}", item.UserListID, item.Name, item.Type, item.UpdatedDate);
+                Console.WriteLine("{0} {1} {2} {3}", item.ID, item.Name, item.Type, item.UpdatedDate);
             }
         }
     }

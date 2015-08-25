@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base Interface\IFeed.cs" />
     <Compile Include="Base Interface\IGrid.cs" />
     <Compile Include="Base Interface\IDetailModel.cs" />
     <Compile Include="Base Interface\IFacade.cs" />

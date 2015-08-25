@@ -8,8 +8,9 @@ using Thi.Core;
 
 namespace Paranovels.ViewModels
 {
-    public class GlossaryDetail: Chapter, IDetailModel
+    public class GlossaryDetail: Glossary, IDetailModel
     {
-
+        public Summarize Summarize  { get; set; }
+        public UserActionDetail UserAction { get; set; }
     }
 }

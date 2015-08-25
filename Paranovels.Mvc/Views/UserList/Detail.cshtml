@@ -1,4 +1,5 @@
-﻿@using Paranovels.Common
+﻿@using System.Diagnostics
+@using Paranovels.Common
 @using Paranovels.DataModels
 @using Paranovels.ViewModels
 @using Thi.Core
@@ -14,8 +15,14 @@
         Sorted = Request.QueryString["sorted"] ?? "title",
         SortOptions = Model.Series.AsQueryable().SortOptions()
     };
-}
 
+    var returnUrl = Request.UrlReferrer == null ? "/" : Request.UrlReferrer.PathAndQuery;
+}
+@if (Model.IsDeleted)
+{
+    @SecurityHelper.Unauthorized("This list once exists but it has been deleted.", "List has been deleted", false)
+    return;
+}
 @if (Model.ShareLevel != R.ShareLevel.PUBLIC && Model.UserID != session.UserID)
 {
     @SecurityHelper.Unauthorized("This list is not public and you donot have permission to view it.", "Unauthorized", false)
@@ -48,7 +55,7 @@
                         sortField: 'Title',
                         preload: true,
                         create: function (input, callback) {
-                            window.location = '@Url.Action("Index","Series",new { Do = "add" })' + '&Title=' + input + '&ReturnUrl=@Request.UrlReferrer.PathAndQuery';
+                            window.location = '@Url.Action("Index","Series",new { Do = "add" })' + '&Title=' + input + '&ReturnUrl=@returnUrl';
                         },
                         render: {
                             option: function (item, escape) {
@@ -282,6 +289,15 @@
                 </div>
             </div>
             <div class="btn-row clearfix">
+                <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{}'>
+                    <input type="hidden" name="ID" value="@Model.ID" />
+                    <input type="hidden" name="UserID" value="@Model.UserID" />
+                    <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m => m.IsDeleted)" />
+                    <input type="hidden" name="ReturnUrl" value="@Url.Action("Index","UserList")" />
+                    <input type="hidden" name="@Model.PropertyName(m => m.IsDeleted)" value="true" />
+
+                    <button type="submit" class="btn btn-danger btn-sm pull-right" onclick="return confirm('Are you sure?')" style="margin-left: 20px;"><i class="fa fa-trash"></i>Delete This List</button>
+                </form>
                 <button type="button" class="btn btn-primary btn-sm pull-right" onclick="window.location.reload();"><i class="fa fa-refresh"></i>Apply Settings</button>
             </div>
         </div>
@@ -319,11 +335,12 @@
                 var unreads = Model.Releases.Where(w => w.SeriesID == item.ID).Where(w => w.Date > read.Date).ToList();
 
                 <tbody class="no-border">
-                    <tr>
-                        <td>
-
+                    <tr id="series@(item.ID)" class="animated">
+                        <td class="hover">
+                            <span class="show pull-right animated action connect toggle text-danger" title="Remove from @Model.Name" data-toggle='{"target":"#series@(item.ID)"}' data-connect='{ "ID": @(Model.Connectors.Single(w=> w.SourceID == item.ID).ID), "ConnectorType": @R.ConnectorType.SERIES_USERLIST, "SourceID": @Model.ID, "TargetID": @item.ID, "IsDeleted": true }' role="button">
+                                <i class="fa fa-trash"></i>
+                            </span>
                             <a class="btn-block" href="@Url.Action("Detail", "Series", new { ID = item.ID, Seo = item.Title.ToSeo() })">@item.Title</a>
-
                         </td>
                         <td>
                             @if (unreads.Any())

@@ -1,0 +1,36 @@
+﻿@using Paranovels.Common
+@using Thi.Core
+@model Paranovels.ViewModels.GlossaryForm
+
+<form class="" method="POST" action="@Url.Action("Form","Glossary")" data-form-ajax='{}'>
+    <div class="hidden">
+        <input type="hidden" name="@Model.PropertyName(m=>m.SourceID)" value="@Model.SourceID" />
+        <input type="hidden" name="@Model.PropertyName(m=>m.SourceTable)" value="@Model.SourceTable" />
+    </div>
+    <div class="form-group">
+        <div class=""><strong>Language</strong></div>
+        @foreach (var item in R.Language.Translate)
+        {
+            <label id="label-@item.Value" for="raw-@item.Value" class="radio-inline">
+                <input id="raw-@item.Value" name="@Model.PropertyName(m => m.RawLanguage)" type="radio" value="@item.Key" required checked="@(item.Key == Model.RawLanguage)" />
+                @item.Value
+            </label>
+        }
+    </div>
+    <div class="form-group">
+        <label id="label-raw" for="raw">Term</label>
+        <input id="raw" name="@Model.PropertyName(m => m.Raw)" type="text" class="form-control" placeholder="Enter term" aria-labelledby="label-raw" required />
+    </div>
+    <div class="form-group">
+        <label id="label-translated" for="title">Translated</label>
+        <input id="translated" name="@Model.PropertyName(m => m.Final)" type="text" class="form-control" placeholder="Enter translated" aria-labelledby="label-translated" required />
+    </div>
+    <div class="form-group">
+        <label id="label-definition" for="definition">Definition</label>
+        <textarea id="definition" name="@Model.PropertyName(m => m.Definition)" class="form-control" placeholder="Enter definition" aria-labelledby="label-definition"></textarea>
+    </div>
+    <div class="form-group clearfix">
+        <button type="submit" class="btn btn-primary"><i class="fa fa-plus-circle"></i>Add glossary</button>
+        <button type="button" class="btn btn-default action toggle" data-toggle='{ "target": "#add-container"}'><i class="fa fa-times-circle"></i>Cancel</button>
+    </div>
+</form>

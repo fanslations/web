@@ -9,7 +9,7 @@ using Thi.Core;
 
 namespace Paranovels.ViewModels
 {
-    public class SeriesGrid: Series, IDetailModel
+    public class SeriesGrid: Series, IDetailModel, IFeed
     {
         [NotMapped]
         public List<UserList> UserLists { get; set; }
@@ -34,5 +34,9 @@ namespace Paranovels.ViewModels
         // by current user
         public int? Voted { get; set; }
         public int? QualityRated { get; set; }
+
+        // feed
+        public string Content { get; set; }
+        public string Url { get; set; }
     }
 }

@@ -17,15 +17,11 @@
     </div>
     <div class="content">
         <div class="detail-group">
-            <strong class="sr-only">Translating Status</strong>
+            <strong class="sr-only">Info</strong>
             <div>
-                <a href="@Url.Action("Translating", "Chapter", new { ID = Model.ID, Seo = Model.Title.IfNullOrWhiteSpace("no title").ToSeo() })">Continue</a>
-            </div>
-        </div>
-        <div class="detail-group">
-            <strong class="sr-only">Title</strong>
-            <div>
-                @Model.Title
+                <ul class="list-unstyled list-inline">
+                    <li>Posed on @Model.UpdatedDate</li>
+                </ul>
             </div>
         </div>
         <div class="detail-group">
@@ -41,4 +37,41 @@
         </div>
     </div>
 </section>
+@if (Model.Novel.ID > 0)
+{
+    <section class="section mobile">
+        <div class="content pagination-container">
+            <ul class="pagination">
+                <li class="active previous">
+                    <a class="" href="@Url.Action("PreviousChapter", "Chapter", new { ID = Model.Novel.ID, Seo = Model.Novel.Title.ToSeo(), ChapterID = Model.ID })"><i class="fa fa-arrow-circle-left"></i>Previous Chapter</a>
+                </li>
+                <li class="active toc">
+                    <a class="" href="@Url.Action("Detail", "Novel", new { ID = Model.Novel.ID, Seo = Model.Novel.Title.ToSeo(), Tab = "Releases" })">Table of Contents</a>
+                </li>
+                <li class="active next">
+                    <a class="" href="@Url.Action("NextChapter", "Chapter", new { ID = Model.Novel.ID, Seo = Model.Novel.Title.ToSeo(), ChapterID = Model.ID })">Next Chapter<i class="fa fa-arrow-circle-right right"></i></a>
+                </li>
+            </ul>
+        </div>
+    </section>
+}
+<section class="section">
+    <div class="content">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#comments" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-comments"></i>Comments (@Model.Summarize.CommentCount)</a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="comments">
+                @{
+                    Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.ID, SourceTable = R.SourceTable.CHAPTER, Sorted = Request.QueryString["sorted"] });
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
 

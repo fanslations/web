@@ -5,28 +5,35 @@
 }
 
 <div class="translator">
-    <ul class="list-unstyled list-inline pull-right">
-        <li>
-            <a href="" class="btn btn-sm btn-primary" ng-click="save()"><i class="fa fa-save"></i>Save</a>
-        </li>
-        <li>
-            <a href="" class="btn btn-sm btn-default" ng-click="discard()"><i class="fa fa-trash"></i>Discard</a>
-        </li>
-    </ul>
-    <ul class="list-unstyled list-inline">
-        <li ng-repeat="translator in translators">
-            <a href="" class="btn btn-sm btn-default switch" ng-class="translator.isSelected ? 'selected': ''" ng-click="toggleTranslator(translator)"><i class="fa fa-power-off"></i>{{translator.Name}}</a>
-        </li>
-        <li>
-            <select ng-model="language.glossary" ng-change="applyGlossary()" class="form-control input-sm">
-                <option value="0">No Glossary</option>
-                <option value="100">Local Glossary</option>
-                <option value="1000">Global Glossary</option>
-            </select>
-            <button id="applyglossary" class="hidden" ng-click="applyGlossary()">Apply</button>
-        </li>
-    </ul>
-    <div>
+    <div class="clearfix">
+        <ul class="list-unstyled list-inline pull-right">
+            <li>
+                <a href="" class="btn btn-sm btn-primary" ng-click="save()"><i class="fa fa-save"></i>Save</a>
+            </li>
+            <li>
+                <a href="" class="btn btn-sm btn-primary" ng-click="saveCheck()"><i class="fa fa-save"></i>Save & <i class="fa fa-check-circle"></i>Check</a>
+            </li>
+            <li>
+                <a href="" class="btn btn-sm btn-default" ng-click="discard()"><i class="fa fa-trash"></i>Discard</a>
+            </li>
+        </ul>
+    </div>
+    <div class="translators">
+        <ul class="list-unstyled list-inline">
+            <li ng-repeat="translator in translators">
+                <a href="" class="btn btn-sm btn-default switch" ng-class="translator.isSelected ? 'selected': ''" ng-click="toggleTranslator(translator)"><i class="fa fa-power-off"></i>{{translator.Name}}</a>
+            </li>
+            <li>
+                <select ng-model="language.glossary" ng-change="applyGlossary()" class="form-control input-sm">
+                    <option value="0">No Glossary</option>
+                    <option value="100">Local Glossary</option>
+                    <option value="1000">Global Glossary</option>
+                </select>
+                <button id="applyglossary" class="hidden" ng-click="applyGlossary()">Apply</button>
+            </li>
+        </ul>
+    </div>
+    <div class="texts">
         <div id="raw" class="raw well well-sm margin-bottom-10px"><i class="label label-info">Raw</i>&nbsp;{{paragraph.Raw}}</div>
         <div class="well well-sm margin-bottom-10px" ng-repeat="translator in translators" ng-show="translator.isSelected">
             <div class="pull-right">

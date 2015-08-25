@@ -9,10 +9,13 @@ using Thi.Core;
 
 namespace Paranovels.ViewModels
 {
-    public class ContentGrid: Content, IDetailModel
+    public class ContentGrid : Content, IDetailModel
     {
         public int Paragraph { get; set; }
         public string Raw { get; set; }
+        public bool IsTranslated { get; set; }
+        public bool IsEdited { get; set; }
+        public bool IsProofread { get; set; }
 
         // from Summarize
         public int? CommentCount { get; set; }

@@ -1,4 +1,4 @@
-// This class was automatically generated with love by ST4bby 8/14/2015 4:20:14 PM.
+// This class was automatically generated with love by ST4bby 8/25/2015 4:37:48 PM.
 // Read more at http://jbubriski.github.com/ST4bby/
 
 namespace Paranovels.DataModels
@@ -29,16 +29,25 @@ namespace Paranovels.DataModels
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("IsDeleted", TypeName = "bit"), Display(Name="Is Deleted")]
 		public bool IsDeleted { get; set; }
 		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("SourceID", TypeName = "int"), Display(Name="Source ID")]
+		public int SourceID { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("SourceTable", TypeName = "int"), Display(Name="Source Table")]
+		public int SourceTable { get; set; }
+		
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Type", TypeName = "int"), Display(Name="Type")]
 		public int Type { get; set; }
 		
-		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Raw", TypeName = "nvarchar"), Display(Name="Raw"), StringLength(200)]
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Raw", TypeName = "nvarchar"), Display(Name="Raw"), StringLength(400)]
 		public string Raw { get; set; }
 		
-		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Final", TypeName = "nvarchar"), Display(Name="Final"), StringLength(200)]
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("RawLanguage", TypeName = "int"), Display(Name="Raw Language")]
+		public int RawLanguage { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Final", TypeName = "nvarchar"), Display(Name="Final"), StringLength(400)]
 		public string Final { get; set; }
 		
-		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Definition", TypeName = "nvarchar"), Display(Name="Definition"), StringLength(2000)]
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Definition", TypeName = "nvarchar"), Display(Name="Definition"), StringLength(8000)]
 		public string Definition { get; set; }
 	}
 }

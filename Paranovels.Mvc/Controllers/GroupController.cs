@@ -19,6 +19,20 @@ namespace Paranovels.Mvc.Controllers
         {
             var searchModel = CreateSearchModel(criteria);
             var pagedList = Facade<SearchFacade>().Search(searchModel);
+
+            // alternative version
+            if (!string.IsNullOrWhiteSpace(criteria.Alt))
+            {
+                var feedItems = pagedList.Data.Select(s => new FeedGrid
+                {
+                    InsertedDate = s.InsertedDate,
+                    UpdatedDate = s.UpdatedDate,
+                    Title = s.Name,
+                    Url = Url.Action("Detail", "Group", new {ID = s.ID, Seo = s.Name.ToSeo()}),
+                });
+                return FeedGenerator(feedItems, criteria.Alt);
+            }
+
             return View(pagedList);
         }
 
@@ -62,6 +76,12 @@ namespace Paranovels.Mvc.Controllers
         {
             form.Model = Facade<GroupFacade>().GetGroup(new GroupCriteria { ID = form.ID });
             return View("_InlineEditPartial", form);
+        }
+
+        public JsonResult CheckFeed(string feedUrl)
+        {
+            var releases = Facade<FeedFacade>().GetNewReleases(feedUrl);
+            return Json(releases, JsonRequestBehavior.AllowGet);
         }
     }
 }

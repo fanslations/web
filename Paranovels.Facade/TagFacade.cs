@@ -34,7 +34,7 @@ namespace Paranovels.Facade
 
                 var detail = JsonHelper.Deserialize<TagDetail>(JsonHelper.Serialize(tag));
 
-                if (tag.TagType == R.TagType.NOVEL_GENRE || tag.TagType == R.TagType.NOVEL_CATEGORY || tag.TagType == R.TagType.NOVEL_CONTAIN)
+                if (tag.TagType == R.TagType.GENRE || tag.TagType == R.TagType.CATEGORY || tag.TagType == R.TagType.CONTAIN)
                 {
                     var sourceIDs = new[]
                     {

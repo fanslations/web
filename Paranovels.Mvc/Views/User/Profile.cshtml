@@ -5,6 +5,8 @@
 @{
     ViewBag.Title = "Profile";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var session = User.GetSession();
 }
 
 <section class="section">
@@ -35,11 +37,26 @@
                 @Html.ImproveThis(m => m.LastName)
             </div>
         </div>
-        <div class="detail-group">
-            <strong>Emaikl</strong>
-            <div>
-                @Html.Raw(Model.Email)
-                @Html.ImproveThis(m => m.Email)
+        @if (Model.ID == session.UserID)
+        {
+            <div class="detail-group">
+                <strong>Email</strong>
+                <div>
+                    @Html.Raw(Model.Email)
+                    @Html.ImproveThis(m => m.Email)
+                </div>
+            </div>
+        }
+    </div>
+    <div class="content">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#publiclists" aria-controls="publiclists" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i>Public Lists</a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="publiclists">
+
             </div>
         </div>
     </div>

@@ -113,7 +113,7 @@ namespace Paranovels.Facade
                         }
 
                         release.Summary = "";
-                        release.Type = R.ReleaseType.CHAPTER;
+                        release.Type = release.Title.IsChapterRelease() ? R.ReleaseType.CHAPTER : R.ReleaseType.NEWS;
                         release.ID = releaseService.SaveChanges(release);
 
                         // notify only if release is new
@@ -133,7 +133,7 @@ namespace Paranovels.Facade
             return newReleaseCount;
         }
 
-        IList<ReleaseForm> GetNewReleases(string url)
+        public IList<ReleaseForm> GetNewReleases(string url)
         {
             var chapters = new FeedChecker().Check(url);
             // filters out news and announments

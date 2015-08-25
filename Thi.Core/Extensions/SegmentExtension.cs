@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Thi.Core
 {
@@ -8,21 +9,22 @@ namespace Thi.Core
         public static Dictionary<int, string> SegmentChapterContent(this string content)
         {
             var segments = new Dictionary<int, string>();
-            var paragraphs = content.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            for (int i = 0; i < paragraphs.Length; i++)
+            var paragraphs = ToParagraphs(content);
+            foreach (string paragraph in paragraphs)
             {
-                var paragraph = paragraphs[i].Trim();
                 var hash = paragraph.GetIntHash();
-                if (segments.ContainsKey(hash))
-                {
-                    var existParagraph = segments[hash];
-                }
-                else
+                if (!segments.ContainsKey(hash))
                 {
                     segments.Add(hash, paragraph);
                 }
             }
             return segments;
         }
+
+        public static List<string> ToParagraphs(this string content)
+        {
+            var paragraphs = content.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            return paragraphs.Where(w=> !string.IsNullOrWhiteSpace(w)).Select(s=> s.Trim()).ToList();
+        } 
     }
 }

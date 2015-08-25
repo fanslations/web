@@ -9,6 +9,6 @@ namespace Paranovels.ViewModels
 {
     public class GlossaryCriteria : BaseCriteria
     {
-
+        public IList<int> RawLanguages { get; set; }
     }
 }

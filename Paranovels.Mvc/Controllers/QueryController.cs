@@ -15,13 +15,13 @@ namespace Paranovels.Mvc.Controllers
         // GET: Api
         public JsonResult Genres()
         {
-            var tagList = Facade<QueryFacade>().SearchTag(new TagCriteria { Types = new []{ R.TagType.NOVEL_GENRE}});
+            var tagList = Facade<QueryFacade>().SearchTag(new TagCriteria { Types = new []{ R.TagType.GENRE}});
 
             return Json(tagList, JsonRequestBehavior.AllowGet);
         }
         public JsonResult Categories()
         {
-            var tagList = Facade<QueryFacade>().SearchTag(new TagCriteria { Types = new[] { R.TagType.NOVEL_CATEGORY } });
+            var tagList = Facade<QueryFacade>().SearchTag(new TagCriteria { Types = new[] { R.TagType.CATEGORY } });
 
             return Json(tagList, JsonRequestBehavior.AllowGet);
         }

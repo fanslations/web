@@ -1,11 +1,14 @@
 ﻿@using Microsoft.Ajax.Utilities
 @using Paranovels.Common
+@using Paranovels.DataModels
 @using Paranovels.ViewModels
 @using Thi.Core
 @model NovelDetail
 @{
     ViewBag.Title = Model.Title;
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var latestChapter = Model.Chapters.OrderByDescending(o => o.Volume).ThenByDescending(o => o.Number).FirstOrDefault() ?? new Chapter();
 }
 
 @section js {
@@ -32,8 +35,15 @@
     </div>
     <div class="content">
         <div class="detail-group improve-img">
-            <img src="@Model.ImageUrl.ToGoogleDriveImageUrl()" class="center-block img-responsive" title="@Model.Title's cover image" />
-            @Html.ImproveThis(m => m.ImageUrl)
+            @if (string.IsNullOrWhiteSpace(Model.ImageUrl))
+            {
+                @Html.ImproveThis(m => m.ImageUrl, customHtmlIcon: @"<i class="" fa fa-upload""></i>Upload cover image for " + Model.Title)
+            }
+            else
+            {
+                <img src="@Model.ImageUrl.ToGoogleDriveImageUrl()" class="center-block img-responsive" title="@Model.Title's cover image" />
+                @Html.ImproveThis(m => m.ImageUrl, customHtmlIcon: @"<i class="" fa fa-upload""></i>Edit")
+            }
         </div>
         <div class="detail-group">
             <strong class="sr-only">Synopsis</strong>
@@ -43,9 +53,17 @@
             </div>
         </div>
         <div class="detail-group">
+            <strong>Title</strong>
+            <div>
+                @Html.Raw(Model.Title.FormatString())
+                @Html.ImproveThis(m => m.Title)
+            </div>
+        </div>
+        <div class="detail-group">
             <strong>Status</strong>
             <div>
                 @Html.Raw(Model.Status.Translate(R.TranslationStatus.Translate))
+                @if (Model.Status == R.TranslationStatus.ACTIVE) { <text>Ongoing</text>}
                 @Html.ImproveThis(m => m.Status)
             </div>
         </div>
@@ -57,20 +75,25 @@
             </div>
         </div>
         <div class="detail-group">
-            <strong>Total Chapter</strong>
+            <strong>Volume</strong>
             <div>
-                @Html.Raw(Model.TotalChapter.FormatInt())
-                @Html.ImproveThis(m => m.TotalChapter)
+                @Html.Raw(Model.Chapters.OrderByDescending(o => o.ID).Select(s => s.Volume).FirstOrDefault().FormatInt())
             </div>
         </div>
         <div class="detail-group">
+            <strong>Chapter</strong>
+            <div>
+                @Html.Raw(Model.Chapters.OrderByDescending(o=>o.ID).Select(s => s.Number).FirstOrDefault().FormatInt())
+            </div>
+        </div>
+        @*<div class="detail-group">
             <strong>Released Date</strong>
             <div>
                 @Html.Raw(Model.ReleasedDate.FormatDate())
                 @Html.ImproveThis(m => m.ReleasedDate)
             </div>
-        </div>
-        @if (Model.Status == R.TranslationStatus.COMPLETED)
+        </div>*@
+        @*@if (Model.Status == R.TranslationStatus.COMPLETED)
         {
             <div class="detail-group">
                 <strong>Completed Date</strong>
@@ -79,7 +102,7 @@
                     @Html.ImproveThis(m => m.CompletedDate)
                 </div>
             </div>
-        }
+        }*@
     </div>
 </section>
 <section class="section">
@@ -96,14 +119,61 @@
         <!-- Tab panes -->
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="toc">
-                <ul class="list-unstyled">
-                    @foreach (var chapter in Model.Chapters.OrderBy(o => o.Volume).ThenBy(o=>o.Number))
+                <table class="table table-condensed table-responsive table-hover">
+                    <thead>
+                        <tr>
+                            <th>Vol</th>
+                            <th>Ch</th>
+                            <th>Chapter Title</th>
+                            <th>Date</th>
+                            <th>Raw</th>
+                            <th>Translate</th>
+                            <th>Edit</th>
+                            <th>Proofread</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var chapter in Model.Chapters.OrderBy(o => o.Volume).ThenBy(o => o.Number))
+                        {
+                            <tr>
+                                <td>
+                                    @chapter.Volume
+                                </td>
+                                <td>
+                                    @chapter.Number
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Detail", "Chapter", new {ID = chapter.ID, Seo = chapter.Title.IfNullOrWhiteSpace("no title").ToSeo()})">@(chapter.Title.IfNullOrWhiteSpace(null) ?? string.Format(@"Volume {0} Chapter {1}", chapter.Volume, chapter.Number))</a>
+                                </td>
+                                <td>
+                                    @Html.Raw(chapter.InsertedDate.FormatDate())
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Edit", "Chapter", new {ID = chapter.ID, Seo = chapter.Title.ToSeo()})">Clean</a>
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Translating", "Chapter", new {ID = chapter.ID, Seo = chapter.Title.ToSeo()})">Translate</a>
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Editing", "Chapter", new {ID = chapter.ID, Seo = chapter.Title.ToSeo()})">Edit</a>
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Proofreading", "Chapter", new {ID = chapter.ID, Seo = chapter.Title.ToSeo()})">Proofread</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    @if (!Model.Chapters.Any())
                     {
-                        <li><a href="@Url.Action("Detail", "Chapter", new { ID = chapter.ID, Seo = chapter.Title.IfNullOrWhiteSpace("no title").ToSeo() })">Volume @(chapter.Volume) Chapter @(chapter.Number) - @chapter.Title</a></li>
+                        <tfoot>
+                            <tr>
+                                <td colspan="8">No chapter found.</td>
+                            </tr>
+                        </tfoot>
                     }
-                </ul>
+                </table>
                 <p>
-                    <a href="@Url.Action("Add", "Chapter", new { NovelID = Model.ID, Number = Model.Chapters.OrderByDescending(o => o.Volume).ThenByDescending(o => o.Number).Select(s => s.Number).FirstOrDefault() + 1 })">
+                    <a href="@Url.Action("Add", "Chapter", new { NovelID = Model.ID, Title = Model.Title, Volume = latestChapter.Volume, Number = latestChapter.Number  + 1 })">
                         <i class="fa fa-plus-circle"></i>Add new chapter
                     </a>
                 </p>

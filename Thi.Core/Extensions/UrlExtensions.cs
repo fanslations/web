@@ -117,7 +117,7 @@ namespace Thi.Core
         {
             if (string.IsNullOrWhiteSpace(title)) return "";
             title = Regex.Replace(title, @"([^a-zA-Z0-9])+", "-");
-            return title;
+            return title.Trim('-');
         }
     }
 }

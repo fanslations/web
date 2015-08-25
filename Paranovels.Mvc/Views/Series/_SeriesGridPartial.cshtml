@@ -34,8 +34,10 @@
             </div>
             <div class="col-content">
                 <ul class="list-unstyled list-inline fs-09em">
-                    <li class="label label-success original-language">@item.RawLanguage.Translate(R.Language.Translate)</li>
-                    @TagHelper.DisplayTags(item.Tags)
+                    <li class="label label-success">@item.RawLanguage.Translate(R.Language.Translate)</li>
+                    @TagHelper.DisplayTags(item.Tags.Where(w => w.TagType == R.TagType.CATEGORY), "label label-primary")
+                    <li class="label label-info">@(item.RawLanguage == R.Language.ENGLISH ? "Original" : "Translation")</li>
+                    @TagHelper.DisplayTags(item.Tags.Where(w => w.TagType == R.TagType.GENRE), "label label-warning")
                 </ul>
                 <div>
                     @foreach (var list in item.UserLists ?? new List<UserList>())
@@ -69,7 +71,7 @@
                     @if (latestRelease.ID > 0)
                     {
                         <li title="Latest Release">
-                            <i class="fa fa-rss"></i><a href="@Url.Action("Detail", "Release", new { latestRelease.ID, Seo = latestRelease.Title.ToSeo() })">@Html.Raw(latestRelease.Title.FormatString())</a>
+                            <i class="fa fa-rss"></i><a href="@Url.Action("Detail", "Release", new { latestRelease.ID, Seo = latestRelease.Title.ToSeo() })">@item.Title @latestRelease.Title.ExtractVolumeChapter()</a>
                         </li>
                     }
                     @foreach (var group in item.Groups)
@@ -81,6 +83,5 @@
                 </ul>
             </div>
         </li>
-
     }
 </ul>

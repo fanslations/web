@@ -165,6 +165,7 @@
     <Reference Include="System.Net.Http.Primitives">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -262,6 +263,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\AkaController.cs" />
+    <Compile Include="Controllers\CheckController.cs" />
     <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\FormController.cs" />
@@ -370,8 +372,10 @@
     <None Include="Properties\PublishProfiles\Trong Server.pubxml" />
     <None Include="Properties\PublishProfiles\MSU Server.pubxml" />
     <Content Include="google6f952c6725824d70.html" />
+    <Content Include="N6GuVhBpUQbdRrJE8KmIgLfPo7M.html" />
     <Content Include="robots.txt" />
     <Content Include="Scripts\_references.js" />
+    <None Include="Views\Glossary\_FormPartial.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -455,12 +459,23 @@
     <Content Include="Views\Author\Detail.cshtml" />
     <Content Include="Views\Author\_InlineEditPartial.cshtml" />
     <Content Include="Views\Author\_AuthorGridPartial.cshtml" />
+    <Content Include="Views\Chapter\Edit.cshtml" />
+    <Content Include="Views\Chapter\Proofreading.cshtml" />
+    <Content Include="Views\Chapter\Editing.cshtml" />
+    <Content Include="Views\Novel\_NovelGridPartial.cshtml" />
+    <Content Include="Views\Translator\ng-editor.cshtml" />
+    <Content Include="Views\Translator\ng-proofreader.cshtml" />
+    <Content Include="Views\Glossary\Index.cshtml" />
+    <Content Include="Views\Glossary\Add.cshtml" />
+    <Content Include="Views\Glossary\Detail.cshtml" />
+    <Content Include="Views\Glossary\_InlineEditPartial.cshtml" />
+    <Content Include="Views\UserList\Public.cshtml" />
+    <Content Include="Views\Glossary\_GlossaryGridPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Api\" />
     <Folder Include="Views\Content\" />
     <Folder Include="Views\Form\" />
-    <Folder Include="Views\Glossary\" />
     <Folder Include="Views\Imd\" />
     <Folder Include="Views\Read\" />
     <Folder Include="Views\Sitemap\" />

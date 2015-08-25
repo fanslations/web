@@ -2,7 +2,7 @@
 @using Paranovels.DataModels
 @using Paranovels.ViewModels
 @using Thi.Core
-@model Thi.Core.PagedList<Paranovels.DataModels.UserList>
+@model Thi.Core.PagedList<ListGrid>
 @{
     ViewBag.Title = "My Lists";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -25,7 +25,7 @@
     </div>
     <div class="content">
         <section class="section">
-            <div class="header">
+            <div class="header sr-only">
                 <h2 class="title">
                     Your Lists
                 </h2>

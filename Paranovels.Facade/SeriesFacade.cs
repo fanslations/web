@@ -61,6 +61,7 @@ namespace Paranovels.Facade
                     {
                         feed.UrlHash = feed.Url.GetIntHash();
                         feed.Status = feed.Status == 0 ? R.FeedStatus.ACTIVE : feed.Status;
+                        feed.LastSuccessDate = feed.LastSuccessDate == DateTime.MinValue ? DateTime.Now : feed.LastSuccessDate;
                         var feedForm = new GenericForm<Feed>
                         {
                             ByUserID = form.ByUserID,
@@ -144,21 +145,25 @@ namespace Paranovels.Facade
                 {
                     R.ConnectorType.SERIES_TAGCATEGORY,
                     R.ConnectorType.SERIES_TAGGENRE,
+                    R.ConnectorType.SERIES_TAGTHEME,
                     R.ConnectorType.SERIES_TAGCONTAIN,
                     R.ConnectorType.SERIES_GROUP,
                     R.ConnectorType.SERIES_AUTHOR,
+                    R.ConnectorType.SERIES_PUBLISHER,
+                    R.ConnectorType.SERIES_GLOSSARY,
+                    R.ConnectorType.SERIES_FEED,
+                    R.ConnectorType.SERIES_USERLIST,
                 };
-                var connectors = service.View<Connector>()
-                                    .Where(w => w.IsDeleted == false && connectorTypes.Contains(w.ConnectorType) && w.SourceID == detail.ID).ToList();
+                var connectors = service.View<Connector>().Where(w => w.IsDeleted == false && connectorTypes.Contains(w.ConnectorType) && w.SourceID == detail.ID).ToList();
 
-                var tagTypes = new[] { R.TagType.NOVEL_CATEGORY, R.TagType.NOVEL_GENRE, R.TagType.NOVEL_CONTAIN };
+                var tagTypes = new[] { R.TagType.CATEGORY, R.TagType.GENRE, R.TagType.CONTAIN };
                 var tags = service.View<Tag>().Where(w => tagTypes.Contains(w.TagType)).ToList();
 
-                detail.Categories = tags.Where(w => w.TagType == R.TagType.NOVEL_CATEGORY && connectors.Any(a => a.ConnectorType == R.ConnectorType.SERIES_TAGCATEGORY && a.TargetID == w.ID)).ToList();
+                detail.Categories = tags.Where(w => w.TagType == R.TagType.CATEGORY && connectors.Any(a => a.ConnectorType == R.ConnectorType.SERIES_TAGCATEGORY && a.TargetID == w.ID)).ToList();
 
-                detail.Genres = tags.Where(w => w.TagType == R.TagType.NOVEL_GENRE && connectors.Any(a => a.ConnectorType == R.ConnectorType.SERIES_TAGGENRE && a.TargetID == w.ID)).ToList();
+                detail.Genres = tags.Where(w => w.TagType == R.TagType.GENRE && connectors.Any(a => a.ConnectorType == R.ConnectorType.SERIES_TAGGENRE && a.TargetID == w.ID)).ToList();
 
-                detail.Contains = tags.Where(w => w.TagType == R.TagType.NOVEL_CONTAIN && connectors.Any(a => a.ConnectorType == R.ConnectorType.SERIES_TAGCONTAIN && a.TargetID == w.ID)).ToList();
+                detail.Contains = tags.Where(w => w.TagType == R.TagType.CONTAIN && connectors.Any(a => a.ConnectorType == R.ConnectorType.SERIES_TAGCONTAIN && a.TargetID == w.ID)).ToList();
 
                 var authorIDs = connectors.Where(w => w.ConnectorType == R.ConnectorType.SERIES_AUTHOR).Select(s=> s.TargetID).ToList();
                 detail.Authors = service.View<Author>().Where(w => authorIDs.Contains(w.ID)).ToList();
@@ -180,9 +185,7 @@ namespace Paranovels.Facade
                                 .Where(w => w.ConnectorType == R.ConnectorType.SERIES_FEED && w.SourceID == detail.ID)
                                 .Join(service.View<Feed>().All(), c => c.TargetID, f => f.ID, (c, f) => f).ToList();
 
-                detail.Glossaries = service.View<Connector>()
-                    .Where(w => w.ConnectorType == R.ConnectorType.SERIES_GLOSSARY && w.SourceID == detail.ID)
-                    .Join(service.View<Glossary>().All(), c => c.TargetID, f => f.ID, (c, f) => f).ToList();
+                detail.Glossaries = detail.Glossaries = service.View<Glossary>().Where(w => w.SourceTable == R.SourceTable.SERIES && w.SourceID == detail.ID).ToList();
 
                 detail.UserAction = new UserActionFacade().Get(new ViewForm { UserID = criteria.ByUserID, SourceID = detail.ID, SourceTable = R.SourceTable.SERIES });
 

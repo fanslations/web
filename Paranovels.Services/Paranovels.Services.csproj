@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthorService.cs" />
+    <Compile Include="CheckService.cs" />
     <Compile Include="StickyService.cs" />
     <Compile Include="ConnectorService.cs" />
     <Compile Include="GlossaryService.cs" />

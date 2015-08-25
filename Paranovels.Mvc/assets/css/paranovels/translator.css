@@ -22,7 +22,7 @@
     margin-top: 10px;
     border-radius: 10px;
 }
-.translating .translator li {
+.translating .translators  li {
     margin-bottom: 10px;
 }
 .translating .switch {
@@ -72,7 +72,6 @@
 }
 
 #glossary .lookup {
-    background: whitesmoke;
     border-radius: 5px;
 }
 

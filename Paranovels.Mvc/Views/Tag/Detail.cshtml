@@ -34,14 +34,8 @@
     </div>
 </section>
 <section class="section">
-    <div class="header">
-        <h2 class="title">
-            Novels
-        </h2>
-    </div>
     <div class="content">
         <ul class="list-unstyled list-inline">
-            <li>Filter by status</li>
             <li>
                 <i class="fa @(hasStatusFilter ? "" : "fa-filter")"></i>
                 <a href="@Url.Action("Detail", "Tag", new { ID = ViewContext.RouteData.Values["ID"], Seo = (Model.TagType.Translate(R.TagType.Translate)).ToSeo() })">All</a>
@@ -69,7 +63,8 @@
                 Groups = new List<Group>(),
                 UserLists = new List<UserList>(),
                 Connectors = new List<Connector>(),
-                Releases = new List<Release>()
+                Releases = new List<Release>(),
+                Tags = new List<Tag>()
             }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
         });
     }

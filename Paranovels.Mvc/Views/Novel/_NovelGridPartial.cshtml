@@ -1,0 +1,88 @@
+﻿@using Paranovels.Common
+@using Paranovels.DataModels
+@using Paranovels.ViewModels
+@using Thi.Core
+@model Thi.Core.PagedList<Paranovels.ViewModels.NovelGrid>
+
+<ul class="grid">
+    @foreach (var item in Model.Data)
+    {
+        var summarize = new Summarize
+        {
+            ID = item.ID,
+            SourceID = item.ID,
+            SourceTable = R.SourceTable.NOVEL,
+            QualityCount = item.QualityCount.GetValueOrDefault(),
+            QualityScore = item.QualityScore.GetValueOrDefault()
+        };
+        var latestRelease = item.Chapters.OrderByDescending(o => o.UpdatedDate).FirstOrDefault() ?? new Chapter();
+        <li class="row-list">
+            <div class="col-first">
+                @if (item.Voted.HasValue)
+                {
+                    <div class="vote @(item.Voted.GetValueOrDefault() == 1 ? "likes" : item.Voted.GetValueOrDefault() == -1 ? "dislikes" : "")">
+                        <div class="action vote-up" data-vote='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.NOVEL, "Vote": 1}'><i class="fa fa-chevron-up"></i></div>
+                        <div class="score @((item.VoteUp - item.VoteDown) < 0 ? "dislikes" : "likes")">@(item.VoteUp.GetValueOrDefault() - item.VoteDown.GetValueOrDefault())</div>
+                        <div class="action vote-down" data-vote='{"SourceID": @item.ID, "SourceTable": @R.SourceTable.NOVEL, "Vote": -1}'><i class="fa fa-chevron-down"></i></div>
+                    </div>
+                }
+            </div>
+            <div class="col-image">
+                <a href="#" class="">
+                    <img src="@item.ImageUrl.ToGoogleDriveImageUrl()" class="img-rounded" alt="@item.Title's cover" />
+                </a>
+            </div>
+            <div class="col-content">
+                <ul class="list-unstyled list-inline fs-09em">
+                    @*<li class="label label-success">@item.SharingLevel.Translate(R.ShareLevel.Translate)</li>*@
+                    <li class="label label-success">@item.RawLanguage.Translate(R.Language.Translate)</li>
+                    @TagHelper.DisplayTags(item.Tags.Where(w => w.TagType == R.TagType.CATEGORY), "label label-primary")
+                    <li class="label label-info">@(item.RawLanguage == R.Language.ENGLISH ? "Original" : "Translation")</li>
+                    @TagHelper.DisplayTags(item.Tags.Where(w => w.TagType == R.TagType.GENRE), "label label-warning")
+                </ul>
+                <div>
+                    @foreach (var list in item.UserLists ?? new List<UserList>())
+                    {
+                        if (list.IsPlaceInFrontOfTitle)
+                        {
+                            var connector = item.Connectors.SingleOrDefault(w => w.ConnectorType == R.ConnectorType.NOVEL_USERLIST && w.TargetID == list.ID);
+                            if (connector != null && connector.IsDeleted == false)
+                            {
+                                <span class="fa animated bounce no-margin" style="@(list.IsColorIcon ? string.Format("color:{0};", list.Color.ToColorHex()) : "")" title="this indicated that it in your @list.Name">&#xf@(Convert.ToString(list.Icon, 16).PadLeft(3, '0'));</span>
+                            }
+                        }
+                    }
+                    <a href="@Url.Action("Detail", "Novel", new { ID = item.ID, Seo = item.Title.ToSeo() })">@item.Title</a>
+                </div>
+                <div>@Html.Raw(item.Synopsis.FormatString(100))</div>
+                <ul class="list-unstyled list-inline">
+                    <li title="Updated Date"><i class="fa fa-calendar"></i>@Html.Raw(item.UpdatedDate.FormatDate())</li>
+                    <li title="Status">
+                        <i class="fa fa-certificate"></i>@Html.Raw(item.Status.Translate(R.TranslationStatus.Translate).FormatString())
+                    </li>
+                    <li title="Comments">
+                        <i class="fa fa-comments-o"></i><a href="@Url.Action("Detail", "Novel", new { ID = item.ID, Seo = item.Title.ToSeo() })#comments">@item.CommentCount.GetValueOrDefault() comments</a>
+                    </li>
+                    @if (true)
+                    {
+                        <li title="Rating">
+                            <i class="fa fa-diamond" title="@(item.QualityRated == 0 ? "You haven't  rated this" : string.Format("You rated {0:0.0} star(s)", item.QualityRated/2))"></i>@RatingHelper.DisplayRating(summarize)
+                        </li>
+                    }
+                    @if (latestRelease.ID > 0)
+                    {
+                        <li title="Latest Release">
+                            <i class="fa fa-rss"></i><a href="@Url.Action("Detail", "Chapter", new { latestRelease.ID, Seo = latestRelease.Title.ToSeo() })">@item.Title @latestRelease.Title.ExtractVolumeChapter()</a>
+                        </li>
+                    }
+                    @foreach (var group in item.Groups)
+                    {
+                        <li title="Translations Group">
+                            <i class="fa fa-group"></i><a href="@Url.Action("Detail", "Group", new { ID = group.ID, Seo = group.Name.ToSeo() })">@group.Name</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </li>
+    }
+</ul>

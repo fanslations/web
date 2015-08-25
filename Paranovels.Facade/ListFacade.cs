@@ -26,13 +26,25 @@ namespace Paranovels.Facade
             }
         }
 
-        public PagedList<UserList> Search(SearchModel<ListCriteria> searchModel)
+        public PagedList<ListGrid> Search(SearchModel<ListCriteria> searchModel)
         {
             using (var uow = UnitOfWorkFactory.Create<NovelContext>())
             {
                 var service = new ListService(uow);
+                var pagedList = service.Search(searchModel);
 
-                return service.Search(searchModel);
+                var userIDs = pagedList.Data.Select(s => s.UserID).ToList();
+
+                var users = service.View<User>().Where(w => userIDs.Contains(w.ID)).ToList();
+
+                pagedList.Data = pagedList.Data.Select(s =>
+                {
+                    s.User = users.SingleOrDefault(w => w.ID == s.UserID) ?? new User();
+
+                    return s;
+                }).ToList();
+
+                return pagedList;
             }
         }
 
@@ -43,25 +55,26 @@ namespace Paranovels.Facade
                 var service = new ListService(uow);
 
                 var detail = service.Get(criteria);
-
-                var listSeriesIDs = service.View<Connector>()
+                // connector
+                detail.Connectors = service.View<Connector>()
                         .Where(w => w.IsDeleted == false && w.ConnectorType == R.ConnectorType.SERIES_USERLIST)
-                        .Where(w => w.TargetID == detail.ID).Select(s => s.SourceID).ToList();
+                        .Where(w => w.TargetID == detail.ID).ToList();
 
+                // series
+                var listSeriesIDs = detail.Connectors.Select(s => s.SourceID).ToList();
                 detail.Series = new SeriesService(uow).Search(new SearchModel<SeriesCriteria>
                 {
                     Criteria = new SeriesCriteria { IDs = listSeriesIDs },
                     PagedListConfig = new PagedListConfig { PageSize = int.MaxValue }
                 }).Data;
-
+                // releases
                 detail.Releases = service.View<Release>().Where(w => listSeriesIDs.Contains(w.SeriesID)).ToList();
-
+                // user reads
                 var releaseIDs = detail.Releases.Select(s => s.ID);
                 detail.Reads = service.View<UserRead>().Where(w => w.UserID == criteria.ByUserID)
                     .Where(w => w.SourceTable == R.SourceTable.RELEASE)
                     .Where(w => releaseIDs.Contains(w.SourceID)).ToList();
-
-
+                
                 return detail;
             }
         }

@@ -1,0 +1,60 @@
+﻿@using Paranovels.Common
+@using Paranovels.DataModels
+@using Thi.Core
+@model Thi.Core.PagedList<Paranovels.ViewModels.ListGrid>
+@{
+    ViewBag.Title = "Public Lists";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="section">
+    <div class="header">
+        <a href="/" class="action left" role="button" title="back"><i class="fa fa-chevron-circle-left"></i></a>
+        <h1 class="title">
+            @ViewBag.Title
+        </h1>
+    </div>
+    <div class="content">
+        <p>Reading lists that has share level public will show up here. It can be anything from your top 10 favorites list, your recommendation for virtual reality novels etc...</p>
+    </div>
+    <ul class="grid">
+        @foreach (var item in Model.Data)
+        {
+            var summarize = new Summarize
+            {
+                ID = item.ID,
+                SourceID = item.ID,
+                SourceTable = R.SourceTable.USERLIST,
+                QualityCount = item.QualityCount.GetValueOrDefault(),
+                QualityScore = item.QualityScore.GetValueOrDefault()
+            };
+            <li data-form='{ "ID":@item.ID, "UserID":@item.UserID, "InlineEditProperty":"Priority", "Priority": @item.Priority}' class="row-list">
+                <div class="col-content">
+                    <strong>
+                        <a href="@Url.Action("Detail", new { ID = item.ID, Seo = item.Name.ToSeo() })">
+                            <span class="fa" style="color: @(item.Color.ToColorHex());">&#xf@(Convert.ToString(item.Icon, 16).PadLeft(3, '0'));</span>@item.Name
+                        </a>
+                    </strong>
+                    <p>@Html.Raw(item.Description.FormatString())</p>
+                    <ul class="list-unstyled list-inline">
+                        <li title="Updated Date"><i class="fa fa-calendar"></i>@Html.Raw(item.UpdatedDate.FormatDate())</li>
+                        <li title="Username">
+                            <i class="fa fa-user"></i><a href="@Url.Action("Profile", "User", new { ID = item.User.ID, Seo = item.User.Username.ToSeo() })">@item.User.Username</a>
+                        </li>
+                        <li title="Comments">
+                            <i class="fa fa-comments-o"></i><a href="@Url.Action("Detail", "Series", new { ID = item.ID, Seo = item.Name.ToSeo() })#comments">@item.CommentCount.GetValueOrDefault() comments</a>
+                        </li>
+                        @if (true)
+                        {
+                            <li title="Rating">
+                                <i class="fa fa-diamond" title="@(item.QualityRated == 0 ? "You haven't  rated this" : string.Format("You rated {0:0.0} star(s)", item.QualityRated/2))"></i>@RatingHelper.DisplayRating(summarize)
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+            </li>
+        }
+    </ul>
+    @Html.Raw(Model.ToPagination(Request.RawUrl, 5))
+
+</section>

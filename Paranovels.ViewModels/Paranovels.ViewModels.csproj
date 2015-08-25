@@ -80,6 +80,7 @@
     <Compile Include="Form Models\ReadForm.cs" />
     <Compile Include="Form Models\ListForm.cs" />
     <Compile Include="Form Models\PreferenceForm.cs" />
+    <Compile Include="Form Models\CheckForm.cs" />
     <Compile Include="Form Models\ViewForm.cs" />
     <Compile Include="Form Models\AkaForm.cs" />
     <Compile Include="Form Models\VoteForm.cs" />
@@ -94,21 +95,31 @@
     <Compile Include="Form Models\UserForm.cs" />
     <Compile Include="Grid Models\CommentGrid.cs" />
     <Compile Include="Grid Models\AuthorGrid.cs" />
+    <Compile Include="Grid Models\FeedGrid.cs" />
     <Compile Include="Grid Models\GroupGrid.cs" />
     <Compile Include="Grid Models\ListGrid.cs" />
     <Compile Include="Grid Models\ContentGrid.cs" />
+    <Compile Include="Grid Models\GlossaryGrid.cs" />
     <Compile Include="Grid Models\ReleaseGrid.cs" />
+    <Compile Include="Grid Models\NovelGrid.cs" />
     <Compile Include="Grid Models\SeriesGrid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Criteria Models\TranslatorCriteria.cs" />
+    <Compile Include="Sort Extensions\ListGrid.SortExtension.cs" />
+    <Compile Include="Sort Extensions\GlossaryGrid.SortExtension.cs" />
     <Compile Include="Sort Extensions\CommentGrid.SortExtension.cs" />
     <Compile Include="Sort Extensions\AuthorGrid.SortExtension.cs" />
     <Compile Include="Sort Extensions\ReleaseGrid.SortExtension.cs" />
     <Compile Include="Sort Extensions\GroupGrid.SortExtension.cs" />
+    <Compile Include="Sort Extensions\NovelGrid.SortExtension.cs" />
     <Compile Include="Sort Extensions\SeriesGrid.SortExtension.cs" />
     <Compile Include="Form Models\StickyForm.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Paranovels.Common\Paranovels.Common.csproj">
+      <Project>{373b031c-5e05-427b-b90e-2fed1747aa5d}</Project>
+      <Name>Paranovels.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Paranovels.DataModels\Paranovels.DataModels.csproj">
       <Project>{06a45be9-db3f-485b-bb9c-30f9d65e2f53}</Project>
       <Name>Paranovels.DataModels</Name>

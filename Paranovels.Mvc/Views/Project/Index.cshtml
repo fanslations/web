@@ -1,19 +1,47 @@
-﻿@using Thi.Core
-
+﻿@using Paranovels.Common
+@using Paranovels.ViewModels
+@using Thi.Core
+@model dynamic
 @{
     ViewBag.Title = "Projects";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var novels = ViewBag.Novels as PagedList<NovelGrid>;
+    var sortedModel = new SortedModel
+    {
+        Sorted = Request.QueryString["sorted"] ?? "new",
+        SortOptions = novels.Data.AsQueryable().SortOptions()
+    };
 }
 <section class="section">
     <div class="header">
-        <h2 class="title">
-            <i class="fa fa-book-o"></i>Projects
-        </h2>
+        <a href="/" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
+        <h1 class="title">
+            Projects
+        </h1>
     </div>
     <div class="content">
         <div class="alert alert-info">This page is a placeholder for Fanslations translation projects.</div>
-        <div>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="@Url.Action("Index", "Project", new { Do = "Novels" })" aria-controls="home" role="tab" data-toggle="tab">
+                    <i class="fa fa-book"></i>Novels
+                </a>
+            </li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="section tab-pane active" id="tabpanel">
+                <div class="content">
+                    @{
+                        Html.RenderPartial("_Sorted", sortedModel);
+                    }
+                </div>
+                @{ Html.RenderPartial("~/Views/Novel/_NovelGridPartial.cshtml", novels); }
+                @Html.Raw(novels.ToPagination(Request.RawUrl, 5))
+            </div>
         </div>
     </div>
-</section>
 
+</section>

@@ -48,10 +48,24 @@
             <div>@RatingHelper.DisplayRating(Model.Summarize)</div>
         </div>
         <div class="detail-group">
-            <strong>Latests Release</strong>
+            <strong>Latest Releases</strong>
             <div>
-                @{ var release = Model.Releases.OrderByDescending(o => o.Date).FirstOrDefault() ?? new Release(); }
-                <a href="@Url.Action("Detail", "Release", new { ID = release.ID, Seo = release.Title.ToSeo() })">@release.Title</a> on @release.Date.FormatDate()
+                <ul class="list-unstyled">
+                    @if (!Model.Releases.Any())
+                    {
+                        <li>
+                            There is no release yet! <a class="" href="@Url.Action("Index", "Release", new { Do = "add", SeriesID = Model.ID })">Click to <i class="fa fa-plus-circle"></i>submit new release.</a>
+                        </li>
+                    }
+                    @foreach (var release in Model.Releases.OrderByDescending(o => o.Date).Take(5))
+                    {
+                        var series = Model.Series.SingleOrDefault(w => w.ID == release.SeriesID) ?? new Series();
+                        <li>
+                            <span>@release.Date.FormatDate()</span> - 
+                            <a href="@Url.Action("Detail", "Release", new {ID = release.ID, Seo = release.Title.ToSeo()})">@series.Title @release.Title.ExtractVolumeChapter()</a>
+                        </li>
+                    }
+                </ul>
             </div>
         </div>
         <div class="detail-group">
@@ -108,20 +122,6 @@
                     </li>
                     <li>
                         @Html.ImproveThis(m => m.Feeds, customHtmlIcon: @"<i class=""fa fa-plus-circle""></i>Add new rss feed")
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="detail-group">
-            <strong>Glossary</strong>
-            <div>
-                <ul class="list-unstyled no-margin">
-                    @Html.Raw(string.Join("", Model.Glossaries.Select(s => string.Format(@"<li>{0} - {1}</li>", s.Raw, s.Final))))
-                    <li>
-                        @Html.Raw(Model.Glossaries.Count > 0 ? "" : "".FormatString())
-                        <div>
-                            @Html.ImproveThis(m => m.Glossaries, customHtmlIcon: @"<i class=""fa fa-plus-circle""></i>Add new glossary")
-                        </div>
                     </li>
                 </ul>
             </div>
@@ -193,69 +193,92 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="@(tab.Equals("Comments",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
-                <a href="?Tab=Comments#comments" aria-controls="home" role="tab"><i class="fa fa-comments"></i>Comments (@Model.Summarize.CommentCount)</a>
+                <a href="?Tab=Comments#tabcontent" aria-controls="tabcontent" role="tab"><i class="fa fa-comments"></i>Comments (@Model.Summarize.CommentCount)</a>
             </li>
             <li role="presentation" class="@(tab.Equals("Series",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
-                <a href="?Tab=Series#series" aria-controls="home" role="tab"><i class="fa fa-book"></i>Series (@Model.Series.Count)</a>
+                <a href="?Tab=Series#tabcontent" aria-controls="tabcontent" role="tab"><i class="fa fa-book"></i>Series (@Model.Series.Count)</a>
             </li>
             <li role="presentation" class="@(tab.Equals("Releases",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
-                <a href="?Tab=Releases#releases" aria-controls="home" role="tab"><i class="fa fa-rss"></i>Releases (@Model.Releases.Count)</a>
+                <a href="?Tab=Releases#tabcontent" aria-controls="tabcontent" role="tab"><i class="fa fa-rss"></i>Releases (@Model.Releases.Count)</a>
+            </li>
+            <li role="presentation" class="@(tab.Equals("Glossaries",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                <a href="?Tab=Glossaries" aria-controls="tabcontent" role="tab"><i class="fa fa-puzzle-piece"></i>Glossaries (@Model.Glossaries.Count)</a>
             </li>
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
-            @if (tab.Equals("Comments", StringComparison.OrdinalIgnoreCase))
-            {
-                <div role="tabpanel" class="tab-pane active" id="comments">
-                    @{
-                Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.ID, SourceTable = R.SourceTable.GROUP, Sorted = Request.QueryString["sorted"] });
-                    }
-                </div>
-            }
-            @if (tab.Equals("Series", StringComparison.OrdinalIgnoreCase))
-            {
-                <div role="tabpanel" class="tab-pane active section" id="series">
-                    @{
-                Html.RenderPartial("~/Views/Series/_SeriesGridPartial.cshtml", new PagedList<SeriesGrid>
+            <div role="tabpanel" class="tab-pane active" id="tabcontent">
+                @if (tab.Equals("Comments", StringComparison.OrdinalIgnoreCase))
                 {
-                    Data = Model.Series.Select(s => new SeriesGrid()
-                    {
-                        ID = s.ID,
-                        Title = s.Title,
-                        UpdatedDate = s.UpdatedDate,
-                        Status = s.Status,
-                        Synopsis = s.Synopsis,
-                        ImageUrl = s.ImageUrl,
-                        Groups = new List<Group>(),
-                        UserLists = new List<UserList>(),
-                        Connectors = new List<Connector>(),
-                        Releases = Model.Releases.Where(w => w.SeriesID == s.ID).ToList()
-                    }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
-                });
-                    }
-                </div>
-            }
-            @if (tab.Equals("Releases", StringComparison.OrdinalIgnoreCase))
-            {
-                <div role="tabpanel" class="tab-pane active section" id="releases">
-                    @{
-                Html.RenderPartial("~/Views/Release/_Release.cshtml", new PagedList<ReleaseGrid>
+                    Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.ID, SourceTable = R.SourceTable.GROUP, Sorted = Request.QueryString["sorted"] });
+                }
+                @if (tab.Equals("Series", StringComparison.OrdinalIgnoreCase))
                 {
-                    Data = Model.Releases.Select(s => new ReleaseGrid
+                    Html.RenderPartial("~/Views/Series/_SeriesGridPartial.cshtml", new PagedList<SeriesGrid>
                     {
-                        ID = s.ID,
-                        Title = s.Title,
-                        Date = s.Date,
-                        Url = s.Url,
-                        Series = Model.Series.SingleOrDefault(w => w.ID == s.SeriesID),
-                        Group = Model,
-                        UserLists = new List<UserList>(),
-                        Connectors = new List<Connector>(),
-                    }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
-                });
-                    }
-                </div>
-            }
+                        Data = Model.Series.Select(s => new SeriesGrid()
+                        {
+                            ID = s.ID,
+                            Title = s.Title,
+                            UpdatedDate = s.UpdatedDate,
+                            Status = s.Status,
+                            Synopsis = s.Synopsis,
+                            ImageUrl = s.ImageUrl,
+                            Groups = new List<Group>(),
+                            UserLists = new List<UserList>(),
+                            Connectors = new List<Connector>(),
+                            Tags = new List<Tag>(),
+                            Releases = Model.Releases.Where(w => w.SeriesID == s.ID).ToList()
+                        }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
+                    });
+                }
+                @if (tab.Equals("Releases", StringComparison.OrdinalIgnoreCase))
+                {
+                    Html.RenderPartial("~/Views/Release/_Release.cshtml", new PagedList<ReleaseGrid>
+                    {
+                        Data = Model.Releases.Select(s => new ReleaseGrid
+                        {
+                            ID = s.ID,
+                            Title = s.Title,
+                            Date = s.Date,
+                            Url = s.Url,
+                            Series = Model.Series.SingleOrDefault(w => w.ID == s.SeriesID),
+                            Group = Model,
+                            UserLists = new List<UserList>(),
+                            Connectors = new List<Connector>(),
+                            Tags = new List<Tag>(),
+                        }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
+                    });
+                }
+                @if (tab.Equals("Glossaries", StringComparison.OrdinalIgnoreCase))
+                {
+                    Html.RenderPartial("~/Views/Glossary/_GlossaryGridPartial.cshtml", new PagedList<GlossaryGrid>
+                    {
+                        Data = Model.Glossaries.Select(s => new GlossaryGrid
+                        {
+                            ID = s.ID,
+                            UpdatedDate = s.UpdatedDate,
+                            SourceID = s.SourceID,
+                            SourceTable = s.SourceTable,
+                            Type = s.Type,
+                            RawLanguage = s.RawLanguage,
+                            Raw = s.Raw,
+                            Final = s.Final,
+                            Definition = s.Definition
+                        }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
+                    });
+
+                    <div class="well well-sm">
+                        @{
+                    Html.RenderPartial("~/Views/Glossary/_FormPartial.cshtml", new GlossaryForm
+                    {
+                        SourceID = Model.ID,
+                        SourceTable = R.SourceTable.SERIES,
+                    });
+                        }
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </section>

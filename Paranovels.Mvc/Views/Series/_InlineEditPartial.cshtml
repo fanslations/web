@@ -63,7 +63,7 @@
                         </div>
                     }
                     <div class="checkbox">
-                        <a href="@Url.Action("List", "Tag", new { ID = R.TagType.NOVEL_GENRE, Seo = Model.InlineEditProperty.ToSeo(), ReturnUrl = Request.UrlReferrer })"><i class="fa fa-plus"></i> Add new genre</a>
+                        <a href="@Url.Action("List", "Tag", new { ID = R.TagType.GENRE, Seo = Model.InlineEditProperty.ToSeo(), ReturnUrl = Request.UrlReferrer })"><i class="fa fa-plus"></i> Add new genre</a>
                     </div>
                 </fieldset>
             }
@@ -84,7 +84,7 @@
                         </div>
                     }
                     <div class="checkbox">
-                        <a href="@Url.Action("List", "Tag", new { ID = R.TagType.NOVEL_CATEGORY, Seo = Model.InlineEditProperty.ToSeo(), ReturnUrl = Request.UrlReferrer })"><i class="fa fa-plus"></i> Add new category</a>
+                        <a href="@Url.Action("List", "Tag", new { ID = R.TagType.CATEGORY, Seo = Model.InlineEditProperty.ToSeo(), ReturnUrl = Request.UrlReferrer })"><i class="fa fa-plus"></i> Add new category</a>
                     </div>
                 </fieldset>
 
@@ -200,6 +200,39 @@
             }
             else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Feeds))
             {
+                <script>
+                    require(['jquery'], function($) {
+                        'use strict';
+                        var $status = $('#@Model.InlineEditProperty-status').removeClass();
+                        var $submit = $('#@(Model.InlineEditProperty)Submit');
+                        $('#@Model.InlineEditProperty').on('change', function() {
+
+                            var formData = new FormData();
+                            formData.append("feedUrl", $('#@Model.InlineEditProperty').val());
+                            $.ajax({
+                                type: 'post',
+                                url: '@Url.Action("CheckFeed")',
+                                data: formData, //$form.serialize(),
+                                contentType: false,
+                                processData: false,
+                                async: false,
+                                cache: false,
+                                success: function(datas) {
+                                    if (datas.length == 0) {
+                                        $status.addClass('alert alert-danger').html('Found ' + datas.length + ' items in feed. Please check feed url make sure it correct.');
+                                        $submit.attr('disabled', 'disabled');
+                                    } else {
+                                        $submit.removeAttr('disabled');
+                                    }
+                                }
+                            });
+                        });
+                    });
+                </script>
+                <div class="alert alert-info">
+                    <p>Thank you for helping us update the rss feed for @Model.Model.Title series. Please add rss feed for @Model.Model.Title series only and not rss feed for the translations group.</p>
+                    <p>A rss feed of a series usually is the rss feed of a category/tag on wordpress and label on blogspot.</p>
+                </div>
                 var feed = Model.Model.Feeds.SingleOrDefault(w => w.ID == int.Parse(Request.QueryString["FeedID"] ?? "0")) ?? new Feed { Status = R.FeedStatus.ACTIVE };
                 <label for="@Model.InlineEditProperty" class="sr-only">Rss Feed Url</label>
                 <input id="@Model.InlineEditProperty" type="url" class="form-control" name="@(Model.InlineEditProperty)[0].@feed.PropertyName(m=>m.Url)" value="@feed.Url" required />
@@ -214,6 +247,7 @@
                     }
                     <input type="hidden" class="form-control" name="@(Model.InlineEditProperty)[0].@feed.PropertyName(m=>m.ID)" value="@feed.ID" required />
                 </div>
+
             }
             else if (Model.InlineEditProperty == Model.PropertyName(m => m.Model.Akas))
             {
@@ -239,9 +273,9 @@
             <input type="hidden" name="ID" value="@Model.ID" />
             <input type="hidden" name="InlineEditProperty" value="@Model.InlineEditProperty" />
         </div>
+        <div id="@Model.InlineEditProperty-status"></div>
         <div class="form-group clearfix">
             <button id="@(Model.InlineEditProperty)Submit" type="submit" class="btn btn-primary"><i class="fa fa-save"></i>Save</button>
-
             <button id="@(Model.InlineEditProperty)Cancel" type="button" class="btn btn-default"><i class="fa fa-times-circle"></i>Cancel</button>
         </div>
     </form>

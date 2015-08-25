@@ -9,8 +9,11 @@ using Thi.Core;
 
 namespace Paranovels.ViewModels
 {
-    class ListGrid : UserList, IGrid
+    public class ListGrid : UserList, IGrid
     {
+        [NotMapped]
+        public User User { get; set; }
+
         // from Summarize
         public int? CommentCount { get; set; }
         public int? ViewCount { get; set; }

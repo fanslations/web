@@ -1,4 +1,4 @@
-// This class was automatically generated with love by ST4bby 8/14/2015 4:20:13 PM.
+// This class was automatically generated with love by ST4bby 8/25/2015 4:37:48 PM.
 // Read more at http://jbubriski.github.com/ST4bby/
 
 namespace Paranovels.DataModels
@@ -38,15 +38,6 @@ namespace Paranovels.DataModels
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("ImageUrl", TypeName = "varchar"), Display(Name="Image Url"), StringLength(100)]
 		public string ImageUrl { get; set; }
 		
-		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("TotalChapter", TypeName = "int"), Display(Name="Total Chapter")]
-		public int TotalChapter { get; set; }
-		
-		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("ReleasedDate", TypeName = "datetime"), Display(Name="Released Date")]
-		public DateTime ReleasedDate { get; set; }
-		
-		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("CompletedDate", TypeName = "datetime"), Display(Name="Completed Date")]
-		public DateTime CompletedDate { get; set; }
-		
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Status", TypeName = "int"), Display(Name="Status")]
 		public int Status { get; set; }
 		
@@ -58,5 +49,20 @@ namespace Paranovels.DataModels
 		
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("FinalLanguage", TypeName = "int"), Display(Name="Final Language")]
 		public int FinalLanguage { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("SharingLevel", TypeName = "int"), Display(Name="Sharing Level")]
+		public int SharingLevel { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("IsEnabledTranslator", TypeName = "bit"), Display(Name="Is Enabled Translator")]
+		public bool IsEnabledTranslator { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("IsEnabledEditor", TypeName = "bit"), Display(Name="Is Enabled Editor")]
+		public bool IsEnabledEditor { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("IsEnabledProofreader", TypeName = "bit"), Display(Name="Is Enabled Proofreader")]
+		public bool IsEnabledProofreader { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("IsEnabledSuggestor", TypeName = "bit"), Display(Name="Is Enabled Suggestor")]
+		public bool IsEnabledSuggestor { get; set; }
 	}
 }

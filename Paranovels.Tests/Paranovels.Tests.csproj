@@ -60,6 +60,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Paranovels.Common\TitleExtention_Tests.cs" />
     <Compile Include="Paranovels.Facade\FeedFacade_Tests.cs" />
     <Compile Include="Paranovels.Facade\ListFacade_Tests.cs" />
     <Compile Include="Paranovels.Proxies\FeedChecker_UnitTest.cs" />
