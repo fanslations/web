@@ -30,7 +30,8 @@ namespace Paranovels.Tests.Paranovels.Common
                 {"HHTP Chapters 23&24","23&24"},
                 {"Death March kara Hajimaru Isekai Kyusoukyoku Chapter 7 Intermission 5","7 Intermission 5"},
                 {"Magic, Mechanics, Shuraba Volume 1 Epilogue", "Epilogue"},
-                {"Elqueeness’ Chapter-8. Summoned to the Human World Part 1","Chapter 8. Summoned to the Human World Part 1"}
+                {"Elqueeness’ Chapter-8. Summoned to the Human World Part 1","Chapter 8. Summoned to the Human World Part 1"},
+                {"THE NEW GATE Vol. 3 Chapter 1 – Part 3", "Chapter 1 – Part 3"}
             };
 
             foreach (var title in titles)

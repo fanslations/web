@@ -19,6 +19,7 @@
         </ul>
     </section>
 }
+
 @*<section class="section">
         <div class="header">
             <h2 class="title">
@@ -37,7 +38,9 @@
         <h1 class="title">
             <i class="fa fa-rss-square"></i>Latest Releases
         </h1>
+        <a class="action right toggle" data-toggle='{ "target": "#search-container"}'><i class="fa fa-search"></i></a>
     </div>
+    @{ Html.RenderPartial("_Search", Request.QueryString.ToCriteria<ReleaseCriteria>()); }
     @{ Html.RenderPartial("~/Views/Release/_Release.cshtml", releases); }
-    <p><a href="@Url.Action("Index", "Release", new { pi = 2, ps = 50 })" class="btn btn-primary btn-block"><i class="fa fa-history"></i>View Older Releases</a></p>
+    <p><a href="@Request.RawUrl.UrlAddQuery("pi", int.Parse(Request.QueryString["pi"] ?? "1")+1)" class="btn btn-primary btn-block"><i class="fa fa-history"></i>View Older Releases</a></p>
 </section>

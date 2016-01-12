@@ -1,4 +1,4 @@
-// This class was automatically generated with love by ST4bby 8/25/2015 4:37:48 PM.
+// This class was automatically generated with love by ST4bby 9/1/2015 4:59:57 PM.
 // Read more at http://jbubriski.github.com/ST4bby/
 
 namespace Paranovels.DataModels
@@ -64,5 +64,8 @@ namespace Paranovels.DataModels
 		
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("IsEnabledSuggestor", TypeName = "bit"), Display(Name="Is Enabled Suggestor")]
 		public bool IsEnabledSuggestor { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("IsEnabledCrowdTranslation", TypeName = "bit"), Display(Name="Is Enabled Crowd Translation")]
+		public bool IsEnabledCrowdTranslation { get; set; }
 	}
 }

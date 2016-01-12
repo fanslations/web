@@ -69,6 +69,8 @@ namespace Paranovels.Services
                     UpdatedBy = sm.Glossary.UpdatedBy,
                     UpdatedDate = sm.Glossary.UpdatedDate,
                     IsDeleted = sm.Glossary.IsDeleted,
+                    SourceID = sm.Glossary.SourceID,
+                    SourceTable = sm.Glossary.SourceTable,
                     RawLanguage = sm.Glossary.RawLanguage,
                     Raw = sm.Glossary.Raw,
                     Final = sm.Glossary.Final,

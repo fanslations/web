@@ -4,8 +4,13 @@
 
 @{
     var queryStrings = Request.QueryString.AllKeys.Where(w => w != "sorted");
+
 }
-<div class="position-relative">
+<div class="">
+    <div class="pull-right">
+        <a href="@Request.RawUrl.UrlAddQuery("alt","rss20")" class="rss20"><i class="fa">&#xf09e;</i>rss 2.0</a>
+        <a href="@Request.RawUrl.UrlAddQuery("alt","atom10")" class="atom10"><i class="fa">&#xf09e;</i>atom 1.0</a>
+    </div>
     <form class="form-inline" method="GET" action="@Request.RawUrl">
         <div class="hidden">
             @foreach (var item in queryStrings)
@@ -26,8 +31,4 @@
             <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
         </noscript>
     </form>
-    <div class="position-absolute top-0px right-0px">
-        <a href="@Request.RawUrl.UrlAddQuery("Alt","rss20")" class="rss20"><i class="fa">&#xf09e;</i>rss 2.0</a>
-        <a href="@Request.RawUrl.UrlAddQuery("Alt","atom10")" class="atom10"><i class="fa">&#xf09e;</i>atom 1.0</a>
-    </div>
 </div>

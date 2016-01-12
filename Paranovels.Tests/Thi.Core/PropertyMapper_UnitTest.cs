@@ -22,7 +22,6 @@ namespace Paranovels.Tests.Thi.Core
             new PropertyMapper<NovelForm, Novel>(novelForm, novel).Map(null);
 
             Assert.AreEqual(novelForm.Title, novel.Title);
-            Assert.AreEqual(novel.CompletedDate, DefaultValue.DateTime);
         }
     }
 }

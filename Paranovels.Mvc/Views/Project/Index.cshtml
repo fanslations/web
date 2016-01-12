@@ -13,6 +13,17 @@
         SortOptions = novels.Data.AsQueryable().SortOptions()
     };
 }
+
+@section CurrentMenu
+{
+    <section class="menu-section">
+        <h2 class="menu-section-title">Current</h2>
+        <ul class="menu-section-list">
+            <li><a href="@Url.Action("Add", "Novel", new { ID = 0, Seo = "new translations project".ToSeo() })"><i class="fa fa-lightbulb-o"></i>Start new project</a></li>
+        </ul>
+    </section>
+}
+
 <section class="section">
     <div class="header">
         <a href="/" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
@@ -21,7 +32,6 @@
         </h1>
     </div>
     <div class="content">
-        <div class="alert alert-info">This page is a placeholder for Fanslations translation projects.</div>
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active">

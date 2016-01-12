@@ -207,7 +207,7 @@
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="tabcontent">
+            <div role="tabpanel" class="section tab-pane active" id="tabcontent">
                 @if (tab.Equals("Comments", StringComparison.OrdinalIgnoreCase))
                 {
                     Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.ID, SourceTable = R.SourceTable.GROUP, Sorted = Request.QueryString["sorted"] });
@@ -268,13 +268,14 @@
                         }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
                     });
 
-                    <div class="well well-sm">
+                    <div id="addglossaryalert" class="alert alert-info cursor-pointer action toggle" data-toggle='{ "target": "#addglossary, #addglossaryalert"}'>Click to add new glossary</div>
+                    <div id="addglossary" class="well well-sm" style="display: none;">
                         @{
                     Html.RenderPartial("~/Views/Glossary/_FormPartial.cshtml", new GlossaryForm
-                    {
-                        SourceID = Model.ID,
-                        SourceTable = R.SourceTable.SERIES,
-                    });
+                            {
+                                SourceID = Model.ID,
+                                SourceTable = R.SourceTable.GROUP,
+                            });
                         }
                     </div>
                 }

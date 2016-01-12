@@ -1,4 +1,4 @@
-﻿@model Paranovels.ViewModels.ChapterDetail  
+﻿@model Paranovels.ViewModels.ChapterDetail
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -10,7 +10,7 @@
     @foreach (var content in Model.Contents.OrderBy(o => o.Paragraph))
     {
 
-                <p>@content.Final</p>
+        <p>@content.Final</p>
 
     }
 </div>

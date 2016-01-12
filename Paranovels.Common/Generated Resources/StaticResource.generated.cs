@@ -272,6 +272,32 @@ namespace Paranovels.Common //.Generated Resources
 						}; // end translate dictionary
         }	
         /// <summary>
+        /// CrawlType auto generated class.
+        /// </summary>
+        public partial class CrawlType 
+        {		
+			/// <summary>
+			/// Blogspot
+			/// </summary>
+			[Description("Blogspot")]
+			public const int BLOGSPOT = 200;
+				
+			/// <summary>
+			/// Wordpress
+			/// </summary>
+			[Description("Wordpress")]
+			public const int WORDPRESS = 100;
+				
+			
+			public const string ClassName = "CrawlType";
+			public static readonly Dictionary<int,string> Translate = new Dictionary<int,string> {
+												{200,"Blogspot"},
+							
+												{100,"Wordpress"},
+							
+						}; // end translate dictionary
+        }	
+        /// <summary>
         /// FeedStatus auto generated class.
         /// </summary>
         public partial class FeedStatus 
@@ -353,11 +379,6 @@ namespace Paranovels.Common //.Generated Resources
         public partial class InlineEditType 
         {		
 			/// <summary>
-			/// Checkboxes
-			/// </summary>
-			[Description("Checkboxes")]
-			public const string CHECKBOXES = "checkboxes";
-			/// <summary>
 			/// Date
 			/// </summary>
 			[Description("Date")]
@@ -367,11 +388,6 @@ namespace Paranovels.Common //.Generated Resources
 			/// </summary>
 			[Description("Number")]
 			public const string NUMBER = "number";
-			/// <summary>
-			/// Radios
-			/// </summary>
-			[Description("Radios")]
-			public const string RADIOS = "radios";
 			/// <summary>
 			/// Text
 			/// </summary>
@@ -385,13 +401,9 @@ namespace Paranovels.Common //.Generated Resources
 			
 			public const string ClassName = "InlineEditType";
 			public static readonly Dictionary<string,string> Translate = new Dictionary<string,string> {
-												{"checkboxes","Checkboxes"},
-							
 												{"date","Date"},
 							
 												{"number","Number"},
-							
-												{"radios","Radios"},
 							
 												{"text","Text"},
 							
@@ -629,6 +641,12 @@ namespace Paranovels.Common //.Generated Resources
 			public const int CHAPTER = 100;
 				
 			/// <summary>
+			/// Chapter
+			/// </summary>
+			[Description("Chapter")]
+			public const int CHAPTER_CRAWLED = 110;
+				
+			/// <summary>
 			/// News
 			/// </summary>
 			[Description("News")]
@@ -644,6 +662,8 @@ namespace Paranovels.Common //.Generated Resources
 			public const string ClassName = "ReleaseType";
 			public static readonly Dictionary<int,string> Translate = new Dictionary<int,string> {
 												{100,"Chapter"},
+							
+												{110,"Chapter"},
 							
 												{200,"News"},
 							
@@ -880,6 +900,32 @@ namespace Paranovels.Common //.Generated Resources
 												{1,"Glossaries"},
 							
 												{5,"Themes"},
+							
+						}; // end translate dictionary
+        }	
+        /// <summary>
+        /// TextType auto generated class.
+        /// </summary>
+        public partial class TextType 
+        {		
+			/// <summary>
+			/// Chapter
+			/// </summary>
+			[Description("Chapter")]
+			public const int CHAPTER = 100;
+				
+			/// <summary>
+			/// Summary
+			/// </summary>
+			[Description("Summary")]
+			public const int SUMMARY = 200;
+				
+			
+			public const string ClassName = "TextType";
+			public static readonly Dictionary<int,string> Translate = new Dictionary<int,string> {
+												{100,"Chapter"},
+							
+												{200,"Summary"},
 							
 						}; // end translate dictionary
         }	

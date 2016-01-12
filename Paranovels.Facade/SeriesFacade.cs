@@ -185,7 +185,7 @@ namespace Paranovels.Facade
                                 .Where(w => w.ConnectorType == R.ConnectorType.SERIES_FEED && w.SourceID == detail.ID)
                                 .Join(service.View<Feed>().All(), c => c.TargetID, f => f.ID, (c, f) => f).ToList();
 
-                detail.Glossaries = detail.Glossaries = service.View<Glossary>().Where(w => w.SourceTable == R.SourceTable.SERIES && w.SourceID == detail.ID).ToList();
+                detail.Glossaries = service.View<Glossary>().Where(w => w.SourceTable == R.SourceTable.SERIES && w.SourceID == detail.ID).ToList();
 
                 detail.UserAction = new UserActionFacade().Get(new ViewForm { UserID = criteria.ByUserID, SourceID = detail.ID, SourceTable = R.SourceTable.SERIES });
 

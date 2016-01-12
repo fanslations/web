@@ -63,6 +63,8 @@ namespace Paranovels.Facade
                 qChapter = qChapter.Where(w => w.NovelID == detail.ID);
 
                 detail.Chapters = qChapter.ToList();
+                // glossary
+                detail.Glossaries = service.View<Glossary>().Where(w => w.SourceTable == R.SourceTable.NOVEL && w.SourceID == detail.ID).ToList();
                 // summarize
                 detail.Summarize = service.View<Summarize>().Where(w => w.SourceTable == R.SourceTable.NOVEL && w.SourceID == detail.ID).SingleOrDefault() ?? new Summarize();
                 return detail;

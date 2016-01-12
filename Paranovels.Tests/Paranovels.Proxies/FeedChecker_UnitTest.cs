@@ -12,7 +12,7 @@ namespace Paranovels.Tests.Paranovels.Proxies
         public void WordPress_feed_test()
         {
             var uc = new FeedChecker();
-            var chapters = uc.Check("http://arkmachinetranslations.com/feed/");
+            var chapters = uc.Check("https://mystiquetranslations.wordpress.com/category/dragon-martial-emperor/feed/");
 
             Assert.IsTrue(chapters.Any());
         }

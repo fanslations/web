@@ -110,5 +110,35 @@ namespace Paranovels.Facade
                 return qGlossary.ToList();
             }
         }
+
+        public IList<Novel> SearchNovel(NovelCriteria criteria)
+        {
+            using (var uow = UnitOfWorkFactory.Create<NovelContext>())
+            {
+                var qNovel = uow.Repository<Novel>().All();
+
+                if (!string.IsNullOrWhiteSpace(criteria.Query))
+                {
+                    qNovel = qNovel.Where(w => w.Title.Contains(criteria.Query));
+                }
+
+                return qNovel.ToList();
+            }
+        }
+
+        public IList<Chapter> SearchChapter(ChapterCriteria criteria)
+        {
+            using (var uow = UnitOfWorkFactory.Create<NovelContext>())
+            {
+                var qChapter = uow.Repository<Chapter>().All();
+
+                if (!string.IsNullOrWhiteSpace(criteria.Query))
+                {
+                    qChapter = qChapter.Where(w => w.Title.Contains(criteria.Query));
+                }
+
+                return qChapter.ToList();
+            }
+        }
     }
 }

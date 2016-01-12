@@ -203,12 +203,13 @@
             var css = {
                 wrapper: {
                     position: "relative",
-                    display: "inline-block"
+                    //display: "inline-block"
                 },
                 hint: {
                     position: "absolute",
-                    top: "0",
+                    //top: "0",
                     left: "0",
+                    width: "100%",
                     borderColor: "transparent",
                     boxShadow: "none",
                     opacity: "1"

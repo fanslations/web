@@ -62,7 +62,7 @@
                 else
                 {
                     <li>
-                        <a class="menu" href="/account/loginmodal/?ReturnUrl=@Request.RawUrl" data-modal='{}'><i class="fa fa-user"></i>Log in or Sign up</a>
+                        <a class="menu" href="/account/loginmodal/?ReturnUrl=@Request.RawUrl" data-modal='{}'><i class="fa fa-sign-in"></i>Log in</a>
                     </li>
                 }
             </ul>
@@ -84,8 +84,17 @@
                         <li><a href="@Url.Action("Index", "Series")"><i class="fa fa-book"></i>Series</a></li>
                         <li><a href="@Url.Action("Index", "Group")"><i class="fa fa-group"></i>Groups</a></li>
                         <li><a href="@Url.Action("Index", "Author")"><i class="fa fa-group"></i>Authors</a></li>
-                        <li><a href="@Url.Action("List", "Tag", new { ID = 3, Seo = "categories" })"><i class="fa fa-tag"></i>Categories</a></li>
-                        <li><a href="@Url.Action("List", "Tag", new { ID = 2, Seo = "geners" })"><i class="fa fa-tag"></i>Genres</a></li>
+
+                    </ul>
+                </section>
+                <section class="menu-section">
+                    <h2 class="menu-section-title">Tags / Labels</h2>
+                    <ul class="menu-section-list">
+                        <li>
+                            <a href="@Url.Action("List", "Tag", new { ID = 3, Seo = "categories" })"><i class="fa fa-tag"></i>Categories</a></li>
+                        <li>
+                            <a href="@Url.Action("List", "Tag", new { ID = 2, Seo = "geners" })"><i class="fa fa-tag"></i>Genres</a>
+                        </li>
                     </ul>
                 </section>
                 <section class="menu-section">
@@ -109,7 +118,7 @@
                             <a href="@Url.Action("Index", "UserList")"><i class="fa fa-list-alt"></i>My Lists</a>
                         </li>
                         <li>
-                            <a href="@Url.Action("Index", "UserPreference")"><i class="fa fa-cog"></i>Preferences</a>
+                            <a href="@Url.Action("Index", "UserPreference")"><i class="fa fa-cog"></i>Tags Preferences</a>
                         </li>
 
                         @if (User.Identity.IsAuthenticated)

@@ -1,10 +1,13 @@
-﻿@using Microsoft.Ajax.Utilities
-@using Paranovels.Common
+﻿@using Paranovels.Common
 @using Paranovels.ViewModels
 @using Thi.Core
 @model Paranovels.ViewModels.ChapterDetail
 @{
-    ViewBag.Title = "Detail";
+    var volume = Model.Volume == 0 ? "" : " Volume " + Model.Volume;
+    var chapterNumber = Model.Number == 0 ? "" : " Chapter " + Model.Number;
+    var chapterTitle = string.IsNullOrWhiteSpace(Model.Title) ? "" : " - " + Model.Title;
+
+    ViewBag.Title = (Model.Novel.Title + volume + chapterNumber + chapterTitle);
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -12,29 +15,44 @@
     <div class="header">
         <a href="javascript:history.go(-1);" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
         <h1 class="title">
-            @Model.Title
+            @ViewBag.Title
         </h1>
     </div>
     <div class="content">
-        <div class="detail-group">
-            <strong class="sr-only">Info</strong>
-            <div>
-                <ul class="list-unstyled list-inline">
-                    <li>Posed on @Model.UpdatedDate</li>
-                </ul>
+        @if (Model.Status != R.ChapterStatus.RELEASED)
+        {
+            <div class="alert alert-warning">This chapter is still in progress.</div>
+        }
+        else
+        {
+            if (Model.Novel.IsEnabledSuggestor)
+            {
+                <div class="alert alert-warning">Help improve this translations by hover over the paragraph and click on <i class="fa fa-edit"></i>Improve this translations.</div>
+            }
+            <div class="detail-group">
+                <strong class="sr-only">Info</strong>
+                <div>
+                    <ul class="list-unstyled list-inline">
+                        <li>Posed on @Model.UpdatedDate</li>
+                    </ul>
+                </div>
             </div>
-        </div>
-        <div class="detail-group">
-            <strong class="sr-only">Content</strong>
-            <div>
-                @foreach (var paragraph in Model.Contents)
-                {
-                    <p>
-                        @Html.Raw(paragraph.Final)
-                    </p>
-                }
+            <div class="detail-group">
+                <strong class="sr-only">Content</strong>
+                <div>
+                    @foreach (var paragraph in Model.Contents)
+                    {
+                        <p class="hover">
+                            @Html.Raw(paragraph.Final)
+                            @if (Model.Novel.IsEnabledSuggestor)
+                            {
+                                <a class="show pull-right" href="@Url.Action("SuggestTranslations", "Content", new {ID = paragraph.ID, Seo = "improve this translations".ToSeo()})"><i class="fa fa-edit"></i>Improve this translations</a>
+                            }
+                        </p>
+                    }
+                </div>
             </div>
-        </div>
+        }
     </div>
 </section>
 @if (Model.Novel.ID > 0)
@@ -46,7 +64,7 @@
                     <a class="" href="@Url.Action("PreviousChapter", "Chapter", new { ID = Model.Novel.ID, Seo = Model.Novel.Title.ToSeo(), ChapterID = Model.ID })"><i class="fa fa-arrow-circle-left"></i>Previous Chapter</a>
                 </li>
                 <li class="active toc">
-                    <a class="" href="@Url.Action("Detail", "Novel", new { ID = Model.Novel.ID, Seo = Model.Novel.Title.ToSeo(), Tab = "Releases" })">Table of Contents</a>
+                    <a class="" href="@Url.Action("Detail", "Novel", new { ID = Model.Novel.ID, Seo = Model.Novel.Title.ToSeo(), Tab = "toc" })">Table of Contents</a>
                 </li>
                 <li class="active next">
                     <a class="" href="@Url.Action("NextChapter", "Chapter", new { ID = Model.Novel.ID, Seo = Model.Novel.Title.ToSeo(), ChapterID = Model.ID })">Next Chapter<i class="fa fa-arrow-circle-right right"></i></a>

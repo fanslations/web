@@ -71,7 +71,7 @@ namespace Paranovels.Mvc.Controllers
             return View("_InlineEditPartial", form);
         }
 
-        public JsonResult CheckFeedUpdate(int id = 5)
+        public JsonResult CheckFeedUpdate(int id)
         {
             var results = Facade<FeedFacade>().CheckFeed(R.ConnectorType.SERIES_FEED, id);
             return Json(results, JsonRequestBehavior.AllowGet);

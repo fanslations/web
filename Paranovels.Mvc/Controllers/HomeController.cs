@@ -15,7 +15,7 @@ namespace Paranovels.Mvc.Controllers
         {
             // get last 100 releases
             var searchModel = CreateSearchModel(criteria);
-            searchModel.PagedListConfig = new PagedListConfig { PageSize = 40 };
+            searchModel.PagedListConfig.PageSize = 40;
             var pagedList = Facade<SearchFacade>().Search(searchModel);
 
             // alternative version

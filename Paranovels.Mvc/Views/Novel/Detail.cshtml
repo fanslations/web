@@ -8,6 +8,8 @@
     ViewBag.Title = Model.Title;
     Layout = "~/Views/Shared/_Layout.cshtml";
 
+    var tab = Request.QueryString["Tab"] ?? "Toc";
+    
     var latestChapter = Model.Chapters.OrderByDescending(o => o.Volume).ThenByDescending(o => o.Number).FirstOrDefault() ?? new Chapter();
 }
 
@@ -109,77 +111,113 @@
     <div class="content">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active">
-                <a href="#toc" aria-controls="toc" role="tab" data-toggle="tab">Table of contents</a>
+            <li role="presentation" class="@(tab.Equals("Toc", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                <a href="?Tab=Toc" aria-controls="tabpanel" role="tab">Table of contents</a>
             </li>
-            <li role="presentation">
-                <a href="#glossary" aria-controls="glossary" role="tab" data-toggle="tab">Glossary</a>
+            <li role="presentation" class="@(tab.Equals("Comments",StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                <a href="?Tab=Comments" aria-controls="tabpanel" role="tab">Glossary</a>
+            </li>
+            <li role="presentation" class="@(tab.Equals("Glossaries", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                <a href="?Tab=Glossaries" aria-controls="tabpanel" role="tab">Glossary</a>
             </li>
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="toc">
-                <table class="table table-condensed table-responsive table-hover">
-                    <thead>
-                        <tr>
-                            <th>Vol</th>
-                            <th>Ch</th>
-                            <th>Chapter Title</th>
-                            <th>Date</th>
-                            <th>Raw</th>
-                            <th>Translate</th>
-                            <th>Edit</th>
-                            <th>Proofread</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var chapter in Model.Chapters.OrderBy(o => o.Volume).ThenBy(o => o.Number))
+            <div role="tabpanel" class="tab-pane active" id="tabpanel">
+                @if (tab.Equals("Toc", StringComparison.OrdinalIgnoreCase))
+                {
+                    <table class="table table-condensed table-responsive table-hover">
+                        <thead>
+                            <tr>
+                                <th>Vol</th>
+                                <th>Ch</th>
+                                <th>Chapter Title</th>
+                                <th>Date</th>
+                                <th>Raw</th>
+                                <th>Translate</th>
+                                <th>Edit</th>
+                                <th>Proofread</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var chapter in Model.Chapters.OrderBy(o => o.Volume).ThenBy(o => o.Number))
+                            {
+                                var volume = chapter.Volume == 0 ? "" : " Volume " + chapter.Volume;
+                                var chapterNumber = chapter.Number == 0 ? "" : " Chapter " + chapter.Number;
+                                var chapterTitle = string.IsNullOrWhiteSpace(chapter.Title) ? "" : " - " + chapter.Title;
+                                var seo = (Model.Title + volume + chapterNumber + chapterTitle).ToSeo();
+                                <tr>
+                                    <td>
+                                        @chapter.Volume
+                                    </td>
+                                    <td>
+                                        @chapter.Number
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("Detail", "Chapter", new {ID = chapter.ID, Seo = seo})">@(chapter.Title.IfNullOrWhiteSpace(null) ?? string.Format(@"Volume {0} Chapter {1}", chapter.Volume, chapter.Number))</a>
+                                    </td>
+                                    <td>
+                                        @Html.Raw(chapter.InsertedDate.FormatDate())
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("Translating", "Chapter", new {ID = chapter.ID, Seo = seo})">Clean</a>
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("Translating", "Chapter", new {ID = chapter.ID, Seo = seo})">Translate</a>
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("Editing", "Chapter", new {ID = chapter.ID, Seo = seo})">Edit</a>
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("Proofreading", "Chapter", new {ID = chapter.ID, Seo = seo})">Proofread</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        @if (!Model.Chapters.Any())
                         {
-                            <tr>
-                                <td>
-                                    @chapter.Volume
-                                </td>
-                                <td>
-                                    @chapter.Number
-                                </td>
-                                <td>
-                                    <a href="@Url.Action("Detail", "Chapter", new {ID = chapter.ID, Seo = chapter.Title.IfNullOrWhiteSpace("no title").ToSeo()})">@(chapter.Title.IfNullOrWhiteSpace(null) ?? string.Format(@"Volume {0} Chapter {1}", chapter.Volume, chapter.Number))</a>
-                                </td>
-                                <td>
-                                    @Html.Raw(chapter.InsertedDate.FormatDate())
-                                </td>
-                                <td>
-                                    <a href="@Url.Action("Edit", "Chapter", new {ID = chapter.ID, Seo = chapter.Title.ToSeo()})">Clean</a>
-                                </td>
-                                <td>
-                                    <a href="@Url.Action("Translating", "Chapter", new {ID = chapter.ID, Seo = chapter.Title.ToSeo()})">Translate</a>
-                                </td>
-                                <td>
-                                    <a href="@Url.Action("Editing", "Chapter", new {ID = chapter.ID, Seo = chapter.Title.ToSeo()})">Edit</a>
-                                </td>
-                                <td>
-                                    <a href="@Url.Action("Proofreading", "Chapter", new {ID = chapter.ID, Seo = chapter.Title.ToSeo()})">Proofread</a>
-                                </td>
-                            </tr>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="8">No chapter found.</td>
+                                </tr>
+                            </tfoot>
                         }
-                    </tbody>
-                    @if (!Model.Chapters.Any())
+                    </table>
+                    <p>
+                        <a href="@Url.Action("Add", "Chapter", new {NovelID = Model.ID, Title = Model.Title, Volume = latestChapter.Volume, Number = latestChapter.Number + 1})">
+                            <i class="fa fa-plus-circle"></i>Add new chapter
+                        </a>
+                    </p>
+                }
+                @if (tab.Equals("Glossaries", StringComparison.OrdinalIgnoreCase))
+                {
+                    Html.RenderPartial("~/Views/Glossary/_GlossaryGridPartial.cshtml", new PagedList<GlossaryGrid>
                     {
-                        <tfoot>
-                            <tr>
-                                <td colspan="8">No chapter found.</td>
-                            </tr>
-                        </tfoot>
-                    }
-                </table>
-                <p>
-                    <a href="@Url.Action("Add", "Chapter", new { NovelID = Model.ID, Title = Model.Title, Volume = latestChapter.Volume, Number = latestChapter.Number  + 1 })">
-                        <i class="fa fa-plus-circle"></i>Add new chapter
-                    </a>
-                </p>
-            </div>
-            <div role="tabpanel" class="tab-pane" id="glossary">
-                .
+                        Data = Model.Glossaries.Select(s => new GlossaryGrid
+                        {
+                            ID = s.ID,
+                            UpdatedDate = s.UpdatedDate,
+                            SourceID = s.SourceID,
+                            SourceTable = s.SourceTable,
+                            Type = s.Type,
+                            RawLanguage = s.RawLanguage,
+                            Raw = s.Raw,
+                            Final = s.Final,
+                            Definition = s.Definition
+                        }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
+                    });
+                    <div id="addglossaryalert" class="alert alert-info cursor-pointer action toggle" data-toggle='{ "target": "#addglossary, #addglossaryalert"}'>Click to add new glossary</div>
+                    <div id="addglossary" class="well well-sm" style="display: none;">
+                        @{
+                            Html.RenderPartial("~/Views/Glossary/_FormPartial.cshtml", new GlossaryForm
+                            {
+                                SourceID = Model.ID,
+                                SourceTable = R.SourceTable.NOVEL,
+                                RawLanguage = Model.RawLanguage
+                            });
+                        }
+                    </div>
+                }
             </div>
         </div>
     </div>

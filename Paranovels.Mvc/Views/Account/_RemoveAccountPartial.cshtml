@@ -2,33 +2,26 @@
 
 @if (Model.Count > 0)
 {
-    <h4>Registered Logins</h4>
-    <table class="table">
-        <tbody>
-            @foreach (var account in Model)
+    <div class="well well-sm">
+        <h2>Linked Social Accounts</h2>
+        @foreach (var account in Model)
+        {
+            if (ViewBag.ShowRemoveButton)
             {
-                <tr>
-                    <td>@account.LoginProvider</td>
-                    <td>
-                        @if (ViewBag.ShowRemoveButton)
-                        {
-                            using (Html.BeginForm("Disassociate", "Account"))
-                            {
-                            @Html.AntiForgeryToken()
-                            <div>
-                                @Html.Hidden("loginProvider", account.LoginProvider)
-                                @Html.Hidden("providerKey", account.ProviderKey)
-                                <input type="submit" class="btn btn-default" value="Remove" title="Remove this @account.LoginProvider login from your account" />
-                            </div>
-                            }
-                        }
-                        else
-                        {
-                            @: &nbsp;
-                        }
-                    </td>
-                </tr>
+                using (Html.BeginForm("Disassociate", "Account"))
+                {
+                    @Html.AntiForgeryToken()
+                    <div>
+                        @Html.Hidden("loginProvider", account.LoginProvider)
+                        @Html.Hidden("providerKey", account.ProviderKey)
+                        <button type="submit" class="btn btn-default" title="Remove this @account.LoginProvider login from your account"><i class="fa fa-chain-broken"></i>@account.LoginProvider</button>
+                    </div>
+                }
             }
-        </tbody>
-    </table>
+            else
+            {
+                @: &nbsp;
+            }
+        }
+    </div>
 }

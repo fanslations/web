@@ -18,6 +18,7 @@
 
 @helper DisplayGrid(ReleaseGrid item, string cssClass = "row-list")
 {
+    item.Tags = item.Tags ?? new List<Tag>();
     var summarize = new Summarize
     {
         ID = item.ID,

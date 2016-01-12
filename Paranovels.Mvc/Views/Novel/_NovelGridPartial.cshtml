@@ -72,13 +72,7 @@
                     @if (latestRelease.ID > 0)
                     {
                         <li title="Latest Release">
-                            <i class="fa fa-rss"></i><a href="@Url.Action("Detail", "Chapter", new { latestRelease.ID, Seo = latestRelease.Title.ToSeo() })">@item.Title @latestRelease.Title.ExtractVolumeChapter()</a>
-                        </li>
-                    }
-                    @foreach (var group in item.Groups)
-                    {
-                        <li title="Translations Group">
-                            <i class="fa fa-group"></i><a href="@Url.Action("Detail", "Group", new { ID = group.ID, Seo = group.Name.ToSeo() })">@group.Name</a>
+                            <i class="fa fa-rss"></i><a href="@Url.Action("Detail", "Chapter", new { latestRelease.ID, Seo = (item.Title + " " + latestRelease.Title.ExtractVolumeChapter() + " " + latestRelease.Title).ToSeo() })">@item.Title @latestRelease.Title.ExtractVolumeChapter()</a>
                         </li>
                     }
                 </ul>

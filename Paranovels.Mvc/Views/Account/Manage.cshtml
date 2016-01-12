@@ -7,7 +7,16 @@
     ViewBag.Title = "Manage Account";
 
     var tab = Model ?? "credentials";
-    var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
+    var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes().OrderBy(o => o.AuthenticationType);
+    var providerIconMapper = new Dictionary<string, string>
+    {
+        {"Google", "google"},
+        {"Facebook", "facebook"},
+        {"Twitter", "twitter"},
+        {"Microsoft", "windows"},
+        {"Reddit", "reddit"},
+        {"WordPress", "wordpress"},
+    };
 }
 
 
@@ -20,8 +29,13 @@
     <div class="content">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist" style="width: 100%;">
-            <li role="presentation" class="@(tab == "credentials" ? "active" : "")"><a href="#credentials" aria-controls="credentials" role="tab" data-toggle="tab">Credentials</a></li>
-            <li role="presentation"><a href="@Url.Action("Index","UserList")" aria-controls="other" role="tab" data-toggle="">My Lists</a></li>
+            <li role="presentation" class="@(tab == "credentials" ? "active" : "")">
+                <a href="#credentials" aria-controls="credentials" role="tab" data-toggle="tab">Credentials</a>
+            </li>
+            <li role="presentation" class="@(tab == "socialaccounts" ? "active" : "")">
+                <a href="#socialaccounts" aria-controls="socialaccounts" role="tab" data-toggle="tab">Social Accounts</a>
+            </li>
+            @*<li role="presentation"><a href="@Url.Action("Index","UserList")" aria-controls="other" role="tab" data-toggle="">My Lists</a></li>*@
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
@@ -29,30 +43,37 @@
                 <div id="password">
                     @if (ViewBag.HasLocalPassword)
                     {
-                        <h4>Change Password Form</h4>
+                        <h2>Change Password Form</h2>
                         @Html.Partial("_ChangePasswordPartial")
                     }
                     else
                     {
-                        <h4>Create Local Login</h4>
+                        <h2>Create Local Login</h2>
                         @Html.Partial("_SetPasswordPartial")
                     }
                 </div>
+            </div>
+            <div id="socialaccounts" role="tabpanel" class="tab-pane @(tab == "socialaccounts" ? "active" : "")">
                 <div id="externallogin">
+
                     @Html.Action("RemoveAccountList")
-                    @using (Html.BeginForm("LinkLogin", "Account", new { ReturnUrl = Request.RawUrl }))
-                    {
-                        @Html.AntiForgeryToken()
-                        @Html.ValidationSummary()
-                        <div id="socialLoginList">
-                            <p>
-                                @foreach (AuthenticationDescription p in loginProviders)
-                                {
-                                    <button type="submit" class="btn btn-default" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account">@p.AuthenticationType</button>
-                                }
-                            </p>
-                        </div>
-                    }
+                    <div class="well well-sm">
+                        @using (Html.BeginForm("LinkLogin", "Account", new { ReturnUrl = Request.RawUrl }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary()
+                            <div id="socialLoginList">
+                                <p>
+                                    @foreach (AuthenticationDescription p in loginProviders)
+                                    {
+                                        <button type="submit" class="btn btn-default" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account">
+                                            <i class="fa fa-@providerIconMapper[p.AuthenticationType]"></i>@p.AuthenticationType
+                                        </button>
+                                    }
+                                </p>
+                            </div>
+                        }
+                    </div>
                 </div>
 
             </div>

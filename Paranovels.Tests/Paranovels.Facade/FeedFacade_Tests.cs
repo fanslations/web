@@ -16,7 +16,7 @@ namespace Paranovels.Tests.Paranovels.Facade
             var feedFacade = new FeedFacade();
 
             //var groupResult = feedFacade.CheckFeed(R.ConnectorType.GROUP_FEED);
-            var seriesResult = feedFacade.CheckFeed(R.ConnectorType.SERIES_FEED);
+            //var seriesResult = feedFacade.CheckFeed();
         }
     }
 }

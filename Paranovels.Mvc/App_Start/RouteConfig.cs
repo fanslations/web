@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -20,8 +21,9 @@ namespace Paranovels.Mvc
             routes.MapRoute(
                 name: "SEO",
                 url: "{controller}/{action}/{seo}/{id}",
-                defaults: new { controller = "Home", action = "Index" }
-                );
+                defaults: new {}
+            );
+
             // default
             routes.MapRoute(
                 name: "Default",
@@ -33,13 +35,13 @@ namespace Paranovels.Mvc
             routes.MapRoute(
                 name: "M",
                 url: "m",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new {}
                 );
             // for /mobile
             routes.MapRoute(
                 name: "Mobile",
                 url: "mobile",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new {}
                 );
         }
     }

@@ -40,7 +40,7 @@ namespace Paranovels.Common
             
             var chapter = "";
             // get volume/book
-            var match = Regex.Match(title, @"(c|ch|chap|chapter|chapters)\s?(?<c>(\d+([a-z-,\.\&\+\s]*\d+)*)+)", RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase);
+            var match = Regex.Match(title, @"(c|ch|chap|chapter|chapters)\s?(?<c>(\d+([a-z-,–\.\&\+\s]*\d+)*)+)", RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase);
             if (match.Success)
             {
                 if (match.Value.Contains("s"))
@@ -58,7 +58,7 @@ namespace Paranovels.Common
             }
             else
             {
-                match = Regex.Match(title, @"(?<c>(\d+([a-z-,\.\&\+\s]*\d+)*)+)", RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase);
+                match = Regex.Match(title, @"(?<c>(\d+([a-z-,–\.\&\+\s]*\d+)*)+)", RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase);
                 if (match.Success)
                 {
                     chapter = "Chapter " + match.Groups["c"].Value;
@@ -74,7 +74,7 @@ namespace Paranovels.Common
             title = title.ToLower();
 
             isNotChapter = title.Contains("updates") || title.Contains("update post") || title.Contains("not a chapter")
-                || Regex.Match(title, @"(?<c>(\d+([a-z-,\.\&\+\s]*\d+)*)+)", RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase).Success == false;
+                || Regex.Match(title, @"(?<c>(\d+([a-z-,–\.\&\+\s]*\d+)*)+)", RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase).Success == false;
 
             return isNotChapter == false;
         }

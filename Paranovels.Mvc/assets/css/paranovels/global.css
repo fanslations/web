@@ -105,27 +105,29 @@ a {
 
 
 a.rss20 {
-    padding: 3px 8px 3px 0px;
+    padding: 1px 8px 1px 0px;
     border: 1px solid darkorange;
     border-radius: 3px;
+    font-size: 0.9em;
 }
 a.rss20 .fa {
     color: white;
     border-right: 1px solid darkorange;
-    padding: 4px 18px 4px 10px;
+    padding: 2px 18px 3px 10px;
     margin-right: 5px;
     background: darkorange;
 }
 
 a.atom10 {
-    padding: 3px 8px 3px 0px;
+    padding: 1px 8px 1px 0px;
     border: 1px solid darkgoldenrod;
     border-radius: 3px;
+    font-size: 0.9em;
 }
 a.atom10 .fa {
     color: white;
     border-right: 1px solid darkgoldenrod;
-    padding: 4px 18px 4px 10px;
+    padding: 2px 18px 3px 10px;
     margin-right: 5px;
     background: darkgoldenrod;
 }

@@ -32,6 +32,7 @@
                     Group = Model.Group,
                     UserLists = new List<UserList>(),
                     Connectors = new List<Connector>(),
+                    Tags = new List<Tag>()
 
                 }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
             });

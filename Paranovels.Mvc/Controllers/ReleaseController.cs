@@ -124,5 +124,11 @@ namespace Paranovels.Mvc.Controllers
             form.Model = Facade<SeriesFacade>().GetRelease(new ReleaseCriteria() { ID = form.ID });
             return View("_InlineEditPartial", form);
         }
+
+        public JsonResult Fix(int id)
+        {
+            var release = Facade<FeedFacade>().FixRelease(id);
+            return Json(release, JsonRequestBehavior.AllowGet);
+        }
     }
 }

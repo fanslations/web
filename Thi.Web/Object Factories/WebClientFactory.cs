@@ -13,7 +13,7 @@ namespace Thi.Web
         {
             ServicePointManager.Expect100Continue = false; // remove "Expect: 100-continue" header
             var webClient = new WebClient();
-            webClient.Headers.Add("User-Agent", "User-Agent:Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.81 Safari/537.36");
+            webClient.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.130 Safari/537.36");
             webClient.Headers.Add("X-Requested-With", "XMLHttpRequest");
             return webClient;
         }

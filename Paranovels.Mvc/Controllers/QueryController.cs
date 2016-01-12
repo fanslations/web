@@ -26,6 +26,13 @@ namespace Paranovels.Mvc.Controllers
             return Json(tagList, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult Release(ReleaseCriteria criteria)
+        {
+            var results = Facade<QueryFacade>().SearchRelease(criteria);
+            return Json(results, JsonRequestBehavior.AllowGet);
+        }
+
+
         public JsonResult Series(SeriesCriteria criteria)
         {
             var results = Facade<QueryFacade>().SearchSeries(criteria);

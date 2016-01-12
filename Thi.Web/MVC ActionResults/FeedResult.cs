@@ -35,7 +35,7 @@ namespace Thi.Web
                     var formatter = new Atom10FeedFormatter(this.feed);
                     formatter.WriteTo(writer);
                 }
-                if (type == "rss20")
+                else
                 {
                     context.HttpContext.Response.ContentType = "application/rss+xml";
                     var formatter = new Rss20FeedFormatter(this.feed);

@@ -86,7 +86,7 @@
                             <ul class="list-unstyled">
                                 <li>
                                     <a href="@Url.Action("Detail", "Author", new { ID = item.ID, Seo = item.Name.ToSeo() })">@Html.Raw(item.Name.FormatString())</a>
-                                    @connector.ImproveThis(m => m.TargetID, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Connector") } })
+                                    @connector.ImproveThis(m => m.TargetID, htmlAttributes: new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Connector") } })
                                 </li>
                             </ul>
                         }
@@ -129,7 +129,7 @@
                     @if (!Model.Releases.Any())
                     {
                         <li>
-                            There is no release yet! <a class="" href="@Url.Action("Index", "Release", new { Do = "add", SeriesID = Model.ID })">Click to <i class="fa fa-plus-circle"></i>submit new release.</a>
+                            There is no release yet! <a class="" href="@Url.Action("Index", "Release", new { Do = "add", SeriesID = Model.ID })">Click to <i class="fa fa-plus-circle"></i>Submit new release.</a>
                         </li>
                     }
                     @foreach (var release in Model.Releases.OrderByDescending(o => o.Date).Take(5))
@@ -229,7 +229,7 @@
                             <ul class="list-unstyled">
                                 <li>
                                     <a href="@Url.Action("Detail", "Group", new { ID = item.ID, Seo = item.Name.ToSeo() })">@Html.Raw(item.Name.FormatString()) <small>(@item.Url)</small></a>
-                                    @connector.ImproveThis(m => m.TargetID, new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Connector") } })
+                                    @connector.ImproveThis(m => m.TargetID, htmlAttributes: new Dictionary<string, object> { { "data-posturl", Url.Action("InlineEdit", "Connector") } })
                                 </li>
                             </ul>
                         }
@@ -313,7 +313,7 @@
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="tabcontent">
+            <div role="tabpanel" class="section gfhfdh tab-pane active" id="tabcontent">
                 @if (tab.Equals("Comments", StringComparison.OrdinalIgnoreCase))
                 {
                     Html.RenderAction("Index", "Comment", new CommentCriteria { SourceID = Model.ID, SourceTable = R.SourceTable.SERIES, Sorted = Request.QueryString["sorted"] });
@@ -355,14 +355,14 @@
                             Definition = s.Definition
                         }).AsQueryable().Sort(new BaseCriteria { Sorted = Request.QueryString["sorted"] }).ToList()
                     });
-
-                    <div class="well well-sm">
+                    <div id="addglossaryalert" class="alert alert-info cursor-pointer action toggle" data-toggle='{ "target": "#addglossary, #addglossaryalert"}'>Click to add new glossary</div>
+                    <div id="addglossary" class="well well-sm" style="display: none;">
                         @{
                             Html.RenderPartial("~/Views/Glossary/_FormPartial.cshtml", new GlossaryForm
                             {
                                 SourceID = Model.ID,
                                 SourceTable = R.SourceTable.SERIES,
-                                RawLanguage =  Model.RawLanguage
+                                RawLanguage = Model.RawLanguage
                             });
                         }
                     </div>

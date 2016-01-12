@@ -18,5 +18,6 @@ namespace Paranovels.ViewModels
         public List<Aka> Akas { get; set; }
         public string RawUrl { get; set; }
         public Summarize Summarize { get; set; }
+        public List<Glossary> Glossaries { get; set; }
     }
 }

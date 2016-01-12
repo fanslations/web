@@ -12,18 +12,13 @@
             </div>
         }
         <div class="content">
-            @if (!string.IsNullOrWhiteSpace(message))
-            {
-                <p class="alert alert-danger margin-bottom-10px">
-                    @(new MvcHtmlString(message))
-                </p>
-            }
-            @if (!User.Identity.IsAuthenticated && showLogin)
-            {
-                <p class="alert alert-danger no-margin">
-                    You must be logged in to access this page. Click <a href="/account/loginmodal?ReturnUrl=@Request.RawUrl" data-modal='{}'>here to login</a>.
-                </p>
-            }
+            <p class="alert alert-danger no-margin">
+                @(new MvcHtmlString(message ?? "You must be logged in to access this page."))
+                @if (showLogin)
+                {
+                    <a href="/account/loginmodal?ReturnUrl=@Request.RawUrl" data-modal='{}'>Click here to <i class="fa fa-sign-in"></i>login.</a>
+                } 
+            </p>
         </div>
     </section>
 }

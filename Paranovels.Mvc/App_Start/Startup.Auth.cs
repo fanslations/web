@@ -4,6 +4,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
+using Owin.Security.Providers.Reddit;
+using Owin.Security.Providers.WordPress;
 using Paranovels.Mvc.Models;
 
 namespace Paranovels.Mvc
@@ -47,6 +49,14 @@ namespace Paranovels.Mvc
             app.UseGoogleAuthentication(
                 clientId: "455221808943-r9i596dqdebng8a70qedcorb4enbgf9h.apps.googleusercontent.com",
                 clientSecret: "wNLTk4_UdfTP3QyDAWJxkgTp");
+
+            app.UseRedditAuthentication(
+                clientId: "geb7DVHGk3cYpw",
+                clientSecret: "4L6kZdKp8jTILJz2kn2uB-9AI9I");
+
+            app.UseWordPressAuthentication(
+                clientId: "42332",
+                clientSecret: "0tjEH8avJpCtCG2npHqEW8gbLqZQniYmDTrsHN5SE3HVssMuyhwHiyRmeGsULpzK");
         }
     }
 }

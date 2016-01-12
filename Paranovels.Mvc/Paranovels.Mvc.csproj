@@ -145,6 +145,9 @@
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
+    <Reference Include="Owin.Security.Providers">
+      <HintPath>..\packages\Owin.Security.Providers.1.24\lib\net45\Owin.Security.Providers.dll</HintPath>
+    </Reference>
     <Reference Include="SimpleMvcSitemap">
       <HintPath>..\packages\SimpleMvcSitemap.2.3.1\lib\net45\SimpleMvcSitemap.dll</HintPath>
     </Reference>
@@ -328,6 +331,8 @@
     <Content Include="assets\img\colorpicker\select_hue.png" />
     <Content Include="assets\img\colorpicker\submit.png" />
     <Content Include="assets\img\no-image.png" />
+    <Content Include="assets\img\search-dark.png" />
+    <Content Include="assets\img\search-white.png" />
     <Content Include="assets\img\sharing\Email.png" />
     <Content Include="assets\img\sharing\Facebook.png" />
     <Content Include="assets\img\sharing\Google+.png" />

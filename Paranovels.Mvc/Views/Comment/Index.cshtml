@@ -330,39 +330,60 @@
     </div>
     <div class="form margin-top-10px">
         <div id="new-form" class="well well-sm no-margin">
-            <form ng-submit="vm.saveNewComment()">
-                <div class="form-group">
-                    <label for="new-comment" class="sr-only">Comment</label>
-                    <textarea id="new-comment" name="Comment" class="form-control" rows="4" placeholder="Enter your comment here..." ng-model="vm.new.Comment" required></textarea>
-                </div>
-                <div class="clearfix">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-comment"></i>Post Comment</button>
-                </div>
-            </form>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form ng-submit="vm.saveNewComment()">
+                    <div class="form-group">
+                        <label for="new-comment" class="sr-only">Comment</label>
+                        <textarea id="new-comment" name="Comment" class="form-control" rows="4" placeholder="Enter your comment here..." ng-model="vm.new.Comment" required></textarea>
+                    </div>
+                    <div class="clearfix">
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-comment"></i>Post Comment</button>
+                    </div>
+                </form>
+            }
+            else
+            {
+                @SecurityHelper.Unauthorized("You must be logged in to post comment.")
+            }
         </div>
         <div id="reply-form" class="hidden well well-sm no-margin">
-            <form ng-submit="vm.saveReplyComment()">
-                <div class="form-group">
-                    <label for="reply-comment" class="sr-only">Comment</label>
-                    <textarea id="reply-comment" name="Comment" class="form-control" rows="4" placeholder="Enter your comment here..." ng-model="vm.reply.Comment" required style="height: 50px !important;"></textarea>
-                </div>
-                <div class="clearfix">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-reply"></i>Post Reply</button>
-                    <button type="button" class="btn btn-default" ng-click="vm.cancelReplyComment()"><i class="fa fa-times-circle"></i>Cancel</button>
-                </div>
-            </form>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form ng-submit="vm.saveReplyComment()">
+                    <div class="form-group">
+                        <label for="reply-comment" class="sr-only">Comment</label>
+                        <textarea id="reply-comment" name="Comment" class="form-control" rows="4" placeholder="Enter your comment here..." ng-model="vm.reply.Comment" required style="height: 50px !important;"></textarea>
+                    </div>
+                    <div class="clearfix">
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-reply"></i>Post Reply</button>
+                        <button type="button" class="btn btn-default" ng-click="vm.cancelReplyComment()"><i class="fa fa-times-circle"></i>Cancel</button>
+                    </div>
+                </form>
+            }
+            else
+            {
+                @SecurityHelper.Unauthorized("You must be logged in to post reply.")
+            }
         </div>
         <div id="edit-form" class="hidden well well-sm no-margin">
-            <form ng-submit="vm.saveEditComment()">
-                <div class="form-group">
-                    <label for="edit-comment" class="sr-only">Comment</label>
-                    <textarea id="edit-comment" name="Comment" class="form-control" rows="4" placeholder="Enter your comment here..." ng-model="vm.edit.Comment" required style="height: 50px !important;"></textarea>
-                </div>
-                <div class="clearfix">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-edit"></i>Update Comment</button>
-                    <button type="button" class="btn btn-default" ng-click="vm.cancelEditComment()"><i class="fa fa-times-circle"></i>Cancel</button>
-                </div>
-            </form>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form ng-submit="vm.saveEditComment()">
+                    <div class="form-group">
+                        <label for="edit-comment" class="sr-only">Comment</label>
+                        <textarea id="edit-comment" name="Comment" class="form-control" rows="4" placeholder="Enter your comment here..." ng-model="vm.edit.Comment" required style="height: 50px !important;"></textarea>
+                    </div>
+                    <div class="clearfix">
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-edit"></i>Update Comment</button>
+                        <button type="button" class="btn btn-default" ng-click="vm.cancelEditComment()"><i class="fa fa-times-circle"></i>Cancel</button>
+                    </div>
+                </form>
+            }
+            else
+            {
+                @SecurityHelper.Unauthorized("You must be logged in to edit comment.")
+            }
         </div>
         <div id="report-form" class="hidden well well-sm no-margin">
             <form ng-submit="vm.saveReportComment()">

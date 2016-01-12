@@ -15,9 +15,9 @@
     </div>
 
     <div class="content" id="novelApp">
-        <p class="alert alert-info">To start a new project please entered all the information below. Additional information can be update after the project created.</p>
+        <p class="alert alert-info">To start a new project entered all the information below. Additional information can be update after the project created.</p>
         <form class="" method="POST" action="@Url.Action("Form")" data-form-ajax='{}'>
-            <div id="entry">
+            <div id="entry" class="well well-md">
                 <div class="form-group">
                     <label id="labeltitle" for="title">Enter title</label>
                     <input id="title" name="@Model.PropertyName(m=>m.Title)" type="text" class="form-control" placeholder="Enter title" aria-labelledby="labeltitle" required />
@@ -60,47 +60,67 @@
                         }
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group clearfix">
                     <strong class="col-xs-12 no-padding">
-                        Select all step that you would want to go through with this project
+                        Check all steps that you would want to go through with this project
                     </strong>
-                    <div class="col-xs-12">
-                        <div class="checkbox">
-                            <label class="">
-                                <input type="checkbox" name="@Model.PropertyName(m=>m.IsEnabledTranslator)" />
-                                Translating
-                            </label>
-                        </div>
-                        <div class="checkbox">
-                            <label class="">
-                                <input type="checkbox" name="@Model.PropertyName(m=>m.IsEnabledEditor)" />
-                                Editing
-                            </label>
-                        </div>
-                        <div class="checkbox">
-                            <label class="">
-                                <input type="checkbox" name="@Model.PropertyName(m=>m.IsEnabledProofreader)" />
-                                Proofreading
-                            </label>
-                        </div>
+                    <div class="col-xs-12 form-control">
+
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="@Model.PropertyName(m=>m.IsEnabledTranslator)" />
+                            Translating
+                        </label>
+
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="@Model.PropertyName(m=>m.IsEnabledEditor)" />
+                            Editing
+                        </label>
+
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="@Model.PropertyName(m=>m.IsEnabledProofreader)" />
+                            Proofreading
+                        </label>
+
                     </div>
                 </div>
-                <div class="form-group">
-                    <label id="labelsharing" for="sharing">Sharing level</label>
-                    <select id="sharing" name="@Model.PropertyName(m=>m.SharingLevel)" class="form-control" required pattern="\d+">
-                        <option value="">Sharing level</option>
+                <div class="form-group clearfix">
+                    <strong class="col-xs-12 no-padding">
+                        Would you like to turn on crowd translation for this project?
+                    </strong>
+                    <div class="col-xs-12 form-control">
+
+                        <label class="radio-inline">
+                            <input type="radio" name="@Model.PropertyName(m=>m.IsEnabledCrowdTranslation)" value="true" />
+                            Enable crowd translation
+                        </label>
+
+                        <label class="radio-inline">
+                            <input type="radio" name="@Model.PropertyName(m => m.IsEnabledCrowdTranslation)" value="false" />
+                            Disable crowd translation
+                        </label>
+
+                    </div>
+                </div>
+                <div class="form-group clearfix">
+                    <strong class="col-xs-12 no-padding">
+                        Sharing level
+                    </strong>
+                    <div class="col-xs-12 form-control">
                         @foreach (var item in R.ShareLevel.Translate)
                         {
-                            <option value="@item.Key">@item.Value</option>
+                            <label class="radio-inline">
+                                <input type="radio" name="@Model.PropertyName(m => m.SharingLevel)" value="@item.Key" />
+                                @item.Value
+                            </label>
                         }
-                    </select>
+                    </div>
                 </div>
                 <div class="hidden">
-                    <input type="hidden" name="@Model.PropertyName(m=>m.Status)" value="@R.TranslationStatus.ACTIVE"/>
+                    <input type="hidden" name="@Model.PropertyName(m=>m.Status)" value="@R.TranslationStatus.ACTIVE" />
                 </div>
-                <div class="form-group">
+                <div class="form-group margin-top-10px">
                     <button type="submit" class="btn btn-primary"><i class="fa fa-plus-circle"></i>Submit</button>
-                    <button type="button" class="btn btn-default" onclick="window.history(-1);"><i class="fa fa-times-circle"></i>Cancel</button>
+                    <button type="button" class="btn btn-default" onclick="history.go(-1);"><i class="fa fa-times-circle"></i>Cancel</button>
                 </div>
             </div>
 

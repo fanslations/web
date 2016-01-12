@@ -35,6 +35,23 @@
                 @Html.ImproveThis(m => m.Raw)
             </div>
         </div>
+        @if (Model.RawLanguage == R.Language.CHINESE)
+        {
+            <div class="detail-group">
+                <strong style="vertical-align: top;">Characters Definition</strong>
+                <div id="word-definition">
+                    Loading...
+                    <script>
+                        window.pnHooks = window.pnHooks || [];
+                        window.pnHooks.push(function () {
+                            $('#word-definition').load('/translator/dictionary?from=zh&text=@Model.Raw', function (data) {
+                                $('#dictionary > table').addClass('table table-condensed');
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        }
         <div class="detail-group">
             <strong>Translated</strong>
             <div>

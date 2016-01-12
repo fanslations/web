@@ -8,9 +8,13 @@
     .device.desktop {
         width: 100%;
         max-width: 1000px;
-
     }
 
     .device.mobile {
         width: 100%;
     }
+
+.mobile .mobile-hidden {
+    position: absolute;
+    left: -9999px;
+}

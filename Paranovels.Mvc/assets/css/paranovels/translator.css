@@ -92,23 +92,18 @@ table.wordprintresults > tbody > tr > td
 }
 table.wordprintresults > tbody > tr > td.hanzi
 {
-	width: 110px;
 	padding-left: 5px;
 	padding-right: 5px;
-	font-size: 20pt;
 }
 table.wordprintresults > tbody > tr > td.pinyin
 {
-	width: 110px;
 	padding-left: 5px;
 	padding-right: 5px;
-	font-size: 11pt;
 }
 table.wordprintresults > tbody > tr > td.defs
 {
 	padding-left: 5px;
 	padding-right: 0;
-	font-size: 11pt;
 }
 
 .mpt1

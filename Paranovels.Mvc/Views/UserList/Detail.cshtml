@@ -17,13 +17,15 @@
     };
 
     var returnUrl = Request.UrlReferrer == null ? "/" : Request.UrlReferrer.PathAndQuery;
+
+    var isOwner = Model.UserID == session.UserID;
 }
 @if (Model.IsDeleted)
 {
     @SecurityHelper.Unauthorized("This list once exists but it has been deleted.", "List has been deleted", false)
     return;
 }
-@if (Model.ShareLevel != R.ShareLevel.PUBLIC && Model.UserID != session.UserID)
+@if (Model.ShareLevel != R.ShareLevel.PUBLIC && !isOwner)
 {
     @SecurityHelper.Unauthorized("This list is not public and you donot have permission to view it.", "Unauthorized", false)
     return;
@@ -34,12 +36,13 @@
         <h1 class="title">
             @ViewBag.Title
         </h1>
-        @if (Model.UserID == session.UserID)
+        @if (isOwner)
         {
             <a class="action toggle right" role="button" data-toggle='{ "target":"#addtolist"}'><i class="fa fa-plus-circle"></i></a>
             <a class="action toggle right" role="button" data-toggle='{ "target":"#settings"}'><i class="fa fa-gear"></i></a>
         }
     </div>
+    @if (isOwner) { 
     <div id="addtolist" class="form animated" style="display: none;">
         @{ var formModel = new ConnectorForm(); }
         <script>
@@ -119,195 +122,196 @@
 
         </form>
     </div>
-    <div id="settings" class="form animated" style="display: none;">
-        <div class="well well-sm no-margin" style="background: white;">
-            <div class="detail-group">
-                <strong>Name</strong>
-                <div>
-                    @Model.Name
-                    @Html.ImproveThis(m => m.Name)
+        <div id="settings" class="form animated" style="display: none;">
+            <div class="well well-sm no-margin" style="background: white;">
+                <div class="detail-group">
+                    <strong>Name</strong>
+                    <div>
+                        @Model.Name
+                        @Html.ImproveThis(m => m.Name)
+                    </div>
                 </div>
-            </div>
-            <div class="detail-group">
-                <strong>Description</strong>
-                <div>
-                    @Model.Description
-                    @Html.ImproveThis(m => m.Description)
+                <div class="detail-group">
+                    <strong>Description</strong>
+                    <div>
+                        @Model.Description
+                        @Html.ImproveThis(m => m.Description)
+                    </div>
                 </div>
-            </div>
-            <div class="detail-group">
-                <strong>Sharing</strong>
-                <div>
-                    <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
-                        <input type="hidden" name="ID" value="@Model.ID" />
-                        <input type="hidden" name="UserID" value="@Model.UserID" />
-                        <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.ShareLevel)" />
-                        @foreach (var level in R.ShareLevel.Translate)
-                        {
-                            <label class="radio-inline">
-                                <input name="@Model.PropertyName(m => m.ShareLevel)" class="submit" type="radio" value="@(level.Key)" checked="@(Model.ShareLevel == level.Key)" />
-                                @level.Value
-                            </label>
-                        }
+                <div class="detail-group">
+                    <strong>Sharing</strong>
+                    <div>
+                        <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                            <input type="hidden" name="ID" value="@Model.ID" />
+                            <input type="hidden" name="UserID" value="@Model.UserID" />
+                            <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.ShareLevel)" />
+                            @foreach (var level in R.ShareLevel.Translate)
+                            {
+                                <label class="radio-inline">
+                                    <input name="@Model.PropertyName(m => m.ShareLevel)" class="submit" type="radio" value="@(level.Key)" checked="@(Model.ShareLevel == level.Key)" />
+                                    @level.Value
+                                </label>
+                            }
 
-                    </form>
+                        </form>
+                    </div>
                 </div>
-            </div>
-            <div class="detail-group">
-                <strong>Icon</strong>
-                <div>
-                    <span id="icon" class="fa" style="@(Model.IsColorIcon ? string.Format("color:{0};", Model.Color.ToColorHex()) : "")">&#xf@(Convert.ToString(Model.Icon, 16).PadLeft(3, '0'));</span>
-                    @Html.ImproveThis(m => m.Icon)
+                <div class="detail-group">
+                    <strong>Icon</strong>
+                    <div>
+                        <span id="icon" class="fa" style="@(Model.IsColorIcon ? string.Format("color:{0};", Model.Color.ToColorHex()) : "")">&#xf@(Convert.ToString(Model.Icon, 16).PadLeft(3, '0'));</span>
+                        @Html.ImproveThis(m => m.Icon)
+                    </div>
                 </div>
-            </div>
-            <div class="detail-group">
-                <strong>Color</strong>
-                <div>
-                    <form id="color-form" action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
-                        <input type="hidden" name="ID" value="@Model.ID" />
-                        <input type="hidden" name="UserID" value="@Model.UserID" />
-                        <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.Color)" />
-                        <input id="color" name="ColorHex" type="hidden" pattern="#[a-zA-z0-9]{6}" value="@Model.Color.ToColorHex()" />
-                    </form>
-                    <span id="colorselector" class="colorSelector" style="background-color: @Model.Color.ToColorHex();"></span>
-                    <script>
-                        window.pnHooks = window.pnHooks || [];
-                        window.pnHooks.push(function () {
-                            require(['colorpicker'], function () {
-                                $('#colorselector').ColorPicker({
-                                    onSubmit: function (hsb, hex, rgb, el, parent) {
-                                        $(el).ColorPickerHide();
-                                    },
-                                    onShow: function (colpkr) {
-                                        $(colpkr).fadeIn(500);
-                                        return false;
-                                    },
-                                    onHide: function (colpkr) {
-                                        // save changed color
-                                        $('#color-form').submit();
+                <div class="detail-group">
+                    <strong>Color</strong>
+                    <div>
+                        <form id="color-form" action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                            <input type="hidden" name="ID" value="@Model.ID" />
+                            <input type="hidden" name="UserID" value="@Model.UserID" />
+                            <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.Color)" />
+                            <input id="color" name="ColorHex" type="hidden" pattern="#[a-zA-z0-9]{6}" value="@Model.Color.ToColorHex()" />
+                        </form>
+                        <span id="colorselector" class="colorSelector" style="background-color: @Model.Color.ToColorHex();"></span>
+                        <script>
+                            window.pnHooks = window.pnHooks || [];
+                            window.pnHooks.push(function () {
+                                require(['colorpicker'], function () {
+                                    $('#colorselector').ColorPicker({
+                                        onSubmit: function (hsb, hex, rgb, el, parent) {
+                                            $(el).ColorPickerHide();
+                                        },
+                                        onShow: function (colpkr) {
+                                            $(colpkr).fadeIn(500);
+                                            return false;
+                                        },
+                                        onHide: function (colpkr) {
+                                            // save changed color
+                                            $('#color-form').submit();
 
-                                        $(colpkr).fadeOut(500);
-                                        return false;
-                                    },
-                                    onChange: function (hsb, hex, rgb) {
-                                        $('#colorselector').css('backgroundColor', '#' + hex);
-                                        $('#icon').css('color', '#' + hex);
-                                        $('#color').val('#' + hex);
-                                    }
-                                }).on('click', function () {
-                                    $(this).ColorPickerSetColor($('#colorselector').css('backgroundColor'));
+                                            $(colpkr).fadeOut(500);
+                                            return false;
+                                        },
+                                        onChange: function (hsb, hex, rgb) {
+                                            $('#colorselector').css('backgroundColor', '#' + hex);
+                                            $('#icon').css('color', '#' + hex);
+                                            $('#color').val('#' + hex);
+                                        }
+                                    }).on('click', function () {
+                                        $(this).ColorPickerSetColor($('#colorselector').css('backgroundColor'));
+                                    });
                                 });
                             });
-                        });
-                    </script>
+                        </script>
+
+                    </div>
+                </div>
+                <div class="detail-group">
+                    <strong></strong>
+                    <div>
+                        <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                            <input type="hidden" name="ID" value="@Model.ID" />
+                            <input type="hidden" name="UserID" value="@Model.UserID" />
+                            <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.IsColorIcon)" />
+                            <label class="no-bold">
+                                <input name="@Model.PropertyName(m=>m.IsColorIcon)" class="submit" type="checkbox" value="true" checked="@(Model.IsColorIcon)" />
+                                Use color icon
+                            </label>
+                        </form>
+                    </div>
 
                 </div>
-            </div>
-            <div class="detail-group">
-                <strong></strong>
-                <div>
-                    <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                <div class="detail-group">
+                    <strong></strong>
+                    <div>
+                        <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                            <input type="hidden" name="ID" value="@Model.ID" />
+                            <input type="hidden" name="UserID" value="@Model.UserID" />
+                            <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.IsPlaceInFrontOfTitle)" />
+                            <label class="no-bold">
+                                <input name="@Model.PropertyName(m => m.IsPlaceInFrontOfTitle)" class="submit" type="checkbox" value="true" checked="@(Model.IsPlaceInFrontOfTitle)" />
+                                Place icon in front of title in home, release, series page
+                            </label>
+                        </form>
+                    </div>
+                </div>
+                <div class="detail-group">
+                    <strong></strong>
+                    <div>
+                        <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                            <input type="hidden" name="ID" value="@Model.ID" />
+                            <input type="hidden" name="UserID" value="@Model.UserID" />
+                            <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m => m.IsHiddenInFrontpage)" />
+                            <label class="no-bold">
+                                <input name="@Model.PropertyName(m => m.IsHiddenInFrontpage)" class="submit" type="checkbox" value="true" checked="@(Model.IsHiddenInFrontpage)" />
+                                Hide this series from home, release, series page
+                            </label>
+                        </form>
+                    </div>
+                </div>
+                <div class="detail-group">
+                    <strong></strong>
+                    <div>
+                        <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                            <input type="hidden" name="ID" value="@Model.ID" />
+                            <input type="hidden" name="UserID" value="@Model.UserID" />
+                            <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m => m.IsAutoAddWhenRead)" />
+                            <label class="no-bold">
+                                <input name="@Model.PropertyName(m => m.IsAutoAddWhenRead)" class="submit" type="checkbox" value="true" checked="@(Model.IsAutoAddWhenRead)" />
+                                Automatically add series that I read to this list <small>(Click "Read It" button in release details page will automatically add to this list if this is checked)</small>
+                            </label>
+                        </form>
+                    </div>
+                </div>
+                <div class="detail-group">
+                    <strong></strong>
+                    <div>
+                        <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                            <input type="hidden" name="ID" value="@Model.ID" />
+                            <input type="hidden" name="UserID" value="@Model.UserID" />
+                            <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m => m.IsNotifyOfNewRelease)" />
+                            <label class="no-bold">
+                                <input name="@Model.PropertyName(m => m.IsNotifyOfNewRelease)" class="submit" type="checkbox" value="true" checked="@(Model.IsNotifyOfNewRelease)" />
+                                Show notification of new releases for series in this list
+                            </label>
+                        </form>
+                    </div>
+                </div>
+                <div class="detail-group">
+                    <strong></strong>
+                    <div>
+                        <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
+                            <input type="hidden" name="ID" value="@Model.ID" />
+                            <input type="hidden" name="UserID" value="@Model.UserID" />
+                            <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m => m.IsNotifyOfNewRelease)" />
+                            <label class="no-bold">
+                                <input name="@Model.PropertyName(m => m.IsNotifyOfNewRelease)" class="submit" type="checkbox" value="true" checked="@(Model.IsNotifyOfNewRelease)" />
+                                Email new releases for series in this list <small>(Will email to @session.Email<a class="fa fa-edit right" href="@Url.Action("Profile","User", new { ID = session.UserID, Seo = session.Username.ToSeo() })"></a>)</small>
+                            </label>
+                        </form>
+                    </div>
+                </div>
+                <div class="btn-row clearfix">
+                    <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{}'>
                         <input type="hidden" name="ID" value="@Model.ID" />
                         <input type="hidden" name="UserID" value="@Model.UserID" />
-                        <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.IsColorIcon)" />
-                        <label class="no-bold">
-                            <input name="@Model.PropertyName(m=>m.IsColorIcon)" class="submit" type="checkbox" value="true" checked="@(Model.IsColorIcon)" />
-                            Use color icon
-                        </label>
-                    </form>
-                </div>
+                        <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m => m.IsDeleted)" />
+                        <input type="hidden" name="ReturnUrl" value="@Url.Action("Index","UserList")" />
+                        <input type="hidden" name="@Model.PropertyName(m => m.IsDeleted)" value="true" />
 
-            </div>
-            <div class="detail-group">
-                <strong></strong>
-                <div>
-                    <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
-                        <input type="hidden" name="ID" value="@Model.ID" />
-                        <input type="hidden" name="UserID" value="@Model.UserID" />
-                        <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m=>m.IsPlaceInFrontOfTitle)" />
-                        <label class="no-bold">
-                            <input name="@Model.PropertyName(m => m.IsPlaceInFrontOfTitle)" class="submit" type="checkbox" value="true" checked="@(Model.IsPlaceInFrontOfTitle)" />
-                            Place icon in front of title in home, release, series page
-                        </label>
+                        <button type="submit" class="btn btn-danger btn-sm pull-right" onclick="return confirm('Are you sure?')" style="margin-left: 20px;"><i class="fa fa-trash"></i>Delete This List</button>
                     </form>
+                    <button type="button" class="btn btn-primary btn-sm pull-right" onclick="window.location.reload();"><i class="fa fa-refresh"></i>Apply Settings</button>
                 </div>
-            </div>
-            <div class="detail-group">
-                <strong></strong>
-                <div>
-                    <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
-                        <input type="hidden" name="ID" value="@Model.ID" />
-                        <input type="hidden" name="UserID" value="@Model.UserID" />
-                        <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m => m.IsHiddenInFrontpage)" />
-                        <label class="no-bold">
-                            <input name="@Model.PropertyName(m => m.IsHiddenInFrontpage)" class="submit" type="checkbox" value="true" checked="@(Model.IsHiddenInFrontpage)" />
-                            Hide this series from home, release, series page
-                        </label>
-                    </form>
-                </div>
-            </div>
-            <div class="detail-group">
-                <strong></strong>
-                <div>
-                    <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
-                        <input type="hidden" name="ID" value="@Model.ID" />
-                        <input type="hidden" name="UserID" value="@Model.UserID" />
-                        <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m => m.IsAutoAddWhenRead)" />
-                        <label class="no-bold">
-                            <input name="@Model.PropertyName(m => m.IsAutoAddWhenRead)" class="submit" type="checkbox" value="true" checked="@(Model.IsAutoAddWhenRead)" />
-                            Automatically add series that I read to this list <small>(Click "Read It" button in release details page will automatically add to this list if this is checked)</small>
-                        </label>
-                    </form>
-                </div>
-            </div>
-            <div class="detail-group">
-                <strong></strong>
-                <div>
-                    <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
-                        <input type="hidden" name="ID" value="@Model.ID" />
-                        <input type="hidden" name="UserID" value="@Model.UserID" />
-                        <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m => m.IsNotifyOfNewRelease)" />
-                        <label class="no-bold">
-                            <input name="@Model.PropertyName(m => m.IsNotifyOfNewRelease)" class="submit" type="checkbox" value="true" checked="@(Model.IsNotifyOfNewRelease)" />
-                            Show notification of new releases for series in this list
-                        </label>
-                    </form>
-                </div>
-            </div>
-            <div class="detail-group">
-                <strong></strong>
-                <div>
-                    <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{ "reload": false }'>
-                        <input type="hidden" name="ID" value="@Model.ID" />
-                        <input type="hidden" name="UserID" value="@Model.UserID" />
-                        <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m => m.IsNotifyOfNewRelease)" />
-                        <label class="no-bold">
-                            <input name="@Model.PropertyName(m => m.IsNotifyOfNewRelease)" class="submit" type="checkbox" value="true" checked="@(Model.IsNotifyOfNewRelease)" />
-                            Email new releases for series in this list <small>(Will email to @session.Email<a class="fa fa-edit right" href="@Url.Action("Profile","User", new { ID = session.UserID, Seo = session.Username.ToSeo() })"></a>)</small>
-                        </label>
-                    </form>
-                </div>
-            </div>
-            <div class="btn-row clearfix">
-                <form action="@Url.Action("Form","UserList")" method="POST" data-form-ajax='{}'>
-                    <input type="hidden" name="ID" value="@Model.ID" />
-                    <input type="hidden" name="UserID" value="@Model.UserID" />
-                    <input type="hidden" name="InlineEditProperty" value="@Model.PropertyName(m => m.IsDeleted)" />
-                    <input type="hidden" name="ReturnUrl" value="@Url.Action("Index","UserList")" />
-                    <input type="hidden" name="@Model.PropertyName(m => m.IsDeleted)" value="true" />
-
-                    <button type="submit" class="btn btn-danger btn-sm pull-right" onclick="return confirm('Are you sure?')" style="margin-left: 20px;"><i class="fa fa-trash"></i>Delete This List</button>
-                </form>
-                <button type="button" class="btn btn-primary btn-sm pull-right" onclick="window.location.reload();"><i class="fa fa-refresh"></i>Apply Settings</button>
             </div>
         </div>
-    </div>
-    <div class="content">
-        <p class="alert alert-info">
-            Series or Releases that in @Model.Name @(Model.IsPlaceInFrontOfTitle ? "will" : "will NOT") have an icon <span class="fa" style="@(Model.IsColorIcon ? string.Format("color:{0};", Model.Color.ToColorHex()) : "")">&#xf@(Convert.ToString(Model.Icon, 16).PadLeft(3, '0'));</span> in front of the title.
-            <a class="alert-link action toggle" role="button" data-toggle='{ "target":"#settings" }'>Click <i class="fa fa-gear"></i> to change list settings.</a>
-        </p>
-    </div>
+        <div class="content">
+            <p class="alert alert-info">
+                Series or Releases that in @Model.Name @(Model.IsPlaceInFrontOfTitle ? "will" : "will NOT") have an icon <span class="fa" style="@(Model.IsColorIcon ? string.Format("color:{0};", Model.Color.ToColorHex()) : "")">&#xf@(Convert.ToString(Model.Icon, 16).PadLeft(3, '0'));</span> in front of the title.
+                <a class="alert-link action toggle" role="button" data-toggle='{ "target":"#settings" }'>Click <i class="fa fa-gear"></i> to change list settings.</a>
+            </p>
+        </div>
+    }
     <div class="content">
         @{
             Html.RenderPartial("_Sorted", sortedModel);
@@ -337,9 +341,12 @@
                 <tbody class="no-border">
                     <tr id="series@(item.ID)" class="animated">
                         <td class="hover">
-                            <span class="show pull-right animated action connect toggle text-danger" title="Remove from @Model.Name" data-toggle='{"target":"#series@(item.ID)"}' data-connect='{ "ID": @(Model.Connectors.Single(w=> w.SourceID == item.ID).ID), "ConnectorType": @R.ConnectorType.SERIES_USERLIST, "SourceID": @Model.ID, "TargetID": @item.ID, "IsDeleted": true }' role="button">
-                                <i class="fa fa-trash"></i>
-                            </span>
+                            @if (isOwner)
+                            {
+                                <span class="show pull-right animated action connect toggle text-danger" title="Remove from @Model.Name" data-toggle='{"target":"#series@(item.ID)"}' data-connect='{ "ID": @(Model.Connectors.Single(w => w.SourceID == item.ID).ID), "ConnectorType": @R.ConnectorType.SERIES_USERLIST, "SourceID": @Model.ID, "TargetID": @item.ID, "IsDeleted": true }' role="button">
+                                    <i class="fa fa-trash"></i>
+                                </span>
+                            }
                             <a class="btn-block" href="@Url.Action("Detail", "Series", new { ID = item.ID, Seo = item.Title.ToSeo() })">@item.Title</a>
                         </td>
                         <td>

@@ -30,6 +30,7 @@ namespace Paranovels.Facade
                     {
                         feed.UrlHash = feed.Url.GetIntHash();
                         feed.Status = feed.Status == 0 ? R.FeedStatus.ACTIVE : feed.Status;
+                        feed.LastSuccessDate = DateTime.Now.AddYears(-10);
                         var feedForm = new GenericForm<Feed>
                         {
                             ByUserID = form.ByUserID,

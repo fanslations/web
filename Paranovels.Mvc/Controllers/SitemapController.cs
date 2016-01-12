@@ -37,7 +37,7 @@ namespace Paranovels.Mvc.Controllers
         public ActionResult Release()
         {
             var releases = Facade<QueryFacade>().SearchRelease(new ReleaseCriteria());
-            var nodes = releases.OrderByDescending(o => o.UpdatedDate).Select(s => new SitemapNode(Url.Action("Detail", "Series", new { ID = s.ID, Seo = s.Title.ToSeo() })));
+            var nodes = releases.OrderByDescending(o => o.UpdatedDate).Select(s => new SitemapNode(Url.Action("Detail", "Release", new { ID = s.ID, Seo = s.Title.ToSeo() })));
             return new SitemapProvider().CreateSitemap(HttpContext, nodes);
         }
 
@@ -45,6 +45,20 @@ namespace Paranovels.Mvc.Controllers
         {
             var series = Facade<QueryFacade>().SearchSeries(new SeriesCriteria());
             var nodes = series.OrderByDescending(o=>o.UpdatedDate).Select(s => new SitemapNode(Url.Action("Detail","Series", new { ID = s.ID, Seo = s.Title.ToSeo() })));
+            return new SitemapProvider().CreateSitemap(HttpContext, nodes);
+        }
+
+        public ActionResult Novel()
+        {
+            var series = Facade<QueryFacade>().SearchNovel(new NovelCriteria());
+            var nodes = series.OrderByDescending(o => o.UpdatedDate).Select(s => new SitemapNode(Url.Action("Detail", "Novel", new { ID = s.ID, Seo = s.Title.ToSeo() })));
+            return new SitemapProvider().CreateSitemap(HttpContext, nodes);
+        }
+
+        public ActionResult Chapter()
+        {
+            var series = Facade<QueryFacade>().SearchChapter(new ChapterCriteria());
+            var nodes = series.OrderByDescending(o => o.UpdatedDate).Select(s => new SitemapNode(Url.Action("Detail", "Chapter", new { ID = s.ID, Seo = s.Title.ToSeo() })));
             return new SitemapProvider().CreateSitemap(HttpContext, nodes);
         }
 

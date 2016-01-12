@@ -30,18 +30,21 @@ namespace Paranovels.Mvc
 
         protected ActionResult FeedGenerator<T>(IEnumerable<T> feedItems, string feedType) where T : class, IFeed, new()
         {
-            var feed = new SyndicationFeed();
-            var items = new List<SyndicationItem>();
+            var baseUri = new Uri("http://www.fanslations.com");
+            var feed = new SyndicationFeed("Fanslations","Fanslations", new Uri(baseUri, Request.RawUrl));
+            feed.Id = new Uri(baseUri, Request.RawUrl).ToString();
+            feed.Authors.Add(new SyndicationPerson("fanslations@gmail.com", "Fanslations", baseUri.ToString()));
+            
 
+            var items = new List<SyndicationItem>();
             foreach (var data in feedItems)
             {
                 var item = new SyndicationItem();
 
-                item.Id = data.Url;
+                item.Id = new Uri(baseUri, data.Url).ToString();
                 item.Title = new TextSyndicationContent(data.Title);
-                item.Content = new TextSyndicationContent(data.Content);
-                item.BaseUri = new Uri("http://www.fanslations.com");
-                item.Links.Add(new SyndicationLink(new Uri(item.BaseUri, data.Url)));
+                item.Content = new TextSyndicationContent(data.Content ?? data.Title);
+                item.Links.Add(new SyndicationLink(new Uri(baseUri, data.Url)));
                 item.PublishDate = data.InsertedDate;
                 item.LastUpdatedTime = data.UpdatedDate;
 

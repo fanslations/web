@@ -1,4 +1,4 @@
-// This class was automatically generated with love by ST4bby 8/25/2015 4:37:48 PM.
+// This class was automatically generated with love by ST4bby 9/1/2015 4:59:57 PM.
 // Read more at http://jbubriski.github.com/ST4bby/
 
 namespace Paranovels.DataModels
@@ -55,5 +55,8 @@ namespace Paranovels.DataModels
 		
 		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("Facebook", TypeName = "varchar"), Display(Name="Facebook"), StringLength(50)]
 		public string Facebook { get; set; }
+		
+		[Required(AllowEmptyStrings = true), DisplayFormat(ConvertEmptyStringToNull = false), Column("CrawlType", TypeName = "int"), Display(Name="Crawl Type")]
+		public int CrawlType { get; set; }
 	}
 }

@@ -58,6 +58,7 @@
     <Compile Include="Generated\Sticky.generated.cs" />
     <Compile Include="Generated\Summarize.generated.cs" />
     <Compile Include="Generated\Tag.generated.cs" />
+    <Compile Include="Generated\Text.generated.cs" />
     <Compile Include="Generated\User.generated.cs" />
     <Compile Include="Generated\UserComment.generated.cs" />
     <Compile Include="Generated\UserList.generated.cs" />

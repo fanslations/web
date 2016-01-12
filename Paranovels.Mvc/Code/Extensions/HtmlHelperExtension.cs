@@ -29,18 +29,19 @@ namespace Paranovels.Mvc
             var inlineEditModelJson = string.Format(@"{{ ""ID"" : {0}, ""InlineEditProperty"" : ""{1}"" }}", html.ViewData.Model.ID, updateField.PropertyName);
 
             var tag = new TagBuilder("a");
-            tag.AddCssClass("improve-this");
-            tag.InnerHtml = customHtmlIcon ?? @"<i class=""fa fa-edit""></i><em>Edit</em>";
-            tag.Attributes.Add("data-inline-edit", inlineEditModelJson);
             if (htmlAttributes != null)
             {
                 tag.MergeAttributes(htmlAttributes);
             }
+            tag.AddCssClass("improve-this");
+            tag.InnerHtml = customHtmlIcon ?? @"<i class=""fa fa-edit""></i><em>Edit</em>";
+            tag.Attributes.Add("data-inline-edit", inlineEditModelJson);
+
             return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
 
         }
 
-        public static MvcHtmlString ImproveThis<TModel,TValue>(this TModel model,
+        public static MvcHtmlString ImproveThis<TModel, TValue>(this TModel model,
             Expression<Func<TModel, TValue>> expressionUpdateField,
             IDictionary<string, object> htmlAttributes = null,
             string customHtmlIcon = null) where TModel : class, IModel, new()
@@ -49,13 +50,14 @@ namespace Paranovels.Mvc
             var inlineEditModelJson = string.Format(@"{{ ""ID"" : {0}, ""InlineEditProperty"" : ""{1}"" }}", model.ID, propertyName);
 
             var tag = new TagBuilder("a");
-            tag.AddCssClass("improve-this");
-            tag.InnerHtml = customHtmlIcon ?? @"<i class=""fa fa-edit""></i><em>Edit</em>";
-            tag.Attributes.Add("data-inline-edit", inlineEditModelJson);
             if (htmlAttributes != null)
             {
                 tag.MergeAttributes(htmlAttributes);
             }
+            tag.AddCssClass("improve-this");
+            tag.InnerHtml = customHtmlIcon ?? @"<i class=""fa fa-edit""></i><em>Edit</em>";
+            tag.Attributes.Add("data-inline-edit", inlineEditModelJson);
+
             return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
 
         }

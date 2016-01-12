@@ -34,15 +34,15 @@
                 <td>
                     @if (item.SourceTable == R.SourceTable.SERIES)
                     {
-                        <a href="@Url.Action("Detail", "Series", new { ID = item.SourceID, Seo = item.Final.ToSeo() })">Series</a>
+                        <a href="@Url.Action("Detail", "Series", new { ID = item.SourceID, Seo = item.Final.ToSeo(), Tab = "Glossaries" })">Series</a>
                     }
                     else if (item.SourceTable == R.SourceTable.GROUP)
                     {
-                        <a href="@Url.Action("Detail", "Group", new { ID = item.SourceID, Seo = item.Final.ToSeo() })">Group</a>
+                        <a href="@Url.Action("Detail", "Group", new { ID = item.SourceID, Seo = item.Final.ToSeo(), Tab = "Glossaries" })">Group</a>
                     }
                     else if (item.SourceTable == R.SourceTable.NOVEL)
                     {
-                        <a href="@Url.Action("Detail", "Novel", new {ID = item.SourceID, Seo = item.Final.ToSeo()})">Novel</a>
+                        <a href="@Url.Action("Detail", "Novel", new { ID = item.SourceID, Seo = item.Final.ToSeo(), Tab = "Glossaries" })">Novel</a>
                     }
                     else
                     {

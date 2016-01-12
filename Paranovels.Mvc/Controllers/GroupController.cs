@@ -48,12 +48,6 @@ namespace Paranovels.Mvc.Controllers
             return View(detail);
         }
 
-        public JsonResult CheckFeedUpdate(int id = 5)
-        {
-            var results = Facade<FeedFacade>().CheckFeed(R.ConnectorType.GROUP_FEED, id);
-            return Json(results, JsonRequestBehavior.AllowGet);
-        }
-
         public ActionResult Add()
         {
 
@@ -76,6 +70,12 @@ namespace Paranovels.Mvc.Controllers
         {
             form.Model = Facade<GroupFacade>().GetGroup(new GroupCriteria { ID = form.ID });
             return View("_InlineEditPartial", form);
+        }
+
+        public JsonResult CheckFeedUpdate(int id)
+        {
+            var results = Facade<FeedFacade>().CheckFeed(R.ConnectorType.GROUP_FEED, id);
+            return Json(results, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult CheckFeed(string feedUrl)
