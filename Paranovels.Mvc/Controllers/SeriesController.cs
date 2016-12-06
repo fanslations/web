@@ -62,7 +62,7 @@ namespace Paranovels.Mvc.Controllers
                 var fileID = GoogleDriveService.uploadFile(driveService, image.InputStream, image.FileName, imagePath);
                 form.ImageUrl = fileID;
             }
-            return SaveChanges(form);
+            return SaveChanges(form, Facade<SeriesFacade>().AddSeries);
         }
 
         public ActionResult InlineEdit(InlineEditForm<SeriesDetail> form)

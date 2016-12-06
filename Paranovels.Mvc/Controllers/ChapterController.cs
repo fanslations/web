@@ -95,7 +95,7 @@ namespace Paranovels.Mvc.Controllers
         [HttpPost]
         public JsonResult Form(ChapterForm chapter)
         {
-            return SaveChanges(chapter);
+            return SaveChanges(chapter, Facade<NovelFacade>().AddChapter);
         }
 
         public ActionResult InlineEdit(InlineEditForm<ChapterDetail> form)

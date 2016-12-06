@@ -61,7 +61,7 @@ namespace Paranovels.Mvc.Controllers
                 form.Color = colorHex.ToColorInt();
             }
             
-            return SaveChanges(form);
+            return SaveChanges(form, Facade<ListFacade>().AddList);
         }
 
         public ActionResult InlineEdit(InlineEditForm<ListDetail> form)

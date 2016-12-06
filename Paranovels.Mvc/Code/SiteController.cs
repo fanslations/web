@@ -99,11 +99,26 @@ namespace Paranovels.Mvc
             return Json(type == null ? model : Activator.CreateInstance(type), JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult SaveChanges<T>(T model, string callbackUrl = null) where T : class, IFormModel, new()
+        //public JsonResult SaveChanges<T>(T model, string callbackUrl = null) where T : class, IFormModel, new()
+        //{
+        //    // set update by userID
+        //    model.ByUserID = UserSession.UserID;
+        //    var id = Facade<UpdateFacade>().SaveChanges(model);
+        //    var result = new
+        //    {
+        //        IsSuccessful = id > 0,
+        //        RedirectUrl = string.IsNullOrWhiteSpace(callbackUrl) ? Request.QueryString["ReturnUrl"] ?? Request.Form["ReturnUrl"] ?? Url.Action("Detail", new { ID = id, Seo = (Request.Form["seo"] ?? "new").ToSeo() }) : string.Format(callbackUrl, id),
+        //        ErrorMessage = id < 0 ? "Unable to save data." : "",
+        //    };
+
+        //    return Json(result, JsonRequestBehavior.AllowGet);
+        //}
+
+        public JsonResult SaveChanges<T>(T model, Func<T, int> saveChanges, string callbackUrl = null) where T : class, IFormModel, new()
         {
             // set update by userID
             model.ByUserID = UserSession.UserID;
-            var id = Facade<UpdateFacade>().SaveChanges(model);
+            var id = saveChanges(model); // Facade<UpdateFacade>().SaveChanges(model);
             var result = new
             {
                 IsSuccessful = id > 0,

@@ -1,0 +1,53 @@
+﻿<Window x:Class="Thi.Wpf.Selenium.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:selenium="clr-namespace:Thi.Wpf.Selenium"
+        Title="MWBC Tester" Height="400" Width="530" Topmost="True">
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard>
+                <Storyboard >
+                    <DoubleAnimation Duration="0:0:.8" Storyboard.TargetProperty="Opacity" From="0" To="1" AccelerationRatio=".1"/>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="Window.Unloaded">
+            <BeginStoryboard>
+                <Storyboard >
+                    <DoubleAnimation Duration="0:0:.8" Storyboard.TargetProperty="Opacity" From="1" To="0" AccelerationRatio=".1"/>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Window.Triggers>
+    <Window.Resources>
+        <selenium:TestCaseChecker x:Key="CheckTestCase" />
+        <DataTemplate x:Key="StoryListItem" DataType="{x:Type selenium:TestCaseHtml}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Path=Name}" Width="230"></TextBlock>
+                <TextBlock Text="{Binding Path=Date}" Width="100"></TextBlock>
+                <!--<TextBlock x:Name="TestedDate" Text="{Binding Path=Url, Converter={StaticResource CheckTestCase}}"  Width="100"></TextBlock>-->
+                <TextBlock Text="{Binding Path=TestedDate}" Foreground="{Binding Path=IsPassed, Converter={x:Static selenium:Converter.RedGreenColor}}" Width="100" FontWeight="Bold">
+                </TextBlock>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="BrowserListItem" DataType="{x:Type selenium:Browser}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Path=Name}" Width="430"></TextBlock>
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+    <StackPanel Orientation="Vertical">
+        <GroupBox Header="Choose browser" Margin="10,0,22,0" Width="Auto">
+            <ListBox Name="BrowserList" Padding="2" BorderThickness="0" HorizontalAlignment="Left" Margin="10,3,0,0" VerticalAlignment="Top" ItemsSource="{Binding Browsers}" ItemTemplate="{StaticResource BrowserListItem}">
+            </ListBox>
+        </GroupBox>
+        <GroupBox Header="Choose test case" Margin="10,0,22,0" Width="Auto" MaxHeight="240">
+            <ListBox x:Name="StoryList" Padding="2" BorderThickness="0" HorizontalAlignment="Left" Margin="10,3,0,0" VerticalAlignment="Top" ItemsSource="{Binding TestCases}" ItemTemplate="{StaticResource StoryListItem}">
+            </ListBox>
+        </GroupBox>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Play" Height="23" HorizontalAlignment="Left" Margin="10,10,10,10" Name="button1" VerticalAlignment="Bottom" Width="75" Click="button1_Click" />
+            <TextBlock Name="LabelStatus" Text="Status go here"  Margin="10,10,10,10" VerticalAlignment="Center"></TextBlock>
+        </StackPanel>
+    </StackPanel>
+</Window>

@@ -14,7 +14,7 @@ namespace Paranovels.Mvc.Controllers
         [HttpPost]
         public JsonResult Form(AkaForm form)
         {
-            return SaveChanges(form);
+            return SaveChanges(form, Facade<AkaFacade>().AddAka);
         }
 
         public ActionResult InlineEdit(InlineEditForm<AkaDetail> form)

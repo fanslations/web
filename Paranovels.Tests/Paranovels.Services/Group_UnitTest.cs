@@ -19,7 +19,7 @@ namespace Paranovels.Tests.Paranovels.Services
         {
             using (var uow = UnitOfWorkFactory.Create<NovelContext>())
             {
-                var facade = new UpdateFacade();
+               
                 var service = new GroupService(uow);
 
                 var groupsWithFeedUrl = service.View<Connector>().Where(w => w.ConnectorType == R.ConnectorType.GROUP_FEED).Select(s => s.SourceID).ToList();
@@ -33,7 +33,7 @@ namespace Paranovels.Tests.Paranovels.Services
                         InlineEditProperty = "Feeds",
                         Feeds = new Feed[] { new Feed { Url = g.Url.Trim(new[] { '/', ' ' }) + "/feeds/posts/default?alt=rss" } }
                     };
-                    facade.SaveChanges(groupForm);
+                    service.SaveChanges(groupForm);
                 }
             }
 

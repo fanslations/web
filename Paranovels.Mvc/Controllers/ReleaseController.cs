@@ -116,7 +116,7 @@ namespace Paranovels.Mvc.Controllers
             {
                 form.Date = DateTime.Now;
             }
-            return SaveChanges(form);
+            return SaveChanges(form, Facade<SeriesFacade>().AddRelease);
         }
 
         public ActionResult InlineEdit(InlineEditForm<ReleaseDetail> form)

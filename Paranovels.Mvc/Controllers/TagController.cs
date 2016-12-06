@@ -38,7 +38,7 @@ namespace Paranovels.Mvc.Controllers
         [HttpPost]
         public JsonResult Form(TagForm form)
         {
-            return SaveChanges(form);
+            return SaveChanges(form, Facade<TagFacade>().AddTag);
         }
 
         public ActionResult InlineEdit(InlineEditForm<TagDetail> form)

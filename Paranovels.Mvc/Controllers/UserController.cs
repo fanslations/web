@@ -26,7 +26,7 @@ namespace Paranovels.Mvc.Controllers
         [HttpPost]
         public JsonResult Form(UserForm form, HttpPostedFileBase image, string imagePath)
         {
-            return SaveChanges(form);
+            return SaveChanges(form, Facade<UserFacade>().AddUser);
         }
 
         public ActionResult InlineEdit(InlineEditForm<UserDetail> form)

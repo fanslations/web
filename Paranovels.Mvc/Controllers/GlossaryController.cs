@@ -43,7 +43,7 @@ namespace Paranovels.Mvc.Controllers
         [HttpPost]
         public JsonResult Form(GlossaryForm form)
         {
-            return SaveChanges(form);
+            return SaveChanges(form, Facade<GlossaryFacade>().AddGlossary);
         }
 
         public ActionResult InlineEdit(InlineEditForm<GlossaryDetail> form)

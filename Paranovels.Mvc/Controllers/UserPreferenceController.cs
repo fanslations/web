@@ -23,7 +23,7 @@ namespace Paranovels.Mvc.Controllers
         public JsonResult Form(PreferenceForm form)
         {
             form.UserID = UserSession.UserID;
-            return SaveChanges(form);
+            return SaveChanges(form, Facade<UserFacade>().AddPreference);
         }
     }
 }

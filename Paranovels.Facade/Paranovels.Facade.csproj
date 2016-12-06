@@ -90,7 +90,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SeriesFacade.cs" />
     <Compile Include="QueryFacade.cs" />
-    <Compile Include="UpdateFacade.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Paranovels.Common\Paranovels.Common.csproj">
