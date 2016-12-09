@@ -18,7 +18,7 @@
                 var $this = $(this);
                 if ($this.hasClass('auto-resize') == false) {
                     resize($this);
-                    $this.on('input', function () {
+                    $this.on('focus input', function () {
                         resize($this);
                         $this.addClass('auto-resize');
                     });

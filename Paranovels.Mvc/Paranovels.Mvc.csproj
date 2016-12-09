@@ -380,6 +380,7 @@
     <Content Include="N6GuVhBpUQbdRrJE8KmIgLfPo7M.html" />
     <Content Include="robots.txt" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Views\Chapter\Cleaning.cshtml" />
     <None Include="Views\Glossary\_FormPartial.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

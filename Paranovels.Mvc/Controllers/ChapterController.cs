@@ -59,6 +59,13 @@ namespace Paranovels.Mvc.Controllers
             return null;
         }
 
+        public ActionResult Cleaning(ChapterCriteria criteria)
+        {
+            var detail = Facade<NovelFacade>().GetChapter(criteria);
+
+            return View(detail);
+        }
+
         public ActionResult Translating(ChapterCriteria criteria)
         {
             var detail = Facade<NovelFacade>().GetChapter(criteria);

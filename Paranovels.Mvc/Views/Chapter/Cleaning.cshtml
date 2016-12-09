@@ -1,0 +1,43 @@
+﻿@using Paranovels.Common
+@using Thi.Core
+@model Paranovels.ViewModels.ChapterDetail
+@{
+    ViewBag.Title = "Edit " + Model.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (!User.Identity.IsAuthenticated)
+{
+    @SecurityHelper.Unauthorized("You must be a member of this team to access to page.", "Unauthorized")
+    return;
+}
+<section class="section">
+    <div class="header">
+        <a href="javascript:history.go(-1);" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
+        <h1 class="title">
+            @ViewBag.Title
+        </h1>
+    </div>
+    <div id="addnewchapter" class="content">
+        <form id="addchapter" method="post" action="@Url.Action("Form", "Chapter")" data-form-ajax='{}'>
+            <div id="entry">
+                <div class="hidden">
+                    <input type="hidden" name="@Model.PropertyName(m=>m.ID)" value="@Model.ID" />
+                    <input type="hidden" name="@Model.PropertyName(m=>m.NovelID)" value="@Model.NovelID" />
+                    <input type="hidden" name="Seo" value="@Model.Title" />
+                    <input type="hidden" name="@Model.PropertyName(m => m.Volume)" value="@Model.Volume" />
+                    <input type="hidden" name="@Model.PropertyName(m => m.Number)" value="@Model.Number" />
+                    <input type="hidden" name="@Model.PropertyName(m => m.Title)" value="@Model.Title" />
+                    <input type="hidden" name="ReturnUrl" value="@Url.Action("Detail", "Novel", new { ID = Model.NovelID, Seo = Model.Novel.Title.ToSeo(), Do = "toc" })" />
+                </div>
+                <div class="form-group">
+                    <label id="labelcontent" for="content">Enter chapter content</label>
+                    <textarea id="content" name="@Model.PropertyName(m=>m.Content)" class="form-control" rows="50" placeholder="Enter chapter content" aria-labelledby="labelcontent">@Model.Content</textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>Save</button>
+                    <button type="button" class="btn btn-default" onclick="history.go(-1)"><i class="fa fa-times-circle"></i>Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>

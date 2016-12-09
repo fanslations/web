@@ -6,7 +6,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
+@if (!User.Identity.IsAuthenticated)
+{
+    @SecurityHelper.Unauthorized("You must be a member of this team to access to page.", "Unauthorized")
+    return;
+}
 <section class="section">
     <div class="header">
         <a href="javascript:history.go(-1);" class="action left"><i class="fa fa-chevron-circle-left"></i></a>
