@@ -16,8 +16,8 @@
     string DatabaseName                 = @"Thi";
 
     // If you want to use sql authentication fill out these two variables...
-    string SqlAuth_Username             = @"thi";
-    string SqlAuth_Password             = @"a31081804";
+    string SqlAuth_Username             = @"thiweb";
+    string SqlAuth_Password             = @"thi@web";
 
     // ...or if you want to use a connection from your App/Web.config
     string Config_ConnectionName        = @"";
